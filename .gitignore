@@ -1,0 +1,15 @@
+.DS_Store
+
+.env
+.env.*
+*.pem
+*.key
+*.p12
+
+node_modules/
+dist/
+coverage/
+.cache/
+
+reports/*.tmp.md
+*.log
