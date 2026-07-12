@@ -1,0 +1,12 @@
+[
+  {
+    "id": "git-001",
+    "title": "Git divergent branches",
+    "category": "git",
+    "difficulty": "basic",
+    "sourceType": "official-doc",
+    "sourceUrl": "https://git-scm.com/docs/git-pull",
+    "summary": "git pull時のdivergent branchesを理解する。",
+    "tags": ["git", "troubleshooting", "workflow"]
+  }
+]
