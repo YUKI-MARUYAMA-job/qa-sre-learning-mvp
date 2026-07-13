@@ -18,7 +18,7 @@
     "validate:data": "bun run src/cli/validate-data.ts",
     "validate:policy": "bun run src/cli/validate-policy.ts",
     "report": "bun run src/cli/generate-report.ts",
-    "check": "bun run typecheck && bun test && bun run validate:data",
+    "check": "bun run typecheck && bun test && bun run validate:data && bun run validate:policy",
     "build": "bun run check && mkdir -p dist && cp -R reports dist/reports && cp README.md dist/index.md"
   }
 }
