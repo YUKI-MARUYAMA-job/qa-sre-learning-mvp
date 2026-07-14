@@ -117,3 +117,11 @@ docs/architecture.md
 ```text
 docs/acceptance-criteria.md
 ```
+
+## Portfolio Readiness
+
+このMVPの現在の到達状況と提出前チェックは以下にまとめている。
+
+```text
+reports/portfolio-readiness.md
+```
