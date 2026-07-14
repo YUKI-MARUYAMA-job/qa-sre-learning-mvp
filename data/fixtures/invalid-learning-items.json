@@ -1,0 +1,30 @@
+[
+  {
+    "id": "bad-001",
+    "title": "",
+    "category": "git",
+    "difficulty": "unknown",
+    "sourceType": "official-doc",
+    "sourceUrl": "http://example.com/not-https",
+    "summary": "",
+    "tags": []
+  },
+  {
+    "id": "ci-001",
+    "title": "Missing source URL",
+    "category": "ci",
+    "difficulty": "basic",
+    "sourceType": "official-doc",
+    "summary": "This item intentionally omits sourceUrl for policy validation.",
+    "tags": ["ci", "quality-gate"]
+  },
+  {
+    "id": "note-001",
+    "title": "Duplicate tags",
+    "category": "note",
+    "difficulty": "basic",
+    "sourceType": "original-note",
+    "summary": "This item intentionally contains duplicate tags.",
+    "tags": ["note", "note"]
+  }
+]
