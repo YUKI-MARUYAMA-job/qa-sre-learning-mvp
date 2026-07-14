@@ -141,3 +141,13 @@ v0.1.0
 ```text
 reports/release-notes-v0.1.0.md
 ```
+
+## Branch Protection
+
+`main` branch には branch protection を設定し、pull request と GitHub Actions quality-gate によって変更を統合する運用としている。
+
+required check:
+
+```text
+Typecheck, test, validate, and report
+```
