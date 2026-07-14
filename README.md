@@ -1,4 +1,5 @@
 # qa-sre-learning-mvp
+[![quality-gate](https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/actions/workflows/quality-gate.yml/badge.svg)](https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/actions/workflows/quality-gate.yml)
 
 To install dependencies:
 
@@ -49,7 +50,7 @@ bun run check
 git status --short
 ```
 
-## GitHub Actions Quality Gate
+## GitHub Actions 品質ゲート
 
 このリポジトリでは、GitHub Actionsにより以下の品質ゲートを自動実行する。
 
