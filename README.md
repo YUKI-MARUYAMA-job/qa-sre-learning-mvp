@@ -101,3 +101,10 @@ bun run validate:public-safety
 ```bash
 bun run check
 ```
+
+## Architecture
+
+このMVPの構成、データ処理パイプライン、品質ゲート、CIフローは以下にまとめている。
+
+```text
+docs/architecture.md
