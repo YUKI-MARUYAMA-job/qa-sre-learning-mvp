@@ -8,5 +8,44 @@
     "sourceUrl": "https://git-scm.com/docs/git-pull",
     "summary": "git pull時のdivergent branchesを理解する。",
     "tags": ["git", "troubleshooting", "workflow"]
+  },
+  {
+    "id": "ci-001",
+    "title": "GitHub Actions quality gate",
+    "category": "ci",
+    "difficulty": "basic",
+    "sourceType": "official-doc",
+    "sourceUrl": "https://docs.github.com/en/actions",
+    "summary": "GitHub Actionsでtypecheck、test、validation、report生成を自動実行する。",
+    "tags": ["ci", "github-actions", "quality-gate"]
+  },
+  {
+    "id": "typescript-001",
+    "title": "TypeScript strict configuration",
+    "category": "typescript",
+    "difficulty": "basic",
+    "sourceType": "official-doc",
+    "sourceUrl": "https://www.typescriptlang.org/tsconfig/",
+    "summary": "strictなtsconfig設定により、optional fieldやimportの型安全性を高める。",
+    "tags": ["typescript", "typecheck", "tsconfig"]
+  },
+  {
+    "id": "bun-001",
+    "title": "Bun runtime and test runner",
+    "category": "bun",
+    "difficulty": "basic",
+    "sourceType": "official-doc",
+    "sourceUrl": "https://bun.sh/docs",
+    "summary": "Bunをruntime、package manager、test runnerとして利用し、MVPの検査を高速化する。",
+    "tags": ["bun", "runtime", "testing"]
+  },
+  {
+    "id": "note-001",
+    "title": "Local QA workflow note",
+    "category": "note",
+    "difficulty": "basic",
+    "sourceType": "original-note",
+    "summary": "localでの検査結果をCIに接続し、品質ゲートとして再現できる状態を維持する。",
+    "tags": ["note", "qa", "workflow"]
   }
 ]
