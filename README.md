@@ -125,3 +125,19 @@ docs/acceptance-criteria.md
 ```text
 reports/portfolio-readiness.md
 ```
+
+## Release
+
+現在の固定releaseは以下である。
+
+```text
+v0.1.0
+```
+
+このreleaseでは、構造化された学習データに対して、schema validation、source policy validation、negative fixtures、quality report generation、report freshness check、dependency reproducibility、public safety check、documentation、GitHub Actions quality gate を含む最初の QA/SRE 志向MVPを固定している。
+
+詳細は以下を参照する。
+
+```text
+reports/release-notes-v0.1.0.md
+```
