@@ -18,9 +18,10 @@
     "validate:data": "bun run src/cli/validate-data.ts",
     "validate:policy": "bun run src/cli/validate-policy.ts",
     "report": "bun run src/cli/generate-report.ts",
-    "check": "bun run typecheck && bun test && bun run validate:data && bun run validate:policy && bun run validate:dependencies && bun run report:check",
+    "check": "bun run typecheck && bun test && bun run validate:data && bun run validate:policy && bun run validate:dependencies && bun run validate:public-safety && bun run report:check",
     "build": "bun run check && mkdir -p dist && cp -R reports dist/reports && cp README.md dist/index.md",
     "report:check": "bun run report && git diff --exit-code -- reports/quality-report.md",
-    "validate:dependencies": "bun run src/cli/check-dependency-policy.ts"
+    "validate:dependencies": "bun run src/cli/check-dependency-policy.ts",
+    "validate:public-safety": "bash scripts/check-public-safety.sh"
   }
 }
