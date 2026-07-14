@@ -141,3 +141,27 @@ v0.1.0
 ```text
 reports/release-notes-v0.1.0.md
 ```
+
+## Static Report Site
+
+このリポジトリでは、`reports/quality-report.md` と `reports/portfolio-readiness.md` を静的HTMLとして生成できる。
+
+```bash
+bun run site:build
+```
+
+生成先は以下である。
+
+```text
+dist/site
+```
+
+この静的サイトは、Cloudflare Pagesで公開することを想定している。
+
+Cloudflare Pages の設定例:
+
+```text
+Build command: bun install --frozen-lockfile && bun run check
+Build output directory: dist/site
+Production branch: main
+```
