@@ -1,20 +1,6 @@
 # qa-sre-learning-mvp
 [![quality-gate](https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/actions/workflows/quality-gate.yml/badge.svg)](https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/actions/workflows/quality-gate.yml)
 
-To install dependencies:
-
-```bash
-bun install
-```
-
-To run:
-
-```bash
-bun run index.ts
-```
-
-This project was created using `bun init` in bun v1.3.14. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
-
 ## Git同期診断
 
 このリポジトリでは、VS Code GUIのSync操作に依存しすぎないよう、local branch と remote branch の状態を事前に確認する診断スクリプトを用意している。
@@ -73,3 +59,23 @@ workflow file:
 ```
 
 CIで生成された `reports/quality-report.md` は、GitHub Actions artifactとして保存する。
+
+
+## Learning Items
+
+検査対象データは `data/raw/learning-items.json` に配置している。
+
+現在のデータは、Git、CI、TypeScript、Bun、local workflow noteを対象とし、以下の観点で検査する。
+
+- schema validation
+- source policy validation
+- category別集計
+- source type別集計
+- tag別集計
+- quality report generation
+
+品質レポートは以下に生成される。
+
+```text
+reports/quality-report.md
+```
