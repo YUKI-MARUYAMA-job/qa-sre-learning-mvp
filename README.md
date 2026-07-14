@@ -48,3 +48,27 @@ bash scripts/git-sync-diagnose.sh
 bun run check
 git status --short
 ```
+
+## GitHub Actions Quality Gate
+
+このリポジトリでは、GitHub Actionsにより以下の品質ゲートを自動実行する。
+
+```bash
+bun run check
+```
+
+検査内容は以下である。
+
+- TypeScript typecheck
+- Bun unit tests
+- data schema validation
+- source policy validation
+- quality report generation
+
+workflow file:
+
+```text
+.github/workflows/quality-gate.yml
+```
+
+CIで生成された `reports/quality-report.md` は、GitHub Actions artifactとして保存する。
