@@ -108,3 +108,12 @@ bun run check
 
 ```text
 docs/architecture.md
+```
+
+## Acceptance Criteria
+
+このMVPの受け入れ基準は以下にまとめている。
+
+```text
+docs/acceptance-criteria.md
+```
