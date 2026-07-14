@@ -3,7 +3,7 @@
 ## Summary
 
 - Total learning items: 5
-- Source policy issues: 0
+- Source policy violations: 0
 
 ## Quality Gates
 
@@ -11,6 +11,32 @@
 - Bun unit tests: pass
 - Data schema validation: pass
 - Source policy validation: pass
+
+## Validation Scope
+
+- Data file: `data/raw/learning-items.json`
+- Schema: `LearningItemsSchema`
+- Source policy: `validateSourcePolicy`
+- Report file: `reports/quality-report.md`
+
+## Limitations
+
+- This report validates metadata quality only.
+- This report does not verify external URL availability.
+- This report does not verify source freshness.
+- This report does not verify factual correctness of referenced content.
+
+## Data Source Summary
+
+- Items with source URL: 4
+- Items without source URL: 1
+
+## Source URL Domains
+
+- bun.sh: 1
+- docs.github.com: 1
+- git-scm.com: 1
+- www.typescriptlang.org: 1
 
 ## Category Counts
 
@@ -46,6 +72,6 @@
 - typescript: 1
 - workflow: 2
 
-## Source Policy Issues
+## Source Policy Violations
 
 - none
