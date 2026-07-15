@@ -585,3 +585,29 @@ PRODUCTION_URL="https://qa-sre-learning-mvp.pages.dev" bun run validate:deployme
 ```
 
 このdeploymentでは、生成済みの静的レポートサイトをCloudflare Pagesで公開し、Quality ReportとPortfolio Readiness Reportをブラウザから確認できる状態にしている。
+
+### Lighthouse CI Warn Operation
+
+Status:
+
+```text
+Implemented
+```
+
+Evidence:
+
+```text
+lighthouserc.json
+.github/workflows/lighthouse-warn.yml
+docs/lighthouse-ci.md
+```
+
+Validation command:
+
+```bash
+bun run lighthouse:check
+```
+
+Phase 15では、Lighthouse CIをrequired quality-gateには含めず、warn-onlyの補助検査として運用する。
+
+この検査では、`dist/site` に生成した静的レポートサイトを対象に、performance、accessibility、best-practices、SEOのcategory scoreを観測する。

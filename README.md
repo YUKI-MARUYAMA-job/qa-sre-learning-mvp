@@ -100,6 +100,13 @@ GitHub Actionsでも同じ品質ゲートを実行する。
 
 main branch は branch protection により、PR経由の統合と required quality-gate check を前提とする。
 
+Lighthouse CIは、現段階では required quality-gate には含めず、warn-only の補助検査として運用する。
+
+```bash
+bun run lighthouse:check
+```
+
+
 Git同期状態は以下で確認する。
 
 ```bash
@@ -209,6 +216,7 @@ bun run site:check
 bun run validate:security-baseline
 bun run validate:performance-baseline
 bun run validate:deployment
+bun run lighthouse:check
 bun run check
 ```
 
