@@ -356,3 +356,26 @@ quality-report
 - `v0.1.0` release tagを作成する
 - required quality-gate checkを伴うbranch protectionを検討する
 - 任意で、レポートをstatic siteとして公開する
+
+## Performance / Security Baseline
+
+Phase 11では、静的レポートサイトに対して performance / security baseline を追加する。
+
+Security baselineでは、Cloudflare Pages用の `_headers` を生成し、以下のようなheadersを設定する。
+
+- `X-Frame-Options`
+- `X-Content-Type-Options`
+- `Referrer-Policy`
+- `Permissions-Policy`
+- `Content-Security-Policy`
+
+Performance baselineでは、`dist/site` の生成物に対して file size budget を検査する。
+
+```text
+reports/*.md
+  -> static HTML generation
+  -> dist/site
+  -> security baseline check
+  -> performance baseline check
+  -> quality-gate
+```
