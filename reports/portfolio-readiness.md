@@ -555,3 +555,33 @@ bun run validate:performance-baseline
 ```
 
 このbaselineでは、静的レポートサイトにsecurity headersが含まれていること、および生成物が簡易的なfile-size budget内に収まっていることを検査する。
+
+### Cloudflare Pages Production Deployment
+
+Status:
+
+```text
+Implemented
+```
+
+Evidence:
+
+```text
+Cloudflare Pages production deployment
+Production branch: main
+Build output directory: dist/site
+```
+
+Production URL:
+
+```text
+https://qa-sre-learning-mvp.pages.dev/
+```
+
+Validation command:
+
+```bash
+PRODUCTION_URL="https://qa-sre-learning-mvp.pages.dev" bun run validate:deployment
+```
+
+このdeploymentでは、生成済みの静的レポートサイトをCloudflare Pagesで公開し、Quality ReportとPortfolio Readiness Reportをブラウザから確認できる状態にしている。

@@ -194,3 +194,25 @@ bun run check
 - security headers の存在
 - generated HTML / CSS の file size budget
 - `dist/site` の必須成果物
+
+## Production Deployment
+
+このリポジトリの静的レポートサイトは、Cloudflare Pagesでproduction deployしている。
+
+```text
+Production URL: https://qa-sre-learning-mvp.pages.dev
+Production branch: main
+Build command: bun install --frozen-lockfile && bun run check
+Build output directory: dist/site
+```
+
+deployment baseline は以下で確認できる。
+
+```bash
+PRODUCTION_URL="https://qa-sre-learning-mvp.pages.dev" bun run validate:deployment
+```
+
+公開サイトでは、以下のレポートを閲覧できる。
+
+- Quality Report
+- Portfolio Readiness Report

@@ -356,3 +356,30 @@ quality-report
 - `v0.1.0` release tagを作成する
 - required quality-gate checkを伴うbranch protectionを検討する
 - 任意で、レポートをstatic siteとして公開する
+
+## Cloudflare Pages Production Deployment
+
+Phase 12では、静的レポートサイトをCloudflare Pagesのproduction deploymentとして公開する。
+
+```text
+reports/*.md
+  -> static HTML generation
+  -> dist/site
+  -> Cloudflare Pages build
+  -> production URL
+```
+
+Cloudflare Pages settings:
+
+```text
+Production branch: main
+Build command: bun install --frozen-lockfile && bun run check
+Build output directory: dist/site
+```
+
+deployment baselineでは、production URL上で以下を確認する。
+
+- index page が取得できること
+- quality report page が取得できること
+- portfolio readiness page が取得できること
+- security headers がresponseに含まれること
