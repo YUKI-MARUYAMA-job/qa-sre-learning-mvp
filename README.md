@@ -167,6 +167,7 @@ bun run validate:performance-baseline
 | `reports/release-notes-v0.1.0.md` | `v0.1.0` release notes |
 | `docs/architecture.md` | アーキテクチャと品質ゲートの説明 |
 | `docs/acceptance-criteria.md` | MVP受け入れ基準 |
+| `docs/interview-notes.md` | 面接説明用の補助資料 |
 | `dist/site` | static report site build output |
 
 品質レポートは以下に生成される。
