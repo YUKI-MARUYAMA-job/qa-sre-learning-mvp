@@ -530,3 +530,28 @@ data quality
 ```
 
 このリポジトリは、今後、実装中心の作業から release preparation と presentation polish に移行するべきである。
+
+### Performance / Security Baseline
+
+Status:
+
+```text
+Implemented
+```
+
+Evidence:
+
+```text
+site/static/_headers
+src/cli/check-security-baseline.ts
+src/cli/check-performance-baseline.ts
+```
+
+Validation commands:
+
+```bash
+bun run validate:security-baseline
+bun run validate:performance-baseline
+```
+
+このbaselineでは、静的レポートサイトにsecurity headersが含まれていること、および生成物が簡易的なfile-size budget内に収まっていることを検査する。
