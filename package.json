@@ -28,6 +28,7 @@
     "site:check": "bun run site:build && test -f dist/site/index.html && test -f dist/site/quality-report.html && test -f dist/site/portfolio-readiness.html",
     "validate:security-baseline": "bun run site:build && bun run src/cli/check-security-baseline.ts",
     "validate:performance-baseline": "bun run site:build && bun run src/cli/check-performance-baseline.ts",
-    "lighthouse:check": "lhci autorun"
+    "lighthouse:check": "lhci autorun",
+    "validate:deployment": "bun run src/cli/check-deployment-baseline.ts"
   }
 }
