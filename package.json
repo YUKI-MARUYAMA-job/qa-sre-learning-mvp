@@ -29,6 +29,7 @@
     "validate:security-baseline": "bun run site:build && bun run src/cli/check-security-baseline.ts",
     "validate:performance-baseline": "bun run site:build && bun run src/cli/check-performance-baseline.ts",
     "lighthouse:check": "lhci autorun",
-    "validate:deployment": "bun run src/cli/check-deployment-baseline.ts"
+    "validate:deployment": "bun run src/cli/check-deployment-baseline.ts",
+    "validate:readme-baseline": "bun run src/cli/check-readme-baseline.ts"
   }
 }

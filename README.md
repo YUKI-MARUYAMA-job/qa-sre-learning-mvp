@@ -57,6 +57,20 @@ data/raw/learning-items.json
   -> Cloudflare Pages production deployment
 ```
 
+主要な構成は以下である。
+
+| Path | Role |
+|---|---|
+| `data/raw/learning-items.json` | 検査対象の学習データ |
+| `data/fixtures/invalid-learning-items.json` | 異常系検証用fixture |
+| `src/schemas/` | Zod schema定義 |
+| `src/application/` | source policy validation / report generation |
+| `src/cli/` | validation / report / static site / baseline checks |
+| `reports/` | quality report / readiness report / release notes |
+| `docs/` | architecture / acceptance criteria |
+| `site/static/` | static site assets / Cloudflare Pages headers |
+| `.github/workflows/quality-gate.yml` | GitHub Actions quality gate |
+
 ## Quality Gate
 
 統合品質ゲートは以下で実行する。
@@ -78,7 +92,42 @@ bun run check
 - security baseline check
 - performance baseline check
 
-## Deployment Baseline
+GitHub Actionsでも同じ品質ゲートを実行する。
+
+```text
+.github/workflows/quality-gate.yml
+```
+
+main branch は branch protection により、PR経由の統合と required quality-gate check を前提とする。
+
+Git同期状態は以下で確認する。
+
+```bash
+bash scripts/git-sync-diagnose.sh
+```
+
+## Production Deployment
+
+このリポジトリの静的レポートサイトは、Cloudflare Pagesでproduction deployしている。
+
+```text
+Production URL: https://qa-sre-learning-mvp.pages.dev
+Production branch: main
+Build command: bun install --frozen-lockfile && bun run check
+Build output directory: dist/site
+```
+
+静的サイトは以下で生成する。
+
+```bash
+bun run site:build
+```
+
+生成先は以下である。
+
+```text
+dist/site
+```
 
 Cloudflare Pages production deployment は以下で検証する。
 
@@ -93,35 +142,40 @@ PRODUCTION_URL="https://qa-sre-learning-mvp.pages.dev" bun run validate:deployme
 - portfolio readiness page が取得できること
 - security headers が response に含まれること
 
-## Key Artifacts
+performance / security baseline は以下で個別に検証できる。
+
+```bash
+bun run validate:security-baseline
+bun run validate:performance-baseline
+```
+
+主な検査対象は以下である。
+
+- Cloudflare Pages 用 `_headers`
+- security headers の存在
+- generated HTML / CSS の file-size budget
+- `dist/site` の必須成果物
+
+## Reports
+
+主要な成果物と補助ドキュメントは以下である。
 
 | Artifact | Purpose |
 |---|---|
 | `reports/quality-report.md` | data quality / policy validation の結果 |
 | `reports/portfolio-readiness.md` | ポートフォリオ提出準備状況 |
+| `reports/release-notes-v0.1.0.md` | `v0.1.0` release notes |
 | `docs/architecture.md` | アーキテクチャと品質ゲートの説明 |
 | `docs/acceptance-criteria.md` | MVP受け入れ基準 |
-| `reports/release-notes-v0.1.0.md` | `v0.1.0` release notes |
 | `dist/site` | static report site build output |
 
-## Main Commands
+品質レポートは以下に生成される。
 
-```bash
-bun run typecheck
-bun test
-bun run validate:data
-bun run validate:policy
-bun run validate:dependencies
-bun run validate:public-safety
-bun run report:check
-bun run site:check
-bun run validate:security-baseline
-bun run validate:performance-baseline
-bun run validate:deployment
-bun run check
+```text
+reports/quality-report.md
 ```
 
-## Learning Items
+公開サイトでは、`reports/quality-report.md` と `reports/portfolio-readiness.md` を静的HTMLとして閲覧できる。
 
 検査対象データは以下に配置している。
 
@@ -138,111 +192,24 @@ data/raw/learning-items.json
 - tag別集計
 - quality report generation
 
-品質レポートは以下に生成される。
+## Main Commands
 
-```text
-reports/quality-report.md
-```
-
-## Static Report Site
-
-このリポジトリでは、`reports/quality-report.md` と `reports/portfolio-readiness.md` を静的HTMLとして生成できる。
+主要コマンドは以下である。
 
 ```bash
-bun run site:build
-```
-
-生成先は以下である。
-
-```text
-dist/site
-```
-
-Cloudflare Pages の設定は以下である。
-
-```text
-Production branch: main
-Build command: bun install --frozen-lockfile && bun run check
-Build output directory: dist/site
-```
-
-## Performance / Security Baseline
-
-このリポジトリでは、静的レポートサイトに対して最低限の performance / security baseline を検査する。
-
-Security baseline:
-
-```bash
-bun run validate:security-baseline
-```
-
-Performance baseline:
-
-```bash
-bun run validate:performance-baseline
-```
-
-主な検査対象は以下である。
-
-- Cloudflare Pages 用 `_headers`
-- security headers の存在
-- generated HTML / CSS の file-size budget
-- `dist/site` の必須成果物
-
-これらの検査は、統合品質ゲートにも含まれる。
-
-```bash
-bun run check
-```
-
-## Public Safety Check
-
-公開リポジトリに含めるべきでないローカルファイルや、秘密情報を含む可能性のあるファイルを検出する。
-
-```bash
+bun run typecheck
+bun test
+bun run validate:data
+bun run validate:policy
+bun run validate:dependencies
 bun run validate:public-safety
-```
-
-検出対象の例は以下である。
-
-- `.env`
-- `.env.*`
-- private key / certificate files
-- local editor profile files
-- bundle files
-
-この検査は統合品質ゲートにも含まれる。
-
-```bash
+bun run report:check
+bun run site:check
+bun run validate:security-baseline
+bun run validate:performance-baseline
+bun run validate:deployment
 bun run check
 ```
-
-## Git Sync Diagnosis
-
-このリポジトリでは、VS Code GUI の Sync 操作に依存しすぎないよう、local branch と remote branch の状態を確認する診断スクリプトを用意している。
-
-```bash
-bash scripts/git-sync-diagnose.sh
-```
-
-このスクリプトは、次の情報を表示する。
-
-- repository root
-- 現在のbranch
-- upstream branch
-- fetch後の ahead / behind 数
-- local-only commit と remote-only commit
-- working tree の未commit変更・未追跡ファイル
-- branch tracking summary
-
-ahead / behind の基本的な読み方は以下である。
-
-| 状態 | 意味 | 推奨操作 |
-|---|---|---|
-| `0 0` | local と remote は同期済み | 未commit変更のみ確認 |
-| `0 N` | remote のみ進んでいる | `git pull --ff-only` |
-| `N 0` | local のみ進んでいる | 検査後に `git push` |
-| `N M` | local と remote が分岐している | `rebase` / `merge` / `reset` を明示判断 |
 
 作業開始時やpush前には、以下を確認する。
 
@@ -252,32 +219,11 @@ bun run check
 git status --short
 ```
 
-## GitHub Actions
-
-GitHub Actionsでは、以下の統合品質ゲートを自動実行する。
+deployment baseline を確認する場合は、production URLを指定する。
 
 ```bash
-bun run check
+PRODUCTION_URL="https://qa-sre-learning-mvp.pages.dev" bun run validate:deployment
 ```
-
-Workflow file:
-
-```text
-.github/workflows/quality-gate.yml
-```
-
-CIで生成された `reports/quality-report.md` は、GitHub Actions artifact として保存する。
-
-## Documentation
-
-詳細な設計・受け入れ基準・提出準備状況は、以下に分けて記録している。
-
-| Document | Description |
-|---|---|
-| `docs/architecture.md` | 構成、データ処理パイプライン、品質ゲート、CIフロー |
-| `docs/acceptance-criteria.md` | MVPとしての受け入れ基準 |
-| `reports/portfolio-readiness.md` | 現在の到達状況と提出前チェック |
-| `reports/release-notes-v0.1.0.md` | `v0.1.0` release notes |
 
 ## Release
 
@@ -294,14 +240,6 @@ v0.1.0
 ```text
 reports/release-notes-v0.1.0.md
 ```
-
-## Interview Summary
-
-このリポジトリでは、構造化された学習データを対象に、QA/SRE志向の品質パイプラインを構築した。
-
-Zodによる schema validation、source policy validation、negative fixture、quality report generation、report freshness check を実装し、dependency reproducibility、public safety check、performance / security baseline を GitHub Actions の quality gate に統合している。
-
-さらに、main branch は branch protection により PR 経由の統合に制限し、生成された report は静的HTMLとして Cloudflare Pages で production deploy している。
 
 ## Known Limitations
 
