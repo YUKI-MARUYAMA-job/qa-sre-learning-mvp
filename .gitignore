@@ -13,3 +13,7 @@ coverage/
 
 reports/*.tmp.md
 *.log
+
+# Private interview preparation notes
+docs/private/
+private-notes/
