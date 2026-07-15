@@ -206,6 +206,7 @@ await Bun.$`rm -rf ${outputDir}`;
 await Bun.$`mkdir -p ${outputDir}`;
 
 await Bun.write(`${outputDir}/styles.css`, await Bun.file("site/static/styles.css").text());
+await Bun.write(`${outputDir}/_headers`, await Bun.file("site/static/_headers").text());
 await Bun.write(`${outputDir}/index.html`, renderIndex());
 
 for (const page of pages) {

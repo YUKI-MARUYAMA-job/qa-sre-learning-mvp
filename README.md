@@ -165,3 +165,32 @@ Build command: bun install --frozen-lockfile && bun run check
 Build output directory: dist/site
 Production branch: main
 ```
+
+## Performance / Security Baseline
+
+このリポジトリでは、静的レポートサイトに対して最低限の performance / security baseline を検査する。
+
+Security baseline:
+
+```bash
+bun run validate:security-baseline
+```
+
+Performance baseline:
+
+```bash
+bun run validate:performance-baseline
+```
+
+これらの検査は、統合品質ゲートにも含まれる。
+
+```bash
+bun run check
+```
+
+主な検査対象:
+
+- Cloudflare Pages 用 `_headers`
+- security headers の存在
+- generated HTML / CSS の file size budget
+- `dist/site` の必須成果物
