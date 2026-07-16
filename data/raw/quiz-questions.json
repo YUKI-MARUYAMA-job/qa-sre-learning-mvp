@@ -25,7 +25,19 @@
       "dev_env_devops",
       "docker",
       "devcontainers"
-    ]
+    ],
+    "legal": {
+      "is_official_question_reproduction": false,
+      "is_copied_verbatim": false,
+      "is_official_certification_claim": false,
+      "is_affiliation_or_endorsement_claim": false,
+      "is_modified_or_original": true,
+      "attribution": "Source: Dev Containers"
+    },
+    "review": {
+      "status": "reviewed",
+      "reviewed_at": "2026-07-16"
+    }
   },
   {
     "id": "edge_infra_security-quiz-001",
@@ -53,6 +65,18 @@
       "edge_infra_security",
       "cloudflare",
       "pages"
-    ]
+    ],
+    "legal": {
+      "is_official_question_reproduction": false,
+      "is_copied_verbatim": false,
+      "is_official_certification_claim": false,
+      "is_affiliation_or_endorsement_claim": false,
+      "is_modified_or_original": true,
+      "attribution": "Source: Cloudflare"
+    },
+    "review": {
+      "status": "reviewed",
+      "reviewed_at": "2026-07-16"
+    }
   }
 ]

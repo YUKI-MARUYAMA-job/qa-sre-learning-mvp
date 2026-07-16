@@ -14,12 +14,24 @@
       "4": "Build output directoryは、Lighthouse CIの結果を削除するための設定である。"
     },
     "answer": "1",
-    "explanation": "本問題は、Cloudflare Pagesにおける静的サイト公開設定の理解を確認するためのものです。このfixtureでは、schemaとしては成立するが、sub_categoryとsub_sub_categoryがtaxonomy masterに存在しないため、taxonomy validationで失敗することを期待します。",
+    "explanation": "本問題は、Cloudflare Pagesにおける静的サイト公開設定の理解を確認するためのfixtureである。このfixtureでは、schemaとしては成立するが、sub_categoryとsub_sub_categoryがtaxonomy masterに存在しないため、taxonomy validationで失敗することを期待する。",
     "source": {
       "title": "Cloudflare Pages documentation",
       "url": "https://developers.cloudflare.com/pages/",
       "publisher": "Cloudflare",
       "retrieved_at": "2026-07-16"
+    },
+    "legal": {
+      "is_official_question_reproduction": false,
+      "is_copied_verbatim": false,
+      "is_official_certification_claim": false,
+      "is_affiliation_or_endorsement_claim": false,
+      "is_modified_or_original": true,
+      "attribution": "Source: Cloudflare documentation"
+    },
+    "review": {
+      "status": "reviewed",
+      "reviewed_at": "2026-07-16"
     },
     "tags": [
       "edge_infra_security",

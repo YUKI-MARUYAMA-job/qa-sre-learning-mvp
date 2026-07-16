@@ -64,3 +64,47 @@ E2E smoke tests
 ```
 
 これらは後続 phase で段階的に追加する。
+
+## Fixture Responsibility
+
+Invalid fixtures are separated by validation layer.
+
+```text
+invalid-quiz-schema.json:
+  expected schema result: false
+  expected taxonomy result: not evaluated
+  expected policy result: not evaluated
+
+invalid-quiz-taxonomy.json:
+  expected schema result: true
+  expected taxonomy result: false
+  expected policy result: not required
+
+policy-invalid-quiz-questions.json:
+  expected schema result: true
+  expected taxonomy result: true
+  expected policy result: false
+```
+
+This responsibility split prevents fixture drift when the quiz schema is extended.
+
+## Fixture Validation Command
+
+```bash
+bun run validate:quiz-fixtures
+```
+
+The fixture validation command mechanically checks that each fixture fails at the intended validation layer.
+
+```text
+invalid-quiz-schema.json:
+  must fail Zod schema validation.
+
+invalid-quiz-taxonomy.json:
+  must pass Zod schema validation and fail taxonomy validation.
+
+policy-invalid-quiz-questions.json:
+  must pass Zod schema validation, pass taxonomy validation, and fail quiz policy validation.
+```
+
+This command is included in `bun run check` so that fixture responsibility drift is detected in CI.

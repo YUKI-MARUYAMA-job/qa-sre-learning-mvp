@@ -34,6 +34,18 @@ export const QuizQuestionSchema = z.object({
     publisher: z.string().min(1),
     retrieved_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/)
   }),
+  legal: z.object({
+    is_official_question_reproduction: z.boolean(),
+    is_copied_verbatim: z.boolean(),
+    is_official_certification_claim: z.boolean(),
+    is_affiliation_or_endorsement_claim: z.boolean(),
+    is_modified_or_original: z.boolean(),
+    attribution: z.string().min(1)
+  }),
+  review: z.object({
+    status: z.enum(["generated", "reviewed"]),
+    reviewed_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable()
+  }),
   tags: z.array(z.string().min(1)).min(1)
 });
 
