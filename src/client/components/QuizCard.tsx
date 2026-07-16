@@ -1,0 +1,81 @@
+import type { PublicQuizQuestion } from "../../schemas/public-quiz-data.schema.ts";
+
+type AnswerKey = "1" | "2" | "3" | "4";
+
+type QuizCardProps = {
+  question: PublicQuizQuestion;
+  currentIndex: number;
+  totalQuestions: number;
+  selectedAnswer: AnswerKey | null;
+  isAnswered: boolean;
+  isCorrect: boolean | null;
+  onSelectAnswer: (answer: AnswerKey) => void;
+  onNext: () => void;
+};
+
+const answerKeys: AnswerKey[] = ["1", "2", "3", "4"];
+
+export function QuizCard({
+  question,
+  currentIndex,
+  totalQuestions,
+  selectedAnswer,
+  isAnswered,
+  isCorrect,
+  onSelectAnswer,
+  onNext
+}: QuizCardProps) {
+  return (
+    <section className="panel">
+      <div className="meta-row">
+        <span className="badge">
+          {currentIndex + 1} / {totalQuestions}
+        </span>
+        <span className="badge">{question.track}</span>
+        <span className="badge">{question.category}</span>
+        <span className="badge">{question.difficulty}</span>
+      </div>
+
+      <h2>Question</h2>
+      <p className="question-text">{question.question}</p>
+
+      <div className="options" aria-label="選択肢">
+        {answerKeys.map((key) => (
+          <button
+            key={key}
+            type="button"
+            className={`option-button ${selectedAnswer === key ? "selected" : ""}`}
+            onClick={() => onSelectAnswer(key)}
+            disabled={isAnswered}
+          >
+            <strong>{key}.</strong> {question.options[key]}
+          </button>
+        ))}
+      </div>
+
+      {isAnswered && (
+        <div className="feedback">
+          <h3>{isCorrect ? "正解" : "不正解"}</h3>
+          <p>
+            正答: <strong>{question.answer}</strong>
+          </p>
+          <p>{question.explanation}</p>
+          <p className="muted">
+            Source: {question.source.publisher} — {question.source.title}
+          </p>
+        </div>
+      )}
+
+      <div className="actions">
+        <button
+          type="button"
+          className="primary-button"
+          onClick={onNext}
+          disabled={!isAnswered}
+        >
+          {currentIndex + 1 >= totalQuestions ? "結果を見る" : "次の問題へ"}
+        </button>
+      </div>
+    </section>
+  );
+}
