@@ -1,0 +1,99 @@
+{
+  "version": "2026-07-16",
+  "categories": [
+    {
+      "key": "frontend_languages",
+      "label": "言語とフロントエンド",
+      "sub_categories": [
+        {
+          "name": "TypeScript",
+          "sub_sub_categories": [
+            "基本静的型付け",
+            "高度な型システム"
+          ]
+        },
+        {
+          "name": "React",
+          "sub_sub_categories": [
+            "React Hooks",
+            "状態管理とカスタムフック"
+          ]
+        },
+        {
+          "name": "HonoとVite-SSG",
+          "sub_sub_categories": [
+            "Hono JSX表現",
+            "Vite SSGによる静的ビルド"
+          ]
+        },
+        {
+          "name": "Vanilla ExtractとCSS",
+          "sub_sub_categories": [
+            "型安全なCSS-in-JS",
+            "CSS変数と動的テーマ"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "edge_infra_security",
+      "label": "エッジインフラとセキュリティ",
+      "sub_categories": [
+        {
+          "name": "Cloudflare PagesとWorkers",
+          "sub_sub_categories": [
+            "Pagesによる静的ホスティング",
+            "Workersによるサーバーレス実行"
+          ]
+        },
+        {
+          "name": "Cloudflare AccessとZero Trust",
+          "sub_sub_categories": [
+            "ID認識型プロキシ(IAP)",
+            "ワンタイムPIN認証ポリシー"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "qa_test_automation",
+      "label": "品質保証と自動テスト",
+      "sub_categories": [
+        {
+          "name": "Webアクセシビリティ自動監査",
+          "sub_sub_categories": [
+            "WCAG AA基準コントラスト比",
+            "相対輝度の算出式"
+          ]
+        },
+        {
+          "name": "パフォーマンス測定",
+          "sub_sub_categories": [
+            "PuppeteerとLighthouse",
+            "WebVitalsメトリクス"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "dev_env_devops",
+      "label": "開発環境とDevOps",
+      "sub_categories": [
+        {
+          "name": "DockerとDevContainers",
+          "sub_sub_categories": [
+            "再現可能開発コンテナ",
+            "コンテナソケット共有"
+          ]
+        },
+        {
+          "name": "GitOpsとインポート自動化",
+          "sub_sub_categories": [
+            "cim / qim トランザクション",
+            "Git自動コミットとロールバック"
+          ]
+        }
+      ]
+    }
+  ]
+}

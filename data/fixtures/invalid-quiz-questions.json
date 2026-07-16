@@ -1,0 +1,28 @@
+[
+  {
+    "id": "bad-quiz-001",
+    "track": "cloudflare",
+    "category": "edge_infra_security",
+    "sub_category": "存在しない中分類",
+    "sub_sub_category": "存在しない小分類",
+    "difficulty": "basic",
+    "question": "短すぎる",
+    "options": {
+      "1": "A",
+      "2": "B",
+      "3": "C",
+      "4": "D"
+    },
+    "answer": "4",
+    "explanation": "短い",
+    "source": {
+      "title": "Example",
+      "url": "http://example.com",
+      "publisher": "Example",
+      "retrieved_at": "2026-07-16"
+    },
+    "tags": [
+      "wrong_tag"
+    ]
+  }
+]
