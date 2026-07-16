@@ -2,6 +2,7 @@ import { validateQuizPolicy } from "../application/validate-quiz-policy.ts";
 import { validateQuizTaxonomy } from "../application/validate-quiz-taxonomy.ts";
 import { QuizQuestionsSchema } from "../schemas/quiz-question.schema.ts";
 import { SubjectTaxonomySchema } from "../schemas/subject-taxonomy.schema.ts";
+import type { SubjectTaxonomy } from "../schemas/subject-taxonomy.schema.ts";
 
 type ExpectedBoolean = boolean | null;
 
@@ -67,36 +68,40 @@ const fixtureExpectations: FixtureExpectation[] = [
   }
 ];
 
-const taxonomyJson = await Bun.file("data/raw/subject-taxonomy.json").json();
-const taxonomyResult = SubjectTaxonomySchema.safeParse(taxonomyJson);
+async function loadTaxonomy(): Promise<SubjectTaxonomy> {
+  const taxonomyJson = await Bun.file("data/raw/subject-taxonomy.json").json();
+  const taxonomyResult = SubjectTaxonomySchema.safeParse(taxonomyJson);
 
-if (!taxonomyResult.success) {
-  if (jsonOutput) {
-    console.log(
-      JSON.stringify(
-        {
-          passed: false,
-          error: "Subject taxonomy schema validation failed.",
-          issues: taxonomyResult.error.issues.map((issue) => ({
-            path: issue.path.join(".") || "(root)",
-            message: issue.message
-          }))
-        },
-        null,
-        2
-      )
-    );
-  } else {
-    console.error("FAIL taxonomy master: Subject taxonomy schema validation failed.");
-    for (const issue of taxonomyResult.error.issues) {
-      console.error(`- ${issue.path.join(".") || "(root)"}: ${issue.message}`);
+  if (!taxonomyResult.success) {
+    if (jsonOutput) {
+      console.log(
+        JSON.stringify(
+          {
+            passed: false,
+            error: "Subject taxonomy schema validation failed.",
+            issues: taxonomyResult.error.issues.map((issue) => ({
+              path: issue.path.join(".") || "(root)",
+              message: issue.message
+            }))
+          },
+          null,
+          2
+        )
+      );
+    } else {
+      console.error("FAIL taxonomy master: Subject taxonomy schema validation failed.");
+      for (const issue of taxonomyResult.error.issues) {
+        console.error(`- ${issue.path.join(".") || "(root)"}: ${issue.message}`);
+      }
     }
+
+    process.exit(1);
   }
 
-  process.exit(1);
+  return taxonomyResult.data;
 }
 
-const taxonomy = taxonomyResult.data;
+const taxonomy = await loadTaxonomy();
 
 function formatSchemaIssue(issue: { path: PropertyKey[]; message: string }): string {
   return `${issue.path.join(".") || "(root)"}: ${issue.message}`;
@@ -169,7 +174,7 @@ async function checkFixture(fixture: FixtureExpectation): Promise<FixtureCheckRe
   };
 }
 
-const results = [];
+const results: FixtureCheckResult[] = [];
 
 for (const fixture of fixtureExpectations) {
   results.push(await checkFixture(fixture));
