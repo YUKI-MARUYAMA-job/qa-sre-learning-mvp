@@ -472,3 +472,77 @@ Bad:
 ```
 
 非決定的な値を入れると、毎回 `git diff` が発生し、freshness check が不安定になる。
+
+## Phase 6 Post-Implementation Workflow
+
+Phase 6 実装後は、React / Vite UI が validated public quiz data を安全に利用できることを確認する。
+
+```text
+data/raw/quiz-questions.json
+  -> schema validation
+  -> taxonomy validation
+  -> policy validation
+  -> public/study-it/quiz_data.json
+  -> React fetch
+  -> PublicQuizDataSchema runtime validation
+  -> quiz UI
+  -> Vite production build
+```
+
+## Post-Implementation Checks
+
+```bash
+bun run prepare:public-quiz-data
+bun run prepare:public-quiz-data:check
+bun run client:typecheck
+bun run client:build
+bun test
+bun run check
+```
+
+## Manual UI Checks
+
+```text
+loading state is displayed
+quiz data is loaded from /study-it/quiz_data.json
+question text is displayed
+answer options are selectable
+correct / incorrect feedback is displayed
+explanation is displayed
+result screen is displayed
+restart works
+browser console has no fatal error
+```
+
+## Build Output Policy
+
+```text
+public/study-it/quiz_data.json:
+  committed generated public data
+
+dist/app:
+  Vite production build output
+  normally not committed
+```
+
+## Phase 6 Completion Criteria
+
+```text
+client:typecheck:
+  pass
+
+client:build:
+  pass
+
+prepare:public-quiz-data:check:
+  pass
+
+check:
+  pass
+
+UI:
+  loads public quiz data
+  validates data at runtime
+  supports question, answer, feedback, result, and restart
+```
+
