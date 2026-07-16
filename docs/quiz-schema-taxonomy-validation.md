@@ -392,3 +392,83 @@ Bad:
 ```
 
 非決定的な値を入れると、毎回 `git diff` が発生し、freshness check が不安定になる。
+
+## Phase 5: Public Quiz Data Generation
+
+Phase 5 では、validated quiz data から Web アプリ配信用の public quiz data を生成する。
+
+```text
+data/raw/quiz-questions.json
+  正本データ。schema / taxonomy / policy / report の対象。
+
+public/study-it/quiz_data.json
+  Web アプリが fetch する配信用データ。
+```
+
+## Public Data Generation Pipeline
+
+```text
+data/raw/quiz-questions.json
+  -> Zod schema validation
+  -> taxonomy validation
+  -> policy validation
+  -> public quiz data projection
+  -> public quiz data schema validation
+  -> public/study-it/quiz_data.json
+```
+
+## Public Data Policy
+
+配信用データには、クイズ UI に必要な field だけを含める。
+
+```text
+included:
+  id
+  track
+  category
+  sub_category
+  sub_sub_category
+  difficulty
+  question
+  options
+  answer
+  explanation
+  source
+  tags
+
+excluded:
+  legal
+  review
+```
+
+`legal` と `review` は内部品質管理用 metadata であり、Web UI の表示には不要である。
+
+## Commands
+
+```bash
+bun run prepare:public-quiz-data
+bun run prepare:public-quiz-data:check
+bun run check
+```
+
+`prepare:public-quiz-data:check` は、配信用 JSON を再生成した後に以下を実行する。
+
+```bash
+git diff --exit-code -- public/study-it/quiz_data.json
+```
+
+これにより、正本データを変更したにもかかわらず配信用 JSON を更新していない状態を CI で検出できる。
+
+## Deterministic Public Data Policy
+
+`public/study-it/quiz_data.json` には現在時刻などの非決定的な値を入れない。
+
+```text
+Good:
+  version: 2026-07-16
+
+Bad:
+  generated_at: 2026-07-16T12:34:56.789Z
+```
+
+非決定的な値を入れると、毎回 `git diff` が発生し、freshness check が不安定になる。

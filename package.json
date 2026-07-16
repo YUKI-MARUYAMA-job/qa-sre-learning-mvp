@@ -18,8 +18,8 @@
     "validate:data": "bun run src/cli/validate-data.ts",
     "validate:policy": "bun run src/cli/validate-policy.ts",
     "report": "bun run src/cli/generate-report.ts",
-    "check": "bun run typecheck && bun test && bun run validate:data && bun run validate:policy && bun run validate:quiz && bun run validate:quiz-policy && bun run validate:quiz-fixtures && bun run quiz:report:check && bun run validate:dependencies && bun run validate:public-safety && bun run report:check && bun run site:check && bun run validate:security-baseline && bun run validate:performance-baseline",
-    "build": "bun run check && mkdir -p dist && cp -R reports dist/reports && cp README.md dist/index.md",
+    "check": "bun run typecheck && bun test && bun run validate:data && bun run validate:policy && bun run validate:quiz && bun run validate:quiz-policy && bun run validate:quiz-fixtures && bun run quiz:report:check && bun run prepare:public-quiz-data:check && bun run validate:dependencies && bun run validate:public-safety && bun run report:check && bun run site:check && bun run validate:security-baseline && bun run validate:performance-baseline",
+    "build": "bun run prepare:public-quiz-data && bun run check && mkdir -p dist && cp -R reports dist/reports && cp README.md dist/index.md",
     "report:check": "bun run report && git diff --exit-code -- reports/quality-report.md",
     "validate:dependencies": "bun run src/cli/check-dependency-policy.ts",
     "validate:public-safety": "bash scripts/check-public-safety.sh",
@@ -37,6 +37,8 @@
     "validate:quiz-fixtures:verbose": "bun run src/cli/validate-quiz-fixtures.ts --verbose",
     "validate:quiz-fixtures:json": "bun run src/cli/validate-quiz-fixtures.ts --json",
     "quiz:report": "bun run src/cli/generate-quiz-report.ts",
-    "quiz:report:check": "bun run quiz:report && git diff --exit-code -- reports/quiz-quality-report.md"
+    "quiz:report:check": "bun run quiz:report && git diff --exit-code -- reports/quiz-quality-report.md",
+    "prepare:public-quiz-data": "bun run src/cli/prepare-public-quiz-data.ts",
+    "prepare:public-quiz-data:check": "bun run prepare:public-quiz-data && git diff --exit-code -- public/study-it/quiz_data.json"
   }
 }
