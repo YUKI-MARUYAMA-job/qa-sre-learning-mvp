@@ -1,0 +1,28 @@
+[
+  {
+    "id": "dev_env_devops-quiz-schema-invalid",
+    "track": "ap",
+    "category": "dev_env_devops",
+    "sub_category": "DockerとDevContainers",
+    "sub_sub_category": "再現可能開発コンテナ",
+    "difficulty": "basic",
+    "question": "短い",
+    "options": {
+      "1": "A",
+      "2": "B",
+      "3": "C",
+      "4": "D"
+    },
+    "answer": "5",
+    "explanation": "短い",
+    "source": {
+      "title": "Example",
+      "url": "https://example.com",
+      "publisher": "Example",
+      "retrieved_at": "2026-07-16"
+    },
+    "tags": [
+      "dev_env_devops"
+    ]
+  }
+]

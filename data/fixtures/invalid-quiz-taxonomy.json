@@ -1,0 +1,30 @@
+[
+  {
+    "id": "edge_infra_security-quiz-taxonomy-invalid",
+    "track": "cloudflare",
+    "category": "edge_infra_security",
+    "sub_category": "存在しない中分類",
+    "sub_sub_category": "存在しない小分類",
+    "difficulty": "basic",
+    "question": "Cloudflare Pagesの静的サイト公開設定に関する説明として最も適切なものを選べ。",
+    "options": {
+      "1": "Build output directoryは、ビルド後に公開される静的ファイルの出力先を示す。",
+      "2": "Build output directoryは、GitHubのユーザー名を変更するための設定である。",
+      "3": "Build output directoryは、TypeScriptのstrict modeを無効化するための設定である。",
+      "4": "Build output directoryは、Lighthouse CIの結果を削除するための設定である。"
+    },
+    "answer": "1",
+    "explanation": "本問題は、Cloudflare Pagesにおける静的サイト公開設定の理解を確認するためのものです。このfixtureでは、schemaとしては成立するが、sub_categoryとsub_sub_categoryがtaxonomy masterに存在しないため、taxonomy validationで失敗することを期待します。",
+    "source": {
+      "title": "Cloudflare Pages documentation",
+      "url": "https://developers.cloudflare.com/pages/",
+      "publisher": "Cloudflare",
+      "retrieved_at": "2026-07-16"
+    },
+    "tags": [
+      "edge_infra_security",
+      "cloudflare",
+      "pages"
+    ]
+  }
+]
