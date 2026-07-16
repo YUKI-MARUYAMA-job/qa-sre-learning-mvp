@@ -6,10 +6,16 @@
   "devDependencies": {
     "@lhci/cli": "0.15.1",
     "@types/bun": "1.3.14",
-    "typescript": "^7.0.2"
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "typescript": "^7.0.2",
+    "vite": "^8.1.5"
   },
   "peerDependencies": {},
   "dependencies": {
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "zod": "^4.4.3"
   },
   "scripts": {
@@ -39,6 +45,10 @@
     "quiz:report": "bun run src/cli/generate-quiz-report.ts",
     "quiz:report:check": "bun run quiz:report && git diff --exit-code -- reports/quiz-quality-report.md",
     "prepare:public-quiz-data": "bun run src/cli/prepare-public-quiz-data.ts",
-    "prepare:public-quiz-data:check": "bun run prepare:public-quiz-data && git diff --exit-code -- public/study-it/quiz_data.json"
+    "prepare:public-quiz-data:check": "bun run prepare:public-quiz-data && git diff --exit-code -- public/study-it/quiz_data.json",
+    "dev": "bunx --bun vite",
+    "client:typecheck": "tsc --noEmit -p tsconfig.client.json",
+    "client:build": "bun run prepare:public-quiz-data && bunx --bun vite build",
+    "client:preview": "bunx --bun vite preview"
   }
 }
