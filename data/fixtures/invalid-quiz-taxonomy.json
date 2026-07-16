@@ -14,7 +14,7 @@
       "4": "Build output directoryは、Lighthouse CIの結果を削除するための設定である。"
     },
     "answer": "1",
-    "explanation": "本問題は、Cloudflare Pagesにおける静的サイト公開設定の理解を確認するためのfixtureである。このfixtureでは、schemaとしては成立するが、sub_categoryとsub_sub_categoryがtaxonomy masterに存在しないため、taxonomy validationで失敗することを期待する。",
+    "explanation": "本問題は、Cloudflare Pagesにおける静的サイト公開設定の理解を確認するためのものです。このfixtureでは、schemaとしては成立するが、sub_categoryとsub_sub_categoryがtaxonomy masterに存在しないため、taxonomy validationで失敗することを期待します。",
     "source": {
       "title": "Cloudflare Pages documentation",
       "url": "https://developers.cloudflare.com/pages/",
