@@ -260,3 +260,8 @@ reports/release-notes-v0.1.0.md
 - external source freshness verification
 - referenced content factual verification
 - multi-user application behavior
+
+## Quiz Validation Docs
+
+| `docs/quiz-schema-taxonomy-validation.md` | クイズデータのschema/taxonomy validation方針 |
+
