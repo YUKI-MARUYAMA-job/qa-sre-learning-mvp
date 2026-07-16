@@ -33,6 +33,8 @@
     "lighthouse:healthcheck": "lhci healthcheck",
     "validate:quiz": "bun run src/cli/validate-quiz-data.ts",
     "validate:quiz-policy": "bun run src/cli/validate-quiz-policy.ts",
-    "validate:quiz-fixtures": "bun run src/cli/validate-quiz-fixtures.ts"
+    "validate:quiz-fixtures": "bun run src/cli/validate-quiz-fixtures.ts",
+    "validate:quiz-fixtures:verbose": "bun run src/cli/validate-quiz-fixtures.ts --verbose",
+    "validate:quiz-fixtures:json": "bun run src/cli/validate-quiz-fixtures.ts --json"
   }
 }
