@@ -43,6 +43,18 @@ test("taxonomy validation detects unknown sub category", async () => {
           publisher: "Example",
           retrieved_at: "2026-07-16"
         },
+        legal: {
+          is_official_question_reproduction: false,
+          is_copied_verbatim: false,
+          is_official_certification_claim: false,
+          is_affiliation_or_endorsement_claim: false,
+          is_modified_or_original: true,
+          attribution: "Source: Example"
+        },
+        review: {
+          status: "reviewed",
+          reviewed_at: "2026-07-16"
+        },
         tags: ["edge_infra_security"]
       }
     ],

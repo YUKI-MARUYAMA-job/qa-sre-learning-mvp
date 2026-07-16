@@ -18,7 +18,7 @@
     "validate:data": "bun run src/cli/validate-data.ts",
     "validate:policy": "bun run src/cli/validate-policy.ts",
     "report": "bun run src/cli/generate-report.ts",
-    "check": "bun run typecheck && bun test && bun run validate:data && bun run validate:policy && bun run validate:quiz && bun run validate:dependencies && bun run validate:public-safety && bun run report:check && bun run site:check && bun run validate:security-baseline && bun run validate:performance-baseline",
+    "check": "bun run typecheck && bun test && bun run validate:data && bun run validate:policy && bun run validate:quiz && bun run validate:quiz-policy && bun run validate:quiz-fixtures && bun run validate:dependencies && bun run validate:public-safety && bun run report:check && bun run site:check && bun run validate:security-baseline && bun run validate:performance-baseline",
     "build": "bun run check && mkdir -p dist && cp -R reports dist/reports && cp README.md dist/index.md",
     "report:check": "bun run report && git diff --exit-code -- reports/quality-report.md",
     "validate:dependencies": "bun run src/cli/check-dependency-policy.ts",
@@ -31,6 +31,8 @@
     "validate:deployment": "bun run src/cli/check-deployment-baseline.ts",
     "validate:readme-baseline": "bun run src/cli/check-readme-baseline.ts",
     "lighthouse:healthcheck": "lhci healthcheck",
-    "validate:quiz": "bun run src/cli/validate-quiz-data.ts"
+    "validate:quiz": "bun run src/cli/validate-quiz-data.ts",
+    "validate:quiz-policy": "bun run src/cli/validate-quiz-policy.ts",
+    "validate:quiz-fixtures": "bun run src/cli/validate-quiz-fixtures.ts"
   }
 }

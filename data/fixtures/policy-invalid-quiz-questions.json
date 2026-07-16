@@ -1,0 +1,82 @@
+[
+  {
+    "id": "edge_infra_security-quiz-policy-invalid",
+    "track": "cloudflare",
+    "category": "edge_infra_security",
+    "sub_category": "Cloudflare PagesとWorkers",
+    "sub_sub_category": "Pagesによる静的ホスティング",
+    "difficulty": "basic",
+    "question": "Cloudflare公式認定試験対策として、Cloudflare Pagesの公式問題に最も近い説明を選べ。",
+    "options": {
+      "1": "Build output directoryは、ビルド後に公開される静的ファイルの出力先を示す。",
+      "2": "Build output directoryは、GitHubのユーザー名を変更するための設定である。",
+      "3": "Build output directoryは、TypeScriptのstrict modeを無効化するための設定である。",
+      "4": "Build output directoryは、Lighthouse CIの結果を削除するための設定である。"
+    },
+    "answer": "1",
+    "explanation": "本問題は、Cloudflare公式問題集の実問再現として扱うための説明文である。これはschemaとtaxonomyは通るが、公式誤認、未レビュー、HTTP source URLなどによりpolicy validationで拒否されるべきfixtureである。",
+    "source": {
+      "title": "Cloudflare Pages documentation",
+      "url": "http://developers.cloudflare.com/pages/",
+      "publisher": "Cloudflare",
+      "retrieved_at": "2026-07-16"
+    },
+    "legal": {
+      "is_official_question_reproduction": false,
+      "is_copied_verbatim": false,
+      "is_official_certification_claim": true,
+      "is_affiliation_or_endorsement_claim": true,
+      "is_modified_or_original": true,
+      "attribution": "Cloudflare official certification exam reproduction"
+    },
+    "review": {
+      "status": "generated",
+      "reviewed_at": null
+    },
+    "tags": [
+      "edge_infra_security",
+      "cloudflare",
+      "pages"
+    ]
+  },
+  {
+    "id": "dev_env_devops-quiz-policy-invalid",
+    "track": "ap",
+    "category": "dev_env_devops",
+    "sub_category": "DockerとDevContainers",
+    "sub_sub_category": "再現可能開発コンテナ",
+    "difficulty": "basic",
+    "question": "IPAの過去問題を丸写しした公式問題として扱う、という説明として最も適切なものを選べ。",
+    "options": {
+      "1": "この項目はpolicy validationで拒否されるべきである。",
+      "2": "この項目は必ずWeb UIで優先表示されるべきである。",
+      "3": "この項目はsource URLなしでも常に公開してよい。",
+      "4": "この項目はreviewなしでも本番投入してよい。"
+    },
+    "answer": "1",
+    "explanation": "本問題は、IPA公開過去問題の扱いに関するpolicy validation用fixtureである。schemaとtaxonomyは通るが、丸写し、公式問題再現、未レビュー状態を検出できるかを確認する。",
+    "source": {
+      "title": "IPA past examination questions",
+      "url": "https://www.ipa.go.jp/shiken/mondai-kaiotu/index.html",
+      "publisher": "IPA",
+      "retrieved_at": "2026-07-16"
+    },
+    "legal": {
+      "is_official_question_reproduction": true,
+      "is_copied_verbatim": true,
+      "is_official_certification_claim": false,
+      "is_affiliation_or_endorsement_claim": false,
+      "is_modified_or_original": false,
+      "attribution": "Source: IPA past examination questions"
+    },
+    "review": {
+      "status": "generated",
+      "reviewed_at": null
+    },
+    "tags": [
+      "dev_env_devops",
+      "ipa",
+      "policy"
+    ]
+  }
+]
