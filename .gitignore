@@ -20,3 +20,5 @@ private-notes/
 
 # Lighthouse CI output
 .lighthouseci/
+
+.last-run.json

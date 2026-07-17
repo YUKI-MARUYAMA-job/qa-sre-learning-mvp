@@ -546,3 +546,39 @@ UI:
   supports question, answer, feedback, result, and restart
 ```
 
+
+## Test Responsibility Split
+
+Phase 7B 以降は、unit / validation tests と E2E tests を分離する。
+
+```text
+tests/
+  Bun test runner が実行する unit / validation tests
+
+e2e/
+  Playwright test runner が実行する browser smoke tests
+```
+
+## Test Commands
+
+```bash
+bun run test:unit
+bun run test:e2e
+bun run check
+```
+
+`bun test` が Playwright 専用の test file を誤って実行しないように、unit test は `tests/` に限定する。
+
+Playwright test file は、必要に応じて以下のように命名する。
+
+```text
+e2e/quiz-smoke.e2e.ts
+```
+
+`playwright.config.ts` では、以下のように E2E test file を明示する。
+
+```ts
+testDir: "e2e",
+testMatch: "**/*.e2e.ts",
+```
+
