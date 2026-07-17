@@ -265,3 +265,36 @@ reports/release-notes-v0.1.0.md
 
 | `docs/quiz-schema-taxonomy-validation.md` | クイズデータのschema/taxonomy validation方針 |
 
+
+## Remote Quality Gates
+
+This project separates full quality checks from deployment builds.
+
+```text
+GitHub Actions:
+  bun run check
+
+Cloudflare Pages:
+  bun run pages:build
+```
+
+`check` includes type checks, unit tests, data validation, report freshness checks, client build, security/performance baselines, and Playwright E2E smoke testing.
+
+`pages:build` excludes Playwright E2E and focuses on generating the deployable `dist/app` output.
+
+## Cloudflare Pages Settings
+
+```text
+Build command:
+  bun install --frozen-lockfile && bun run pages:build
+
+Build output directory:
+  dist/app
+
+Root directory:
+  blank
+
+NODE_VERSION:
+  22.16.0
+```
+
