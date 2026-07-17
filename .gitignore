@@ -16,6 +16,7 @@ reports/*.tmp.md
 
 # Private interview preparation notes
 docs/private/
+docs/interview/
 private-notes/
 
 # Lighthouse CI output
