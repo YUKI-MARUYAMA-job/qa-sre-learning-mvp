@@ -1,6 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
+  workers: process.env.CI ? 1 : undefined,
   testDir: "e2e",
   testMatch: "**/*.e2e.ts",
   timeout: 30_000,
