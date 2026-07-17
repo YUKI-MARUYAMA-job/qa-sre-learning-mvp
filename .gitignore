@@ -26,9 +26,5 @@ private-notes/
 playwright-report/
 test-results/
 
-# Playwright generated artifacts
-playwright-report/
-test-results/
-
 # Local build outputs
 dist/
