@@ -1,26 +1,37 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const previewPort = 4173;
+const previewHost = "127.0.0.1";
+const previewUrl = `http://${previewHost}:${previewPort}`;
+
 export default defineConfig({
-  workers: process.env.CI ? 1 : undefined,
   testDir: "e2e",
   testMatch: "**/*.e2e.ts",
+
   timeout: 30_000,
   expect: {
     timeout: 5_000
   },
-  fullyParallel: true,
+
+  fullyParallel: false,
+  workers: process.env.CI ? 1 : undefined,
+
   reporter: [["list"], ["html", { open: "never" }]],
+
   use: {
-    baseURL: "http://127.0.0.1:4173",
+    baseURL: previewUrl,
     trace: "on-first-retry"
   },
+
   webServer: {
-    command:
-      "bun run client:build && bun run client:preview -- --host 127.0.0.1 --port 4173",
-    url: "http://127.0.0.1:4173",
+    command: "bun run e2e:webserver",
+    port: previewPort,
+    timeout: 180_000,
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000
+    stdout: "pipe",
+    stderr: "pipe"
   },
+
   projects: [
     {
       name: "chromium",
