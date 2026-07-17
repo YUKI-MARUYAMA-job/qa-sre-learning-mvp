@@ -349,3 +349,55 @@ output:
 
 この責務分離により、GitHub Actions では品質保証を行い、Cloudflare Pages では静的アプリケーションのビルドと配信に集中する。
 
+
+## Portfolio Demo Flow
+
+このプロジェクトは、以下の順番で確認できる。
+
+```text
+1. READMEでプロジェクトの目的を確認する
+2. Cloudflare Pages上のdemo UIを開く
+3. クイズを1周操作する
+4. reports/portfolio-readiness.md で品質保証の到達点を確認する
+5. reports/quiz-quality-report.md でクイズデータの分布と検証結果を確認する
+6. GitHub Actions の Quality Gate で remote CI の成功状態を確認する
+```
+
+## What This Project Demonstrates
+
+```text
+QA:
+  unit test
+  invalid fixture test
+  schema validation
+  taxonomy validation
+  policy validation
+  E2E smoke test
+
+SRE:
+  GitHub Actions quality gate
+  Cloudflare Pages deployment
+  deployment-safe build command
+  CI/CD responsibility split
+
+Data quality:
+  raw quiz data validation
+  public quiz data projection
+  internal metadata exclusion
+  report freshness check
+
+Frontend:
+  React / Vite quiz UI
+  public JSON fetch
+  answer feedback
+  result display
+```
+
+## Reproducible Commands
+
+```bash
+bun install --frozen-lockfile
+bun run pages:build
+bun run check
+```
+
