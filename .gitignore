@@ -22,3 +22,6 @@ private-notes/
 .lighthouseci/
 
 .last-run.json
+# Playwright generated artifacts
+playwright-report/
+test-results/
