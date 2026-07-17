@@ -298,3 +298,54 @@ NODE_VERSION:
   22.16.0
 ```
 
+
+## Remote Quality Gates
+
+このプロジェクトでは、品質チェックとデプロイ用ビルドを分離している。
+
+```text
+GitHub Actions:
+  bun run check
+
+Cloudflare Pages:
+  bun run pages:build
+```
+
+`check` は、local / GitHub Actions 向けの完全品質ゲートである。
+以下をまとめて実行する。
+
+```text
+- TypeScript typecheck
+- client typecheck
+- unit tests
+- data validation
+- policy validation
+- quiz schema validation
+- quiz taxonomy validation
+- quiz policy validation
+- fixture responsibility validation
+- report freshness check
+- public quiz data freshness check
+- dependency policy validation
+- public repository safety check
+- static site build check
+- client build
+- security baseline check
+- performance baseline check
+- Playwright E2E smoke test
+```
+
+`pages:build` は、Cloudflare Pages 向けのデプロイ用ビルドである。  
+Playwright E2E は含めず、デプロイ可能な `dist/app` の生成に責務を限定する。
+
+```text
+pages:build:
+  pages:verify
+  client:build
+
+output:
+  dist/app
+```
+
+この責務分離により、GitHub Actions では品質保証を行い、Cloudflare Pages では静的アプリケーションのビルドと配信に集中する。
+
