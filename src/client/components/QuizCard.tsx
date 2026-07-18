@@ -40,21 +40,58 @@ export function QuizCard({
       <p className="question-text">{question.question}</p>
 
       <div className="options" aria-label="選択肢">
-        {answerKeys.map((key) => (
-          <button
-            key={key}
-            type="button"
-            className={`option-button ${selectedAnswer === key ? "selected" : ""}`}
-            onClick={() => onSelectAnswer(key)}
-            disabled={isAnswered}
-          >
-            <strong>{key}.</strong> {question.options[key]}
-          </button>
-        ))}
+        {answerKeys.map((key) => {
+          const isSelected = selectedAnswer === key;
+          const isCorrectOption = question.answer === key;
+          const isIncorrectSelected =
+            isAnswered && isSelected && !isCorrectOption;
+
+          const optionClassName = [
+            "option-button",
+            isSelected ? "selected" : "",
+            isAnswered && isCorrectOption ? "correct" : "",
+            isIncorrectSelected ? "incorrect" : ""
+          ]
+            .filter(Boolean)
+            .join(" ");
+
+          const statusLabel =
+            isAnswered && isCorrectOption
+              ? "正解"
+              : isIncorrectSelected
+                ? "不正解"
+                : "";
+
+          return (
+            <button
+              key={key}
+              type="button"
+              className={optionClassName}
+              onClick={() => onSelectAnswer(key)}
+              disabled={isAnswered}
+              aria-label={`${key}. ${question.options[key]}${statusLabel ? ` ${statusLabel}` : ""
+                }`}
+            >
+              <strong>{key}.</strong>
+              <span>{question.options[key]}</span>
+
+              {statusLabel ? (
+                <span className="option-status" aria-hidden="true">
+                  {statusLabel}
+                </span>
+              ) : null}
+            </button>
+          );
+        })}
       </div>
 
       {isAnswered && (
-        <div className="feedback">
+        <div
+          className={`feedback ${isCorrect ? "feedback--correct" : "feedback--incorrect"
+            }`}
+          role="status"
+          aria-live="polite"
+        >
           <h3>{isCorrect ? "正解" : "不正解"}</h3>
           <p>
             正答: <strong>{question.answer}</strong>

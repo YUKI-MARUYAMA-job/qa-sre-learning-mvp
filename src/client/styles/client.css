@@ -5,8 +5,28 @@
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
+
   color: #172033;
   background: #f7f8fb;
+
+  --color-text: #172033;
+  --color-muted: #64748b;
+  --color-panel: #ffffff;
+  --color-border: #d9deea;
+  --color-soft-border: #cfd6e6;
+  --color-soft-bg: #f4f6fb;
+  --color-selected-bg: #eef2ff;
+  --color-selected-border: #334155;
+
+  --color-correct-border: #1f883d;
+  --color-correct-bg: #dafbe1;
+  --color-correct-text: #116329;
+
+  --color-incorrect-border: #cf222e;
+  --color-incorrect-bg: #ffebe9;
+  --color-incorrect-text: #a40e26;
+
+  --focus-ring: 0 0 0 3px rgb(51 65 85 / 24%);
 }
 
 * {
@@ -19,6 +39,11 @@ body {
 
 button {
   font: inherit;
+}
+
+button:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 .app-shell {
@@ -42,8 +67,8 @@ button {
 }
 
 .panel {
-  background: #ffffff;
-  border: 1px solid #d9deea;
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 10px 30px rgb(15 23 42 / 6%);
@@ -58,12 +83,12 @@ button {
 
 .badge {
   display: inline-flex;
-  border: 1px solid #cfd6e6;
+  border: 1px solid var(--color-soft-border);
   border-radius: 999px;
   padding: 4px 10px;
   font-size: 0.85rem;
   color: #32415f;
-  background: #f4f6fb;
+  background: var(--color-soft-bg);
 }
 
 .question-text {
@@ -79,21 +104,60 @@ button {
 }
 
 .option-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
   text-align: left;
-  border: 1px solid #cfd6e6;
+  border: 1px solid var(--color-soft-border);
   border-radius: 12px;
   background: #ffffff;
+  color: var(--color-text);
   padding: 14px 16px;
   cursor: pointer;
 }
 
-.option-button:hover {
-  background: #f4f6fb;
+.option-button:not(:disabled):hover {
+  background: var(--color-soft-bg);
+}
+
+.option-button:disabled {
+  cursor: default;
+  opacity: 1;
 }
 
 .option-button.selected {
-  border-color: #334155;
-  background: #eef2ff;
+  border-color: var(--color-selected-border);
+  background: var(--color-selected-bg);
+}
+
+.option-button.correct {
+  border-color: var(--color-correct-border);
+  background: var(--color-correct-bg);
+}
+
+.option-button.incorrect {
+  border-color: var(--color-incorrect-border);
+  background: var(--color-incorrect-bg);
+}
+
+.option-button.correct,
+.option-button.incorrect {
+  font-weight: 600;
+}
+
+.option-status {
+  margin-left: auto;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.option-button.correct .option-status {
+  color: var(--color-correct-text);
+}
+
+.option-button.incorrect .option-status {
+  color: var(--color-incorrect-text);
 }
 
 .feedback {
@@ -101,7 +165,29 @@ button {
   padding: 16px;
   margin-top: 16px;
   background: #f8fafc;
-  border: 1px solid #d9deea;
+  border: 1px solid var(--color-border);
+}
+
+.feedback h3 {
+  margin-top: 0;
+}
+
+.feedback--correct {
+  border-color: var(--color-correct-border);
+  background: var(--color-correct-bg);
+  color: var(--color-correct-text);
+}
+
+.feedback--incorrect {
+  border-color: var(--color-incorrect-border);
+  background: var(--color-incorrect-bg);
+  color: var(--color-incorrect-text);
+}
+
+.feedback--correct .muted,
+.feedback--incorrect .muted {
+  color: currentColor;
+  opacity: 0.78;
 }
 
 .actions {
@@ -119,8 +205,13 @@ button {
   cursor: pointer;
 }
 
+.primary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .secondary-button {
-  border: 1px solid #cfd6e6;
+  border: 1px solid var(--color-soft-border);
   border-radius: 12px;
   background: #ffffff;
   color: #172033;
@@ -128,10 +219,33 @@ button {
   cursor: pointer;
 }
 
+.secondary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .muted {
-  color: #64748b;
+  color: var(--color-muted);
 }
 
 .error {
   color: #991b1b;
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    padding: 24px 14px;
+  }
+
+  .panel {
+    padding: 18px;
+  }
+
+  .option-button {
+    align-items: flex-start;
+  }
+
+  .option-status {
+    margin-left: 0;
+  }
 }
