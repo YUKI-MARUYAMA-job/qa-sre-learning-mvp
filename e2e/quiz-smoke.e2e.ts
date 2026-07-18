@@ -63,6 +63,14 @@ test("quiz app loads and completes a minimal session", async ({ page }) => {
     /Score:\s*\d+\s*\/\s*\d+/i
   );
 
+  await expect(page.getByTestId("result-accuracy")).toContainText(
+    /Accuracy:\s*\d+%/i
+  );
+
+  await expect(
+    page.getByRole("region", { name: /カテゴリ別スコア/ })
+  ).toBeVisible();
+
   await page.getByRole("button", { name: /もう一度解く/ }).click();
 
   await expect(page.getByText(/Question/i)).toBeVisible();
