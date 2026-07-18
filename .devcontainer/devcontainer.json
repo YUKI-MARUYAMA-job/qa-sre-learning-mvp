@@ -1,0 +1,42 @@
+{
+  "name": "QA SRE Learning MVP",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "remoteUser": "node",
+  "forwardPorts": [5173, 8787],
+  "portsAttributes": {
+    "5173": {
+      "label": "Vite Client Preview",
+      "onAutoForward": "notify",
+      "requireLocalPort": true
+    },
+    "8787": {
+      "label": "Cloudflare Wrangler / Future Worker",
+      "onAutoForward": "notify",
+      "requireLocalPort": true
+    }
+  },
+  "containerEnv": {
+    "CI": "1",
+    "TMPDIR": "/tmp"
+  },
+  "remoteEnv": {
+    "TMPDIR": "/tmp"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "bierner.markdown-mermaid",
+        "ms-azuretools.vscode-docker",
+        "ms-playwright.playwright"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "typescript.tsdk": "node_modules/typescript/lib"
+      }
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/post-create.sh"
+}

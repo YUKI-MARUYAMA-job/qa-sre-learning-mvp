@@ -427,3 +427,50 @@ Cloudflare Pagesで公開しているQA/SRE学習用クイズアプリです。
 - Security baseline check
 - Performance baseline check
 - Playwright E2E
+
+## Dev Container
+
+このリポジトリには、VS Code Dev Containers 向けの開発環境設定を含めています。
+
+Dev Containerを利用すると、Bun、TypeScript、Vite、Playwrightなどの開発環境をコンテナ内で再現できます。  
+ローカル環境差による不具合を減らし、品質ゲートを安定して実行しやすくすることを目的としています。
+
+### Dev Containerで開く手順
+
+1. Docker Desktopをインストールする。
+2. VS CodeにDev Containers拡張機能をインストールする。
+3. このリポジトリをVS Codeで開く。
+4. コマンドパレットから `Dev Containers: Reopen in Container` を実行する。
+
+コンテナ作成後、依存関係のインストールと軽量な型チェックが実行されます。
+
+### コンテナ内での手動確認
+
+```bash
+bun run typecheck
+bun run client:typecheck
+bun run test:unit
+bun run client:build
+CI=1 bun run check
+```
+
+### コンテナ内でPlaywright E2Eを実行する場合
+
+Playwright E2EをDev Container内で実行する場合は、必要に応じてChromiumをインストールします。
+
+```bash
+bunx playwright install chromium
+CI=1 bunx playwright test e2e/quiz-smoke.e2e.ts --trace on
+```
+
+
+### Dev ContainerでE2Eを実行する場合
+
+Dev Container内でPlaywright E2Eを実行する場合は、初回のみChromiumをインストールします。
+
+```bash
+bunx playwright install chromium
+CI=1 bunx playwright test e2e/quiz-smoke.e2e.ts --trace on
+```
+
+`Host system is missing dependencies to run browsers` が表示される場合は、DevContainerのDockerfileにPlaywright Chromium実行用のLinux共有ライブラリが含まれているか確認してください。
