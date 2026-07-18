@@ -58,5 +58,6 @@
     "pages:verify": "bun run typecheck && bun run client:typecheck && bun run test:unit && bun run validate:data && bun run validate:policy && bun run validate:quiz && bun run validate:quiz-policy && bun run validate:quiz-fixtures && bun run quiz:report:check && bun run prepare:public-quiz-data:check && bun run validate:dependencies && bun run validate:public-safety && bun run report:check && bun run site:check && bun run validate:security-baseline && bun run validate:performance-baseline",
     "pages:build": "bun run pages:verify && bun run client:build",
     "e2e:webserver": "bun run client:build && bun run client:preview -- --host 127.0.0.1 --port 4173 --strictPort"
-  }
+  },
+  "license": "MIT"
 }
