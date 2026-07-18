@@ -57,6 +57,336 @@
         "cloudflare",
         "pages"
       ]
+    },
+    {
+      "id": "frontend_languages-phase10-typescript-typecheck-001",
+      "track": "ap",
+      "category": "frontend_languages",
+      "sub_category": "TypeScript",
+      "sub_sub_category": "基本静的型付け",
+      "difficulty": "basic",
+      "question": "以下のTypeScriptコードを `bun run typecheck` で検査した場合の結果として、最も適切なものを選べ。\\n\\n```typescript\\nlet retryCount: number = 3;\\nretryCount = \\\"4\\\";\\n```",
+      "options": {
+        "1": "文字列は自動的に数値へ変換されるため、typecheckは成功する。",
+        "2": "number型の変数にstring型の値を代入しているため、静的型チェックでエラーとして検出される。",
+        "3": "TypeScriptの型注釈は実行時専用なので、typecheckでは検出されない。",
+        "4": "Vite buildを実行しない限り、TypeScriptの型エラーは検出できない。"
+      },
+      "answer": "2",
+      "explanation": "本問題は、TypeScriptの<b>基本静的型付け</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`retryCount` は `number` 型として宣言されているため、`string` 型の値である `\\\"4\\\"` を代入すると、静的型チェックで型不整合として検出されます。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】不適切です。TypeScriptの型チェックは、暗黙的な型変換を前提に型不整合を許容するものではありません。<br>【選択肢2】<b>適切な選択肢</b>です。number型にstring型を代入しているため、typecheckで検出されます。<br>【選択肢3】不適切です。TypeScriptの型注釈は主にコンパイル時・静的解析時に利用されます。<br>【選択肢4】不適切です。`tsc --noEmit` などのtypecheckにより、build出力を生成せずに型エラーを検出できます。<br><br><b>■ 本プロジェクトとの関係</b><br>本プロジェクトでは、`bun run check` にtypecheckを含めることで、型不整合をGitHub Actions上の<b>Quality Gate</b>で早期に検出する設計としています。",
+      "source": {
+        "title": "Project package scripts and TypeScript configuration",
+        "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/blob/main/package.json",
+        "publisher": "This project",
+        "retrieved_at": "2026-07-18"
+      },
+      "tags": [
+        "frontend_languages",
+        "typescript",
+        "typecheck",
+        "quality-gate",
+        "frontend"
+      ]
+    },
+    {
+      "id": "frontend_languages-phase10-typescript-typecheck-002",
+      "track": "ap",
+      "category": "frontend_languages",
+      "sub_category": "TypeScript",
+      "sub_sub_category": "基本静的型付け",
+      "difficulty": "basic",
+      "question": "以下の `package.json` のscript定義について、`typecheck` の役割として最も適切なものを選べ。\\n\\n```json\\n{\\n  \\\"scripts\\\": {\\n    \\\"typecheck\\\": \\\"tsc --noEmit\\\",\\n    \\\"client:build\\\": \\\"bun run prepare:public-quiz-data && bunx --bun vite build\\\"\\n  }\\n}\\n```",
+      "options": {
+        "1": "JavaScriptファイルを出力し、本番用bundleを生成する。",
+        "2": "型の静的解析を行い、build出力を生成せずに型不整合を検出する。",
+        "3": "PlaywrightのHTMLレポートを生成する。",
+        "4": "Cloudflare PagesのBuild output directoryを自動設定する。"
+      },
+      "answer": "2",
+      "explanation": "本問題は、`tsc --noEmit` による<b>typecheckの目的</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`--noEmit` は、JavaScriptなどの出力を生成せず、TypeScriptの型チェックを行うための設定です。これにより、build処理とは別に型安全性を検証できます。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】不適切です。`--noEmit` は出力を生成しません。<br>【選択肢2】<b>適切な選択肢</b>です。型の静的解析により、型不整合を検出します。<br>【選択肢3】不適切です。PlaywrightのHTMLレポート生成とは別の責務です。<br>【選択肢4】不適切です。Cloudflare Pagesの設定を自動変更するものではありません。<br><br><b>■ 本プロジェクトとの関係</b><br>本プロジェクトでは、typecheckとclient buildを分離することで、CI上で型安全性を独立した品質ゲートとして確認できるようにしています。",
+      "source": {
+        "title": "Project package scripts",
+        "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/blob/main/package.json",
+        "publisher": "This project",
+        "retrieved_at": "2026-07-18"
+      },
+      "tags": [
+        "frontend_languages",
+        "typescript",
+        "tsc",
+        "noemit",
+        "typecheck"
+      ]
+    },
+    {
+      "id": "frontend_languages-phase10-typescript-typecheck-003",
+      "track": "ap",
+      "category": "frontend_languages",
+      "sub_category": "TypeScript",
+      "sub_sub_category": "基本静的型付け",
+      "difficulty": "basic",
+      "question": "以下のTypeScriptコードでは、プロパティ名にタイポが含まれている。このコードをtypecheckした場合の説明として最も適切なものを選べ。\\n\\n```typescript\\nconst quizItem = {\\n  question: \\\"TypeScriptの目的は何か\\\",\\n  answer: \\\"1\\\"\\n};\\n\\nconsole.log(quizItem.answr);\\n```",
+      "options": {
+        "1": "`answr` は `answer` と近いため、TypeScriptが自動的に補正して成功する。",
+        "2": "存在しないプロパティへのアクセスとして、静的型チェックでエラーとして検出される。",
+        "3": "実行時にのみReferenceErrorとなり、typecheckでは検出されない。",
+        "4": "JSON形式ではないため、TypeScriptはこのコードを検査できない。"
+      },
+      "answer": "2",
+      "explanation": "本問題は、TypeScriptの<b>プロパティ存在確認</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`quizItem` には `question` と `answer` は存在しますが、`answr` は存在しません。TypeScriptはオブジェクトの型推論に基づき、存在しないプロパティへのアクセスを静的型チェックで検出できます。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】不適切です。TypeScriptは推測でソースコードを書き換えるものではありません。<br>【選択肢2】<b>適切な選択肢</b>です。存在しないプロパティへのアクセスはtypecheckで検出されます。<br>【選択肢3】不適切です。TypeScriptでは実行前の静的解析で検出可能です。<br>【選択肢4】不適切です。これはTypeScriptのオブジェクトリテラルであり、検査対象になります。<br><br><b>■ 本プロジェクトとの関係</b><br>クイズアプリでは、`question` や `answer` のようなデータfield名の取り違えがUI不具合につながるため、typecheckは実装ミスを早期に検出する品質ゲートとして機能します。",
+      "source": {
+        "title": "Project TypeScript usage",
+        "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/tree/main/src",
+        "publisher": "This project",
+        "retrieved_at": "2026-07-18"
+      },
+      "tags": [
+        "frontend_languages",
+        "typescript",
+        "property-access",
+        "typecheck",
+        "quiz-data"
+      ]
+    },
+    {
+      "id": "frontend_languages-phase10-typescript-typecheck-004",
+      "track": "ap",
+      "category": "frontend_languages",
+      "sub_category": "TypeScript",
+      "sub_sub_category": "基本静的型付け",
+      "difficulty": "basic",
+      "question": "以下の関数呼び出しについて、TypeScriptのtypecheck結果として最も適切なものを選べ。\\n\\n```typescript\\nfunction buildScoreLabel(score: number): string {\\n  return `Score: ${score}`;\\n}\\n\\nconst label = buildScoreLabel(\\\"10\\\");\\n```",
+      "options": {
+        "1": "引数の文字列は数値へ自動変換されるため、typecheckは成功する。",
+        "2": "関数の引数型がnumberであるため、stringを渡すと静的型チェックでエラーとして検出される。",
+        "3": "テンプレート文字列を使っているため、引数の型は常にstringとして扱われる。",
+        "4": "戻り値がstringなので、引数にもstringを渡す必要がある。"
+      },
+      "answer": "2",
+      "explanation": "本問題は、TypeScriptにおける<b>関数シグネチャの型チェック</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`buildScoreLabel` は `score: number` を受け取る関数として定義されています。そのため、`\\\"10\\\"` のようなstring型の値を渡すと、引数型の不一致としてtypecheckで検出されます。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】不適切です。TypeScriptの型チェックは自動変換を前提に型不一致を許容するものではありません。<br>【選択肢2】<b>適切な選択肢</b>です。関数の引数型と呼び出し側の値の型が一致していません。<br>【選択肢3】不適切です。テンプレート文字列の利用は、関数引数の型定義を変更しません。<br>【選択肢4】不適切です。戻り値の型と引数の型は別々に定義できます。<br><br><b>■ 本プロジェクトとの関係</b><br>UIやデータ変換処理では、関数の入力と出力を型で契約することで、クイズデータ生成や表示処理の不整合を早期に検出できます。",
+      "source": {
+        "title": "Project TypeScript usage",
+        "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/tree/main/src",
+        "publisher": "This project",
+        "retrieved_at": "2026-07-18"
+      },
+      "tags": [
+        "frontend_languages",
+        "typescript",
+        "function-signature",
+        "typecheck",
+        "frontend"
+      ]
+    },
+    {
+      "id": "frontend_languages-phase10-typescript-typecheck-005",
+      "track": "ap",
+      "category": "frontend_languages",
+      "sub_category": "TypeScript",
+      "sub_sub_category": "基本静的型付け",
+      "difficulty": "basic",
+      "question": "以下の `package.json` の `check` scriptについて、CI上でこのscriptを実行する目的として最も適切なものを選べ。\\n\\n```json\\n{\\n  \\\"scripts\\\": {\\n    \\\"check\\\": \\\"bun run typecheck && bun run test:unit && bun run client:build && bun run test:e2e\\\"\\n  }\\n}\\n```",
+      "options": {
+        "1": "型チェック、単体テスト、build、E2Eをまとめて実行し、変更が品質ゲートを通過できるか確認する。",
+        "2": "Cloudflare PagesのRoot directoryを自動的に空欄へ変更する。",
+        "3": "Gitのcommit messageを自動生成する。",
+        "4": "public JSONからreview metadataを意図的に公開する。"
+      },
+      "answer": "1",
+      "explanation": "本問題は、TypeScriptを含む<b>品質ゲートとしてのcheck script</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`check` scriptは、typecheck、unit test、client build、E2Eなどをまとめて実行することで、変更がCI上の品質基準を満たすか確認する役割を持ちます。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】<b>適切な選択肢</b>です。複数の検証を連結し、品質ゲートとして機能します。<br>【選択肢2】不適切です。package scriptはCloudflare Pagesの画面設定を直接変更しません。<br>【選択肢3】不適切です。commit message生成のためのscriptではありません。<br>【選択肢4】不適切です。public JSONに内部metadataを出すことは避けるべきです。<br><br><b>■ 本プロジェクトとの関係</b><br>本プロジェクトでは、GitHub Actionsで `bun run check` を実行することで、typecheckを含む複数の検証をremote品質ゲートとして扱います。",
+      "source": {
+        "title": "Project package scripts",
+        "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/blob/main/package.json",
+        "publisher": "This project",
+        "retrieved_at": "2026-07-18"
+      },
+      "tags": [
+        "frontend_languages",
+        "typescript",
+        "check",
+        "quality-gate",
+        "ci"
+      ]
+    },
+    {
+      "id": "frontend_languages-phase10-typescript-typecheck-006",
+      "track": "ap",
+      "category": "frontend_languages",
+      "sub_category": "TypeScript",
+      "sub_sub_category": "基本静的型付け",
+      "difficulty": "basic",
+      "question": "以下のTypeScriptコードにおいて、`any` を使用した場合の問題点として最も適切なものを選べ。\\n\\n```typescript\\nfunction renderAnswer(answer: any) {\\n  return answer.toUpperCase();\\n}\\n\\nrenderAnswer(1);\\n```",
+      "options": {
+        "1": "`any` により型チェックが弱まり、不適切な値に対する操作がコンパイル時に検出されにくくなる。",
+        "2": "`any` を使うと、TypeScriptは必ず実行時に値をstringへ変換する。",
+        "3": "`any` はCloudflare Pages専用の型であり、frontendでは利用できない。",
+        "4": "`any` を使うと、PlaywrightのE2Eが自動的に失敗する。"
+      },
+      "answer": "1",
+      "explanation": "本問題は、TypeScriptにおける<b>any型と型安全性</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`any` はTypeScriptの型チェックを弱めるため、本来検出したい不適切な値の操作を見逃す可能性があります。例では数値に対して文字列メソッドを呼び出す危険があります。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】<b>適切な選択肢</b>です。any型は型安全性を損なう可能性があります。<br>【選択肢2】不適切です。anyは自動変換を保証するものではありません。<br>【選択肢3】不適切です。Cloudflare Pages専用の型ではありません。<br>【選択肢4】不適切です。anyの使用だけでPlaywrightが自動的に失敗するわけではありません。<br><br><b>■ 本プロジェクトとの関係</b><br>本プロジェクトでは、typecheckを品質ゲートとして機能させるため、型安全性を損なう実装を避けることが重要です。anyに依存すると、CI上のtypecheckで検出できるはずの問題を見逃す可能性があります。",
+      "source": {
+        "title": "Project TypeScript usage",
+        "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/tree/main/src",
+        "publisher": "This project",
+        "retrieved_at": "2026-07-18"
+      },
+      "tags": [
+        "frontend_languages",
+        "typescript",
+        "any",
+        "type-safety",
+        "typecheck"
+      ]
+    },
+    {
+      "id": "frontend_languages-phase10-typescript-typecheck-007",
+      "track": "ap",
+      "category": "frontend_languages",
+      "sub_category": "TypeScript",
+      "sub_sub_category": "基本静的型付け",
+      "difficulty": "basic",
+      "question": "以下の `tsconfig.json` スニペットにおいて、型チェックを厳格にする中心的な設定として最も適切なものを選べ。\\n\\n```json\\n{\\n  \\\"compilerOptions\\\": {\\n    \\\"target\\\": \\\"ESNext\\\",\\n    \\\"strict\\\": true,\\n    \\\"noEmit\\\": true\\n  }\\n}\\n```",
+      "options": {
+        "1": "`target`: 出力するJavaScriptの構文水準に関する設定であり、厳格な型チェックの中心ではない。",
+        "2": "`strict`: 複数の厳格な型チェックを有効化する中心的な設定である。",
+        "3": "`noEmit`: Cloudflare Pagesへのdeployを自動実行する設定である。",
+        "4": "`compilerOptions`: Playwrightのbrowser installを実行する設定である。"
+      },
+      "answer": "2",
+      "explanation": "本問題は、TypeScriptの<b>strict設定</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`strict` は、TypeScriptの厳格な型チェックを有効化する中心的な設定です。これにより、型安全性を高め、CI上のtypecheckを品質ゲートとして機能させやすくなります。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】不適切です。`target` は出力されるJavaScriptの構文水準に関する設定です。<br>【選択肢2】<b>適切な選択肢</b>です。strict設定は型チェックを厳格化します。<br>【選択肢3】不適切です。`noEmit` は出力を生成しない設定であり、deploy自動実行ではありません。<br>【選択肢4】不適切です。Playwrightのbrowser installとは関係ありません。<br><br><b>■ 本プロジェクトとの関係</b><br>本プロジェクトでは、typecheckをCI品質ゲートとして扱うため、TypeScript設定で型安全性を維持することが重要です。",
+      "source": {
+        "title": "Project TypeScript configuration",
+        "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/blob/main/tsconfig.json",
+        "publisher": "This project",
+        "retrieved_at": "2026-07-18"
+      },
+      "tags": [
+        "frontend_languages",
+        "typescript",
+        "tsconfig",
+        "strict",
+        "typecheck"
+      ]
+    },
+    {
+      "id": "frontend_languages-phase10-typescript-undefined-001",
+      "track": "ap",
+      "category": "frontend_languages",
+      "sub_category": "TypeScript",
+      "sub_sub_category": "高度な型システム",
+      "difficulty": "basic",
+      "question": "以下のTypeScriptコードでは、配列の先頭要素を取得している。`noUncheckedIndexedAccess` を有効にした場合の型安全性に関する説明として最も適切なものを選べ。\\n\\n```typescript\\nconst questions: string[] = [];\\nconst firstQuestion = questions[0];\\n```",
+      "options": {
+        "1": "`firstQuestion` は常にstring型であり、undefinedの可能性は考慮されない。",
+        "2": "配列要素が存在しない可能性を考慮し、`firstQuestion` は `string | undefined` として扱われる。",
+        "3": "空配列へのアクセスは必ずコンパイル時に例外として停止する。",
+        "4": "TypeScriptは配列アクセスをすべてany型に変換する。"
+      },
+      "answer": "2",
+      "explanation": "本問題は、TypeScriptの<b>optional / undefined対策</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`noUncheckedIndexedAccess` を有効にすると、配列やオブジェクトのインデックスアクセスに対して、値が存在しない可能性を型に反映します。そのため、`questions[0]` は `string | undefined` として扱われます。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】不適切です。設定が有効な場合、undefinedの可能性が考慮されます。<br>【選択肢2】<b>適切な選択肢</b>です。存在しない要素へのアクセス可能性を型として扱います。<br>【選択肢3】不適切です。TypeScriptは空配列アクセスを常にコンパイル時例外として停止するわけではありません。<br>【選択肢4】不適切です。any型へ変換する設定ではありません。<br><br><b>■ 本プロジェクトとの関係</b><br>クイズアプリでは、現在の問題や選択肢を配列から取り出す処理が発生します。undefinedの可能性を型で扱うことで、UI表示時の実行時エラーを減らせます。",
+      "source": {
+        "title": "Project TypeScript configuration",
+        "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/blob/main/tsconfig.json",
+        "publisher": "This project",
+        "retrieved_at": "2026-07-18"
+      },
+      "tags": [
+        "frontend_languages",
+        "typescript",
+        "undefined",
+        "noUncheckedIndexedAccess",
+        "type-safety"
+      ]
+    },
+    {
+      "id": "frontend_languages-phase10-typescript-undefined-002",
+      "track": "ap",
+      "category": "frontend_languages",
+      "sub_category": "TypeScript",
+      "sub_sub_category": "高度な型システム",
+      "difficulty": "basic",
+      "question": "以下のコードで、`currentQuestion` が `undefined` の可能性を持つ場合に、最も安全な修正方針はどれか。\\n\\n```typescript\\ntype Question = {\\n  id: string;\\n  question: string;\\n};\\n\\nconst currentQuestion: Question | undefined = undefined;\\nconsole.log(currentQuestion.question);\\n```",
+      "options": {
+        "1": "`currentQuestion` が存在するかを確認してから `question` にアクセスする。",
+        "2": "`currentQuestion` をany型に変換して型チェックを回避する。",
+        "3": "TypeScriptのstrict設定を無効化する。",
+        "4": "console.logを削除すれば、データの存在確認は不要になる。"
+      },
+      "answer": "1",
+      "explanation": "本問題は、TypeScriptにおける<b>undefinedの可能性を持つ値への安全なアクセス</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`Question | undefined` の値に直接アクセスすると、値が存在しない場合に実行時エラーにつながります。アクセス前に存在確認を行うことで、型安全性と実行時安全性を両立できます。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】<b>適切な選択肢</b>です。undefinedの可能性を明示的に処理しています。<br>【選択肢2】不適切です。any型への変換は型チェックの利益を失わせます。<br>【選択肢3】不適切です。strict設定を無効化すると、品質ゲートとしてのtypecheckの価値が下がります。<br>【選択肢4】不適切です。出力処理を消しても、データ存在確認の設計問題は解決しません。<br><br><b>■ 本プロジェクトとの関係</b><br>クイズUIでは、現在表示する問題が存在するかを確認してから描画する必要があります。optional / undefined対策は、React / Vite UIの安定性を高めるための基本設計です。",
+      "source": {
+        "title": "Project React quiz UI implementation",
+        "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/tree/main/src/client",
+        "publisher": "This project",
+        "retrieved_at": "2026-07-18"
+      },
+      "tags": [
+        "frontend_languages",
+        "typescript",
+        "undefined",
+        "react",
+        "quiz-ui"
+      ]
+    },
+    {
+      "id": "frontend_languages-phase10-typescript-undefined-003",
+      "track": "ap",
+      "category": "frontend_languages",
+      "sub_category": "TypeScript",
+      "sub_sub_category": "高度な型システム",
+      "difficulty": "basic",
+      "question": "以下のTSXコンポーネントにおいて、`explanation` が存在しない可能性を考慮した実装として最も適切なものを選べ。\\n\\n```tsx\\ntype QuizCardProps = {\\n  explanation?: string;\\n};\\n\\nexport function QuizCard({ explanation }: QuizCardProps) {\\n  return <p>{explanation.toUpperCase()}</p>;\\n}\\n```",
+      "options": {
+        "1": "`explanation` はoptionalなので、存在確認なしに常にstringとして扱える。",
+        "2": "`explanation` の存在確認を行い、存在する場合だけ文字列メソッドを呼び出す。",
+        "3": "`explanation` をnumber型へ変更すれば安全になる。",
+        "4": "JSX内ではTypeScriptの型チェックは行われないため、修正不要である。"
+      },
+      "answer": "2",
+      "explanation": "本問題は、TSXにおける<b>optional property</b>の扱いに関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`explanation?: string` は、`explanation` が `string` または `undefined` になり得ることを示します。そのため、`toUpperCase()` を呼ぶ前に存在確認が必要です。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】不適切です。optional propertyは存在しない可能性を持ちます。<br>【選択肢2】<b>適切な選択肢</b>です。存在確認により安全に文字列メソッドを呼び出せます。<br>【選択肢3】不適切です。number型へ変えても、文字列メソッドの問題は解決しません。<br>【選択肢4】不適切です。TSXもTypeScriptの型チェック対象です。<br><br><b>■ 本プロジェクトとの関係</b><br>Reactコンポーネントでは、クイズ解説やフィードバック表示のようなoptionalな値を扱う場面があります。optional / undefined対策は、UIの実行時エラーを防ぐために重要です。",
+      "source": {
+        "title": "Project React quiz UI implementation",
+        "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/tree/main/src/client",
+        "publisher": "This project",
+        "retrieved_at": "2026-07-18"
+      },
+      "tags": [
+        "frontend_languages",
+        "typescript",
+        "tsx",
+        "optional",
+        "react"
+      ]
+    },
+    {
+      "id": "frontend_languages-phase10-typescript-undefined-004",
+      "track": "ap",
+      "category": "frontend_languages",
+      "sub_category": "TypeScript",
+      "sub_sub_category": "高度な型システム",
+      "difficulty": "basic",
+      "question": "以下の関数は、idに一致するクイズを検索する。戻り値の型として最も安全な考え方はどれか。\\n\\n```typescript\\ntype Quiz = { id: string; question: string };\\n\\nfunction findQuiz(quizzes: Quiz[], id: string) {\\n  return quizzes.find((quiz) => quiz.id === id);\\n}\\n```",
+      "options": {
+        "1": "一致する要素が必ず存在するため、戻り値は常にQuiz型である。",
+        "2": "一致する要素が存在しない可能性があるため、戻り値はQuizまたはundefinedとして扱う必要がある。",
+        "3": "findを使うと戻り値は常にstring型になる。",
+        "4": "配列検索はTypeScriptでは型チェックできないため、戻り値は必ずany型になる。"
+      },
+      "answer": "2",
+      "explanation": "本問題は、TypeScriptにおける<b>検索結果とundefinedの扱い</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`find` は条件に一致する要素が見つからない場合に `undefined` を返す可能性があります。そのため、呼び出し側では戻り値が存在するかを確認してから利用する設計が安全です。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】不適切です。一致する要素が常に存在するとは限りません。<br>【選択肢2】<b>適切な選択肢</b>です。undefinedの可能性を型として扱う必要があります。<br>【選択肢3】不適切です。findの戻り値は配列要素型またはundefinedです。<br>【選択肢4】不適切です。TypeScriptは配列検索結果の型も扱えます。<br><br><b>■ 本プロジェクトとの関係</b><br>クイズアプリでは、idや現在位置に基づいて対象データを取得する処理が発生します。検索結果が存在しない場合を型で扱うことで、UI表示時の実行時エラーを防ぎやすくなります。",
+      "source": {
+        "title": "Project quiz data handling",
+        "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/tree/main/src/client",
+        "publisher": "This project",
+        "retrieved_at": "2026-07-18"
+      },
+      "tags": [
+        "frontend_languages",
+        "typescript",
+        "undefined",
+        "array-find",
+        "quiz-data"
+      ]
     }
   ]
 }
