@@ -1,17 +1,35 @@
 import { expect, test } from "@playwright/test";
 
+type AnswerKey = "1" | "2" | "3" | "4";
+
+type QuizDataQuestion = {
+  answer: AnswerKey;
+};
+
+type QuizDataResponse =
+  | QuizDataQuestion[]
+  | {
+      questions: QuizDataQuestion[];
+    };
+
+const appTitlePattern = /QA\s*\/\s*SRE Learning Quiz/i;
+
+function getQuestions(quizData: QuizDataResponse): QuizDataQuestion[] {
+  return Array.isArray(quizData) ? quizData : quizData.questions;
+}
+
 test("quiz app loads and completes a minimal session", async ({ page }) => {
   await page.goto("/");
 
   await expect(
-    page.getByRole("heading", { name: /QA\/SRE Learning Quiz/i })
+    page.getByRole("heading", { name: appTitlePattern })
   ).toBeVisible();
 
   const response = await page.request.get("/study-it/quiz_data.json");
   expect(response.ok()).toBeTruthy();
 
-  const quizData = await response.json();
-  const questions = Array.isArray(quizData) ? quizData : quizData.questions;
+  const quizData = (await response.json()) as QuizDataResponse;
+  const questions = getQuestions(quizData);
   const questionCount = questions.length;
 
   expect(questionCount).toBeGreaterThan(0);
@@ -41,7 +59,9 @@ test("quiz app loads and completes a minimal session", async ({ page }) => {
     page.getByRole("heading", { name: /結果|Result/i })
   ).toBeVisible();
 
-  await expect(page.getByText(/スコア|Score[:：]?/i)).toBeVisible();
+  await expect(page.getByTestId("result-score")).toContainText(
+    /Score:\s*\d+\s*\/\s*\d+/i
+  );
 
   await page.getByRole("button", { name: /もう一度解く/ }).click();
 
@@ -54,13 +74,13 @@ test("quiz answer feedback is visually distinguishable", async ({ page }) => {
   const response = await page.request.get("/study-it/quiz_data.json");
   expect(response.ok()).toBeTruthy();
 
-  const quizData = await response.json();
-  const questions = Array.isArray(quizData) ? quizData : quizData.questions;
+  const quizData = (await response.json()) as QuizDataResponse;
+  const questions = getQuestions(quizData);
   const firstQuestion = questions[0];
 
   expect(firstQuestion).toBeTruthy();
 
-  const wrongAnswer = ["1", "2", "3", "4"].find(
+  const wrongAnswer = (["1", "2", "3", "4"] as AnswerKey[]).find(
     (option) => option !== firstQuestion.answer
   );
 
