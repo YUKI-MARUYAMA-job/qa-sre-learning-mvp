@@ -5,8 +5,8 @@
 [![Bun](https://img.shields.io/badge/Bun-1.3.x-black.svg)](https://bun.sh/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> **一言で説明**: `qa-sre-learning-mvp` は、QA/SRE志向の学習用クイズアプリと品質ゲートを組み合わせた小型ポートフォリオMVPです。
-> TypeScript、Bun、Vite、Playwright、Cloudflare Pagesを用いて、データ検証・E2E・品質レポート・本番デプロイまで再現できることを示します。
+> **Highlight**: `qa-sre-learning-mvp` は、QA/SRE志向の学習用クイズアプリと品質ゲートを組み合わせた小型ポートフォリオMVPです。
+> TypeScript、Bun、Vite、Playwright、Cloudflare Pagesを用いて、データ検証・E2E・品質レポート・本番デプロイまでを再現可能に示します。
 
 ## 概要
 
@@ -321,55 +321,29 @@ CI=1 bunx playwright test e2e/quiz-smoke.e2e.ts --trace on
 
 ## 今後の拡張候補
 
-今後は、以下の機能追加・品質向上を検討しています。
+今後の拡張候補は以下です。
 
-- 出題範囲を絞り込む機能
-  - 分野、カテゴリ、学習テーマに応じて出題対象を選択できるようにする。
-
-- 問題順のシャッフル機能
-  - 固定順に加えて、任意で問題順を並べ替えられるようにする。
-
-- 回答内容の振り返り画面
-  - 結果画面から、各問題の選択回答、正答、解説を確認できるようにする。
-
-- クイズデータの拡充
-  - QA、SRE、DevOps、TypeScript、Cloudflareなどの学習領域を中心に問題数を増やす。
-
-- アクセシビリティ確認の強化
-  - キーボード操作、見出し構造、色によらない情報提示などを追加で検証する。
-
-- Lighthouse CIの運用強化
-  - 現在の補助的な確認から、将来的には継続的な品質指標として扱えるようにする。
-
-- 基本的な稼働確認の追加
-  - デプロイ後に主要ページへアクセスできることや、公開データが取得できることを確認する。
+- track / category filter
+- optional question shuffle
+- per-question review screen
+- larger quiz dataset
+- additional accessibility checks
+- Lighthouse CI enforcement
+- basic observability or deployment health check
 
 ---
 
-## 現時点での制限事項
+## Known Limitations
 
-現時点では、本プロジェクトは本格運用サービスではなく、ポートフォリオ用の小型MVPとして範囲を限定しています。
+現時点では、以下は本格運用レベルではなく、ポートフォリオMVPとしての範囲に限定しています。
 
-- 本格的な監視機能は未実装
-  - ログ収集、メトリクス監視、アラート通知などは今後の拡張対象です。
-
-- 本番運用を前提とした監視体制は未整備
-  - 障害検知、復旧手順、運用担当者向け通知などは含めていません。
-
-- Lighthouse CIは補助的な確認として運用
-  - 現時点では、品質ゲートの必須条件ではなく、追加確認として扱っています。
-
-- 外部参照元の鮮度確認は限定的
-  - 参照元資料が最新であるかを自動的に検証する仕組みは未実装です。
-
-- 参照内容の事実確認は限定的
-  - 参照元の内容そのものの正確性を自動的に検証する仕組みは含めていません。
-
-- 複数ユーザー利用は未対応
-  - ログイン、ユーザー別履歴、権限管理などは実装していません。
-
-- 学習履歴の永続保存は未実装
-  - 回答履歴や成績推移をブラウザやデータベースに保存する機能は今後の拡張対象です。
+- full observability
+- production-grade monitoring
+- advanced Lighthouse CI enforcement
+- external source freshness verification
+- referenced content factual verification
+- multi-user application behavior
+- persistent learning history
 
 ---
 
