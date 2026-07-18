@@ -3,6 +3,16 @@ import type { PublicQuizQuestion } from "../../schemas/public-quiz-data.schema.t
 
 type AnswerKey = "1" | "2" | "3" | "4";
 
+export type QuizAttempt = {
+  questionId: string;
+  question: string;
+  track: PublicQuizQuestion["track"];
+  category: PublicQuizQuestion["category"];
+  selectedAnswer: AnswerKey;
+  correctAnswer: AnswerKey;
+  isCorrect: boolean;
+};
+
 export type QuizSessionState = {
   currentQuestion: PublicQuizQuestion;
   currentIndex: number;
@@ -11,6 +21,7 @@ export type QuizSessionState = {
   isAnswered: boolean;
   isCorrect: boolean | null;
   correctCount: number;
+  attempts: QuizAttempt[];
   isFinished: boolean;
   selectAnswer: (answer: AnswerKey) => void;
   next: () => void;
@@ -43,6 +54,7 @@ export function useQuizSession(
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<AnswerKey | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
+  const [attempts, setAttempts] = useState<QuizAttempt[]>([]);
   const [isFinished, setIsFinished] = useState(false);
 
   const currentQuestion = getCurrentQuestion(sortedQuestions, currentIndex);
@@ -57,14 +69,33 @@ export function useQuizSession(
       return;
     }
 
+    const answeredCorrectly = answer === currentAnswer;
+
     setSelectedAnswer(answer);
 
-    if (answer === currentAnswer) {
+    if (answeredCorrectly) {
       setCorrectCount((value) => value + 1);
     }
+
+    setAttempts((currentAttempts) => [
+      ...currentAttempts,
+      {
+        questionId: currentQuestion.id,
+        question: currentQuestion.question,
+        track: currentQuestion.track,
+        category: currentQuestion.category,
+        selectedAnswer: answer,
+        correctAnswer: currentAnswer,
+        isCorrect: answeredCorrectly
+      }
+    ]);
   }
 
   function next(): void {
+    if (selectedAnswer === null) {
+      return;
+    }
+
     if (currentIndex + 1 >= sortedQuestions.length) {
       setIsFinished(true);
       return;
@@ -78,6 +109,7 @@ export function useQuizSession(
     setCurrentIndex(0);
     setSelectedAnswer(null);
     setCorrectCount(0);
+    setAttempts([]);
     setIsFinished(false);
   }
 
@@ -89,6 +121,7 @@ export function useQuizSession(
     isAnswered,
     isCorrect,
     correctCount,
+    attempts,
     isFinished,
     selectAnswer,
     next,

@@ -249,3 +249,33 @@ button:focus-visible {
     margin-left: 0;
   }
 }
+.result-score {
+  font-size: 1.15rem;
+}
+
+.result-breakdown {
+  margin-top: 20px;
+}
+
+.result-table-wrapper {
+  overflow-x: auto;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 0.95rem;
+}
+
+.result-table th,
+.result-table td {
+  border-bottom: 1px solid #d9deea;
+  padding: 10px 8px;
+  text-align: left;
+}
+
+.result-table th {
+  color: #32415f;
+  background: #f4f6fb;
+}
