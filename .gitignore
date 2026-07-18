@@ -28,3 +28,6 @@ playwright-report/
 test-results/
 # Local build outputs
 dist/
+
+# Local temporary diagnostics and recovery files
+tmp/
