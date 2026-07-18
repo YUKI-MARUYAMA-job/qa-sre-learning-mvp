@@ -6,7 +6,7 @@ This report is generated from repository quiz data.
 
 | Metric | Value |
 |---|---:|
-| Total quiz questions | 2 |
+| Total quiz questions | 13 |
 | Taxonomy issue count | 0 |
 | Policy issue count | 0 |
 
@@ -22,7 +22,7 @@ This report is generated from repository quiz data.
 
 | Key | Count |
 |---|---:|
-| ap | 1 |
+| ap | 12 |
 | cloudflare | 1 |
 
 ## Category Distribution
@@ -31,12 +31,13 @@ This report is generated from repository quiz data.
 |---|---:|
 | dev_env_devops | 1 |
 | edge_infra_security | 1 |
+| frontend_languages | 11 |
 
 ## Difficulty Distribution
 
 | Key | Count |
 |---|---:|
-| basic | 2 |
+| basic | 13 |
 
 ## Source Publisher Distribution
 
@@ -44,12 +45,13 @@ This report is generated from repository quiz data.
 |---|---:|
 | Cloudflare | 1 |
 | Dev Containers | 1 |
+| This project | 11 |
 
 ## Review Status Distribution
 
 | Key | Count |
 |---|---:|
-| reviewed | 2 |
+| reviewed | 13 |
 
 ## Legal Flag Summary
 
@@ -59,13 +61,13 @@ This report is generated from repository quiz data.
 | is_official_question_reproduction | 0 |
 | is_official_certification_claim | 0 |
 | is_affiliation_or_endorsement_claim | 0 |
-| is_modified_or_original | 2 |
+| is_modified_or_original | 13 |
 
 ## Taxonomy Coverage
 
 | Category | Label | Questions | Covered Sub Categories | Total Sub Categories | Coverage |
 |---|---|---:|---:|---:|---:|
-| frontend_languages | 言語とフロントエンド | 0 | 0 | 4 | 0.0% |
+| frontend_languages | 言語とフロントエンド | 11 | 1 | 4 | 25.0% |
 | edge_infra_security | エッジインフラとセキュリティ | 1 | 1 | 2 | 50.0% |
 | qa_test_automation | 品質保証と自動テスト | 0 | 0 | 2 | 0.0% |
 | dev_env_devops | 開発環境とDevOps | 1 | 1 | 2 | 50.0% |

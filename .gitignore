@@ -31,3 +31,6 @@ dist/
 
 # Local temporary diagnostics and recovery files
 tmp/
+
+# Local backup files
+*.backup-*
