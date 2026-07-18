@@ -400,4 +400,30 @@ bun install --frozen-lockfile
 bun run pages:build
 bun run check
 ```
+## Quiz App Demo
 
+Cloudflare Pagesで公開しているQA/SRE学習用クイズアプリです。
+
+- 公開URL: `<Cloudflare Pages URL>`
+- 問題数: 13問
+- 対象領域: AP基礎、DevOps、Cloudflare、TypeScript
+- 主な機能:
+  - 4択クイズ
+  - 正誤フィードバック
+  - 結果画面
+  - public JSONからのクイズデータ読み込み
+
+## Quality Gate
+
+このリポジトリでは、以下を `bun run check` に統合しています。
+
+- TypeScript typecheck
+- Unit test
+- Data validation
+- Quiz schema / taxonomy / policy validation
+- Public quiz data freshness check
+- Public safety check
+- Static site build check
+- Security baseline check
+- Performance baseline check
+- Playwright E2E
