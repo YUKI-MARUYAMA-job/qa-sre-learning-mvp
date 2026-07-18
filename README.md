@@ -379,7 +379,7 @@ CI=1 bunx playwright test e2e/quiz-smoke.e2e.ts --trace on
 
 | Document                                  | Purpose                                        |
 | :---------------------------------------- | :--------------------------------------------- |
-| `docs/architecture.md`                    | アーキテクチャと品質ゲートの説明               |
+| `docs/architecture/architechture.md`      | アーキテクチャと品質ゲートの説明               |
 | `docs/acceptance-criteria.md`             | MVP受け入れ基準                                |
 | `docs/interview-notes.md`                 | 面接説明用の補助資料                           |
 | `docs/quiz-schema-taxonomy-validation.md` | クイズデータのschema / taxonomy validation方針 |
