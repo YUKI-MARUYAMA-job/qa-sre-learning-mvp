@@ -1,439 +1,474 @@
-# 受け入れ基準
+# 受け入れ基準(docs/acceptance-criteria.md)
 
-## 目的
+## 概要
 
-この文書は、`qa-sre-learning-mvp` をMVPとして受け入れるための基準を定義する。
+このドキュメントは、`qa-sre-learning-mvp` をポートフォリオMVPとして受け入れるための基準を定義するものです。
 
-このリポジトリは、learning itemデータを題材として、QA/SRE志向の品質ゲートを小さく構築することを目的とする。
+本プロジェクトでは、学習用クイズアプリを題材として、以下を再現可能に示すことを目的とします。
 
-MVPとしての合格条件は、単にアプリケーションコードが存在することではなく、以下が再現可能に検証できることである。
+- クイズアプリを公開環境で操作できること
+- クイズデータを検証できること
+- 学習データと品質レポートを生成できること
+- 異常系fixtureにより検証層の責務を確認できること
+- local環境とGitHub Actionsで同じ品質ゲートを実行できること
+- Cloudflare Pagesへ静的アプリケーションをデプロイできること
+- README、docs、reportsから技術判断を確認できること
 
-- データ構造が検証できる
-- プロジェクト固有の品質ルールが検証できる
-- 異常系データを検出できる
-- 品質レポートを決定的に生成できる
-- 生成物の鮮度を検査できる
-- 依存関係の再現性を検査できる
-- 公開に不適切なファイル混入を検出できる
-- localとGitHub Actionsの両方で同じ品質ゲートを実行できる
+MVPとしての合格条件は、単にアプリケーションコードが存在することではありません。
+データ、UI、検証、ビルド、E2E、デプロイ、ドキュメントが、それぞれ確認可能な状態で揃っていることを受け入れ条件とします。
 
-## v0.1.0 受け入れ基準
+---
 
-`v0.1.0` は、以下の条件をすべて満たす場合に受け入れ可能とする。
+## 受け入れ判断の要約
 
-## 1. Data Criteria
+最小限の受け入れ判断では、以下を確認します。
 
-### AC-DATA-001: learning item data exists
+| 観点         | 合格条件                                             |
+| :----------- | :--------------------------------------------------- |
+| アプリ       | Cloudflare Pages上でクイズを操作できる               |
+| データ       | raw dataから公開用JSONを生成できる                   |
+| 検証         | schema、taxonomy、policy、fixture検証が成功する      |
+| テスト       | unit testとPlaywright E2Eが成功する                  |
+| 品質ゲート   | `CI=1 bun run check` が成功する                      |
+| デプロイ     | `bun run pages:build` により `dist/app` を生成できる |
+| ドキュメント | READMEから主要docsとreportsへ辿れる                  |
+| 開発環境     | Dev Container内で主要検証を再現できる                |
 
-`data/raw/learning-items.json` が存在すること。
+---
 
-### AC-DATA-002: learning item data has multiple records
+## 主要コマンド
 
-`data/raw/learning-items.json` には、複数のlearning itemが含まれていること。
-
-初期MVPでは、少なくとも3件以上を目安とする。
-
-### AC-DATA-003: data schema validation passes
-
-以下のコマンドが成功すること。
+受け入れ判定で使う主要コマンドは以下です。
 
 ```bash
-bun run validate:data
+bun install --frozen-lockfile
+bun run typecheck
+bun run client:typecheck
+bun run test:unit
+bun run client:build
+CI=1 bun run check
 ```
 
-### AC-DATA-004: schema is implemented with Zod
+Dev Container内でE2Eを確認する場合は、必要に応じて以下を実行します。
 
-learning item のschemaがZodで定義されていること。
+```bash
+bunx playwright install chromium
+CI=1 bunx playwright test e2e/quiz-smoke.e2e.ts --trace on
+```
 
-対象:
+Cloudflare Pages向けのデプロイ用ビルドは以下です。
+
+```bash
+bun run pages:build
+```
+
+---
+
+## 受け入れ対象
+
+| 領域          | 対象                                 | 主な導線                                                         |
+| :------------ | :----------------------------------- | :--------------------------------------------------------------- |
+| クイズアプリ  | React / Viteによる4択クイズUI        | `src/client/`                                                    |
+| クイズデータ  | raw dataと公開用JSON                 | `data/raw/quiz-questions.json`、`public/study-it/quiz_data.json` |
+| 学習データ    | 品質レポート生成用の学習項目         | `data/raw/learning-items.json`                                   |
+| schema定義    | Zodによる構造検証                    | `src/schemas/`                                                   |
+| 検証処理      | validation / report / baseline check | `src/cli/`、`src/application/`                                   |
+| 異常系fixture | schema、taxonomy、policy違反の検出   | `data/fixtures/`、`tests/`                                       |
+| E2E           | クイズ操作の主要フロー検証           | `e2e/quiz-smoke.e2e.ts`                                          |
+| 品質ゲート    | local / GitHub Actionsでの統合検査   | `.github/workflows/quality-gate.yml`                             |
+| デプロイ      | Cloudflare Pages向けbuild            | `bun run pages:build`、`dist/app`                                |
+| 開発環境      | Dev Containerによる再現環境          | `.devcontainer/`                                                 |
+| ドキュメント  | 設計・受け入れ基準・面接説明         | `README.md`、`docs/`、`reports/`                                 |
+
+---
+
+## 受け入れ基準一覧
+
+### 1. クイズアプリ
+
+| 確認項目             | 合格条件                                                   | 確認方法                                                     |
+| :------------------- | :--------------------------------------------------------- | :----------------------------------------------------------- |
+| アプリ実装           | `src/client/` にクイズUIが実装されている                   | `src/client/App.tsx`、`src/client/components/` を確認        |
+| 公開用データ読み込み | `public/study-it/quiz_data.json` を読み込んで動作する      | ブラウザまたはE2Eで確認                                      |
+| クイズ操作           | 問題表示、回答、正誤表示、次問題遷移、結果画面表示ができる | `CI=1 bunx playwright test e2e/quiz-smoke.e2e.ts --trace on` |
+| 正誤フィードバック   | 正解・不正解、正答、解説が表示される                       | UIまたはE2Eで確認                                            |
+| 結果画面             | 正答数、総問題数、正答率、カテゴリ別スコアが表示される     | UIまたはE2Eで確認                                            |
+| クライアントビルド   | production buildが成功する                                 | `bun run client:build`                                       |
+
+---
+
+### 2. クイズデータ
+
+| 確認項目       | 合格条件                                               | 確認方法                                 |
+| :------------- | :----------------------------------------------------- | :--------------------------------------- |
+| raw data       | `data/raw/quiz-questions.json` が存在する              | ファイル確認                             |
+| 問題数         | 現行MVPでは13問以上を含む                              | `bun run validate:quiz`                  |
+| schema検証     | 構造・必須項目・型が妥当である                         | `bun run validate:quiz`                  |
+| taxonomy検証   | `track`、`category`、`difficulty` が定義済み分類に従う | `bun run validate:quiz`                  |
+| policy検証     | 公開リポジトリに不適切な情報を含まない                 | `bun run validate:quiz-policy`           |
+| 公開用JSON生成 | raw dataからpublic JSONを生成できる                    | `bun run prepare:public-quiz-data`       |
+| 公開用JSON鮮度 | 再生成しても不要なGit差分が出ない                      | `bun run prepare:public-quiz-data:check` |
+
+関連ファイル:
 
 ```text
+data/raw/quiz-questions.json
+public/study-it/quiz_data.json
+src/cli/prepare-public-quiz-data.ts
+src/cli/validate-quiz-data.ts
+src/cli/validate-quiz-policy.ts
+```
+
+---
+
+### 3. 学習データとsource policy
+
+| 確認項目      | 合格条件                                         | 確認方法                  |
+| :------------ | :----------------------------------------------- | :------------------------ |
+| 学習データ    | `data/raw/learning-items.json` が存在する        | ファイル確認              |
+| schema検証    | learning itemの構造がZod schemaに適合する        | `bun run validate:data`   |
+| source policy | 外部参照、URL、tag、categoryのルールを検証できる | `bun run validate:policy` |
+| HTTPS URL     | `sourceUrl` が存在する場合はHTTPSである          | `bun run validate:policy` |
+| tag整合性     | `tags` に `category` が含まれる                  | `bun run validate:policy` |
+| 重複tag検出   | 重複tagをpolicy違反として検出できる              | `bun run validate:policy` |
+
+関連ファイル:
+
+```text
+data/raw/learning-items.json
 src/schemas/learning-item.schema.ts
-```
-
-## 2. Source Policy Criteria
-
-### AC-POLICY-001: source policy validation exists
-
-プロジェクト固有のsource policy validationが実装されていること。
-
-対象:
-
-```text
 src/application/validate-source-policy.ts
+src/cli/validate-data.ts
+src/cli/validate-policy.ts
 ```
 
-### AC-POLICY-002: source policy validation passes
+---
 
-以下のコマンドが成功すること。
+### 4. 異常系fixture
 
-```bash
-bun run validate:policy
-```
+| 確認項目     | 合格条件                                   | 確認方法                         |
+| :----------- | :----------------------------------------- | :------------------------------- |
+| fixture配置  | `data/fixtures/` に異常系fixtureが存在する | ファイル確認                     |
+| schema違反   | schema違反fixtureを検出できる              | `bun run test:unit`              |
+| taxonomy違反 | 分類体系違反fixtureを検出できる            | `bun run test:unit`              |
+| policy違反   | policy違反fixtureを検出できる              | `bun run test:unit`              |
+| 責務検証     | 各fixtureが想定した検証層で失敗する        | `bun run validate:quiz-fixtures` |
 
-### AC-POLICY-003: non-original sources require sourceUrl
-
-`sourceType` が `original-note` ではないlearning itemには、`sourceUrl` が必要であること。
-
-### AC-POLICY-004: sourceUrl must use HTTPS
-
-`sourceUrl` が存在する場合、HTTPS URLであること。
-
-### AC-POLICY-005: tags include category
-
-各learning itemの `tags` には、当該itemの `category` が含まれること。
-
-### AC-POLICY-006: duplicate tags are rejected
-
-`tags` に重複値が含まれる場合、source policy violationとして検出されること。
-
-## 3. Negative Fixture Criteria
-
-### AC-NEG-001: invalid fixture exists
-
-異常系検証用fixtureが存在すること。
-
-対象:
+関連ファイル:
 
 ```text
-data/fixtures/invalid-learning-items.json
-```
-
-### AC-NEG-002: schema-invalid data is rejected
-
-schemaとして不正なfixtureが、testで検出されること。
-
-対象例:
-
-```text
+data/fixtures/
 tests/invalid-fixture.test.ts
+tests/invalid-quiz-schema-fixture.test.ts
+tests/invalid-quiz-taxonomy-fixture.test.ts
+tests/validate-quiz-policy.test.ts
+src/cli/validate-quiz-fixtures.ts
 ```
 
-### AC-NEG-003: policy-invalid data is detected
+---
 
-schemaとしては成立するがsource policyに違反するデータが、testで検出されること。
+### 5. 品質レポート
 
-### AC-NEG-004: unit tests pass
+| 確認項目               | 合格条件                                      | 確認方法                                            |
+| :--------------------- | :-------------------------------------------- | :-------------------------------------------------- |
+| 学習データ品質レポート | `reports/quality-report.md` が生成される      | `bun run report`                                    |
+| クイズ品質レポート     | `reports/quiz-quality-report.md` が生成される | `bun run quiz:report`                               |
+| 提出準備レポート       | `reports/portfolio-readiness.md` が存在する   | ファイル確認                                        |
+| レポート鮮度           | 再生成しても不要なGit差分が出ない             | `bun run report:check`、`bun run quiz:report:check` |
+| 決定的出力             | timestampなど実行時依存値で不要差分を出さない | `git diff --exit-code -- reports/`                  |
 
-以下のコマンドが成功すること。
-
-```bash
-bun test
-```
-
-## 4. Quality Report Criteria
-
-### AC-REPORT-001: quality report is generated
-
-品質レポートが以下に生成されること。
+関連ファイル:
 
 ```text
 reports/quality-report.md
+reports/quiz-quality-report.md
+reports/portfolio-readiness.md
+src/cli/generate-report.ts
+src/cli/generate-quiz-report.ts
 ```
 
-### AC-REPORT-002: report generation command succeeds
+---
 
-以下のコマンドが成功すること。
+### 6. 依存関係と公開安全性
 
-```bash
-bun run report
-```
+| 確認項目       | 合格条件                                          | 確認方法                         |
+| :------------- | :------------------------------------------------ | :------------------------------- |
+| lockfile       | `bun.lock` が存在し、commit対象に含まれる         | ファイル確認                     |
+| frozen install | lockfileに基づいて依存関係を再現できる            | `bun install --frozen-lockfile`  |
+| latest禁止     | `package.json` の依存関係に `"latest"` を使わない | `bun run validate:dependencies`  |
+| public safety  | `.env` や秘密鍵などを公開repoへ混入させない       | `bun run validate:public-safety` |
+| 統合品質ゲート | 依存関係検査とpublic safetyが `check` に含まれる  | `CI=1 bun run check`             |
 
-### AC-REPORT-003: quality report includes validation scope
-
-品質レポートに、検証対象と検証ロジックの範囲が記載されていること。
-
-例:
-
-- data file
-- schema
-- source policy
-- report file
-
-### AC-REPORT-004: quality report includes limitations
-
-品質レポートに、現在保証していない範囲が記載されていること。
-
-例:
-
-- 外部URL到達性
-- sourceの鮮度
-- 参照内容の事実正確性
-
-### AC-REPORT-005: quality report includes data source summary
-
-品質レポートに、source URLの有無やdomain集計が含まれていること。
-
-### AC-REPORT-006: report output is deterministic
-
-品質レポートは、不要なGit差分を発生させないよう、timestampなどの実行時依存値を含めないこと。
-
-## 5. Report Freshness Criteria
-
-### AC-FRESH-001: report freshness check exists
-
-以下のscriptが存在すること。
-
-```bash
-bun run report:check
-```
-
-### AC-FRESH-002: report freshness check passes
-
-以下のコマンドが成功すること。
-
-```bash
-bun run report:check
-```
-
-### AC-FRESH-003: stale report causes failure
-
-`reports/quality-report.md` が現在のデータまたは生成ロジックと一致しない場合、`report:check` が失敗すること。
-
-## 6. Dependency Reproducibility Criteria
-
-### AC-DEP-001: lockfile exists
-
-Bunのlockfileが存在し、commit対象に含まれていること。
-
-対象:
+関連ファイル:
 
 ```text
+package.json
 bun.lock
+src/cli/check-dependency-policy.ts
+scripts/check-public-safety.sh
 ```
 
-### AC-DEP-002: frozen install succeeds in CI
+---
 
-GitHub Actions上で以下が成功すること。
+### 7. 統合品質ゲート
 
-```bash
-bun install --frozen-lockfile
-```
+| 確認項目  | 合格条件                                        | 確認方法                             |
+| :-------- | :---------------------------------------------- | :----------------------------------- |
+| local実行 | local環境で統合品質ゲートが成功する             | `CI=1 bun run check`                 |
+| CI実行    | GitHub Actionsで同じ品質ゲートが成功する        | `.github/workflows/quality-gate.yml` |
+| PR実行    | pull requestでquality gateが実行される          | GitHub Actions確認                   |
+| main実行  | main branchへのpush後にquality gateが実行される | GitHub Actions確認                   |
+| E2E含有   | Playwright E2E smoke testが含まれる             | `bun run test:e2e`                   |
 
-### AC-DEP-003: dependency policy validation exists
+`bun run check` に含める主な検査:
 
-依存関係の再現性を確認する検査が存在すること。
-
-例:
-
-```bash
-bun run validate:dependencies
-```
-
-### AC-DEP-004: dependency versions avoid latest
-
-`package.json` の依存関係に `"latest"` を使わないこと。
-
-## 7. Public Safety Criteria
-
-### AC-SAFE-001: public safety check exists
-
-公開repoに含めるべきでないファイルを検出するcheckが存在すること。
-
-例:
-
-```bash
-bun run validate:public-safety
-```
-
-### AC-SAFE-002: public safety check passes
-
-以下のコマンドが成功すること。
-
-```bash
-bun run validate:public-safety
-```
-
-### AC-SAFE-003: unsafe files are rejected
-
-以下のようなファイルが存在する場合、public safety checkが失敗すること。
-
-- `.env`
-- `.env.*`
-- private key files
-- certificate files
-- local editor profile files
-- bundle files
-
-### AC-SAFE-004: public safety check is included in integrated quality gate
-
-public safety checkが以下に含まれていること。
-
-```bash
-bun run check
-```
-
-## 8. Integrated Quality Gate Criteria
-
-### AC-QG-001: integrated quality gate exists
-
-以下の統合品質ゲートが存在すること。
-
-```bash
-bun run check
-```
-
-### AC-QG-002: integrated quality gate passes locally
-
-local環境で以下が成功すること。
-
-```bash
-bun run check
-```
-
-### AC-QG-003: integrated quality gate includes all required checks
-
-`bun run check` には、少なくとも以下が含まれていること。
-
+```text
 - TypeScript typecheck
-- Bun unit tests
+- client typecheck
+- unit tests
 - data schema validation
 - source policy validation
-- dependency policy validation
-- public safety check
+- quiz schema validation
+- quiz taxonomy validation
+- quiz policy validation
+- fixture responsibility validation
 - report freshness check
-
-## 9. GitHub Actions Criteria
-
-### AC-CI-001: quality-gate workflow exists
-
-GitHub Actions workflowが存在すること。
-
-対象:
-
-```text
-.github/workflows/quality-gate.yml
+- public quiz data freshness check
+- dependency policy validation
+- public repository safety check
+- static site build check
+- client build
+- security baseline check
+- performance baseline check
+- Playwright E2E smoke test
 ```
 
-### AC-CI-002: workflow runs on pull requests
+---
 
-pull requestに対してquality gateが実行されること。
+### 8. Cloudflare Pagesデプロイ
 
-### AC-CI-003: workflow runs on push
+| 確認項目        | 合格条件                                                                    | 確認方法               |
+| :-------------- | :-------------------------------------------------------------------------- | :--------------------- |
+| 公開URL         | Cloudflare Pages上でクイズアプリを確認できる                                | ブラウザで確認         |
+| デプロイ用build | `pages:build` が成功する                                                    | `bun run pages:build`  |
+| 出力先          | `dist/app` が生成される                                                     | `test -d dist/app`     |
+| 責務分離        | GitHub Actionsは完全品質ゲート、Cloudflare Pagesはデプロイ用buildに限定する | READMEまたはdocsで確認 |
 
-main branchへのpush後にquality gateが実行されること。
+Cloudflare Pagesの想定設定:
 
-### AC-CI-004: workflow uses frozen lockfile install
+```text
+Build command:
+  bun install --frozen-lockfile && bun run pages:build
 
-CI上で以下が実行されること。
+Build output directory:
+  dist/app
+
+Root directory:
+  blank
+
+NODE_VERSION:
+  22.16.0
+```
+
+---
+
+### 9. security / performance baseline
+
+| 確認項目             | 合格条件                                             | 確認方法                                |
+| :------------------- | :--------------------------------------------------- | :-------------------------------------- |
+| security baseline    | 必要なsecurity headers等の基準を確認できる           | `bun run validate:security-baseline`    |
+| performance baseline | 静的成果物のfile-size budgetを確認できる             | `bun run validate:performance-baseline` |
+| 品質ゲート統合       | security / performance baselineが `check` に含まれる | `CI=1 bun run check`                    |
+
+関連ファイル:
+
+```text
+src/cli/check-security-baseline.ts
+src/cli/check-performance-baseline.ts
+site/static/_headers
+```
+
+---
+
+### 10. Dev Container
+
+| 確認項目     | 合格条件                                                   | 確認方法          |
+| :----------- | :--------------------------------------------------------- | :---------------- |
+| 設定ファイル | Dev Container設定が存在する                                | `.devcontainer/`  |
+| Bun          | Dev Container内でBunを実行できる                           | `bun --version`   |
+| bunx         | Dev Container内でbunxを実行できる                          | `command -v bunx` |
+| 主要検証     | Dev Container内で型検査・unit test・client buildが成功する | 下記コマンド      |
+| E2E          | Chromium導入後にPlaywright E2Eを実行できる                 | 下記コマンド      |
+
+主要検証:
 
 ```bash
 bun install --frozen-lockfile
+bun run typecheck
+bun run client:typecheck
+bun run test:unit
+bun run client:build
 ```
 
-### AC-CI-005: workflow runs integrated quality gate
-
-CI上で以下が実行されること。
+E2E確認:
 
 ```bash
-bun run check
+bunx playwright install chromium
+CI=1 bunx playwright test e2e/quiz-smoke.e2e.ts --trace on
 ```
 
-### AC-CI-006: quality report artifact is uploaded
-
-CI上で生成されたquality reportがartifactとしてuploadされること。
-
-## 10. Documentation Criteria
-
-### AC-DOC-001: README exists
-
-`README.md` が存在すること。
-
-### AC-DOC-002: architecture document exists
-
-以下が存在すること。
+関連ファイル:
 
 ```text
-docs/architecture.md
+.devcontainer/devcontainer.json
+.devcontainer/Dockerfile
+.devcontainer/post-create.sh
 ```
 
-### AC-DOC-003: acceptance criteria document exists
+---
 
-以下が存在すること。
+### 11. ドキュメント
+
+| 確認項目       | 合格条件                                                                        | 主な導線                                  |
+| :------------- | :------------------------------------------------------------------------------ | :---------------------------------------- |
+| README         | プロジェクト概要、公開URL、機能、技術スタック、品質ゲート、デプロイ手順が分かる | `README.md`                               |
+| アーキテクチャ | データ境界、検証層、デプロイ責務が分かる                                        | `docs/architecture.md`                    |
+| 受け入れ基準   | MVPとしての合格条件が分かる                                                     | `docs/acceptance-criteria.md`             |
+| 面接説明       | 技術判断と説明ポイントが分かる                                                  | `docs/interview-notes.md`                 |
+| クイズ検証方針 | schema / taxonomy validationの方針が分かる                                      | `docs/quiz-schema-taxonomy-validation.md` |
+| 品質レポート   | 検証結果と提出準備状況が分かる                                                  | `reports/`                                |
+
+ドキュメント記述方針:
 
 ```text
-docs/acceptance-criteria.md
+- 絵文字を使わない
+- 強調はMarkdown構文で表現する
+- 技術名として一般に定着しているものを除き、日本語で記述する
+- README、docs、reportsの説明粒度を揃える
+- 主要ファイルや確認コマンドへの導線を明記する
 ```
 
-### AC-DOC-004: README links to architecture document
+---
 
-READMEから `docs/architecture.md` へ辿れること。
+### 12. Git運用
 
-### AC-DOC-005: README links to acceptance criteria document
+| 確認項目   | 合格条件                                         | 確認方法                       |
+| :--------- | :----------------------------------------------- | :----------------------------- |
+| 同期診断   | Git同期状態を確認するscriptが存在する            | `scripts/git-sync-diagnose.sh` |
+| 短命branch | 新規開発は原則として `main` から短命branchを切る | branch運用確認                 |
+| PR統合     | mainへの統合はpull request経由で行う             | GitHub確認                     |
+| main安定性 | main branchが展示可能状態である                  | `CI=1 bun run check`           |
 
-READMEから `docs/acceptance-criteria.md` へ辿れること。
+作業前後の確認:
 
-## 11. Git Operation Criteria
-
-### AC-GIT-001: Git sync diagnosis script exists
-
-Git同期状態を確認するscriptが存在すること。
-
-例:
-
-```text
-scripts/git-sync-diagnose.sh
+```bash
+bash scripts/git-sync-diagnose.sh
+git status --short
+CI=1 bun run check
 ```
 
-### AC-GIT-002: feature branches are short-lived
+---
 
-新規開発は、原則として `main` から短命feature branchを切って行うこと。
+## 現時点での対象外
 
-### AC-GIT-003: pull requests are used for main integration
+現時点では、以下は必須要件としません。
 
-mainへ統合する変更は、pull request経由で検査すること。
+| 対象外項目                     | 理由                                    |
+| :----------------------------- | :-------------------------------------- |
+| 複数ユーザー利用               | 個人ポートフォリオMVPの範囲外           |
+| ログイン機能                   | 学習履歴の個別管理をまだ扱わないため    |
+| 学習履歴の永続保存             | 後続拡張として扱うため                  |
+| 本格的な監視機能               | SRE観点の将来拡張として扱うため         |
+| アラート通知                   | 運用体制を前提としないため              |
+| 外部URL到達性の自動確認        | 参照元の可用性保証までは含めないため    |
+| 外部参照元の鮮度確認           | 参照資料の更新追跡は後続課題とするため  |
+| 参照内容そのものの事実確認     | 自動検証の対象外とするため              |
+| 本格的なsecret scanning engine | public safety checkの範囲に限定するため |
+| production-grade monitoring    | 本格運用サービスではなくMVPであるため   |
 
-## 12. Non-Goals
+---
 
-`v0.1.0` 時点では、以下は必須要件としない。
+## 完了チェックリスト
 
-- Web UI
-- Cloudflare Pages deployment
-- performance baseline
-- security headers baseline
-- external URL availability check
-- source freshness check
-- factual correctness check
-- full secret scanning engine
+### データ・検証
 
-これらは、後続phaseで検討する。
-
-## 13. Completion Checklist
-
-`v0.1.0` の完了時には、以下を確認する。
-
-- [ ] `bun run typecheck` が成功する
-- [ ] `bun test` が成功する
 - [ ] `bun run validate:data` が成功する
 - [ ] `bun run validate:policy` が成功する
-- [ ] `bun run validate:dependencies` が成功する
-- [ ] `bun run validate:public-safety` が成功する
+- [ ] `bun run validate:quiz` が成功する
+- [ ] `bun run validate:quiz-policy` が成功する
+- [ ] `bun run validate:quiz-fixtures` が成功する
+
+### 型検査・テスト
+
+- [ ] `bun run typecheck` が成功する
+- [ ] `bun run client:typecheck` が成功する
+- [ ] `bun run test:unit` が成功する
+- [ ] `CI=1 bunx playwright test e2e/quiz-smoke.e2e.ts --trace on` が成功する
+
+### 生成物
+
 - [ ] `bun run report` が成功する
+- [ ] `bun run quiz:report` が成功する
 - [ ] `bun run report:check` が成功する
-- [ ] `bun run check` が成功する
+- [ ] `bun run quiz:report:check` が成功する
+- [ ] `bun run prepare:public-quiz-data:check` が成功する
+
+### build・baseline
+
+- [ ] `bun run client:build` が成功する
+- [ ] `bun run site:check` が成功する
+- [ ] `bun run validate:security-baseline` が成功する
+- [ ] `bun run validate:performance-baseline` が成功する
+
+### 統合品質ゲート
+
+- [ ] `CI=1 bun run check` が成功する
 - [ ] GitHub Actions `quality-gate` がpull request上で成功する
 - [ ] GitHub Actions `quality-gate` がmain push後に成功する
-- [ ] `reports/quality-report.md` が最新である
+
+### デプロイ
+
+- [ ] Cloudflare Pagesでクイズアプリを確認できる
+- [ ] `bun run pages:build` が成功する
+- [ ] `dist/app` が生成される
+
+### ドキュメント
+
+- [ ] `README.md` が存在する
 - [ ] `docs/architecture.md` が存在する
 - [ ] `docs/acceptance-criteria.md` が存在する
+- [ ] `docs/interview-notes.md` が存在する
 - [ ] READMEから主要docsへ辿れる
-- [ ] public safety checkが品質ゲートに含まれている
-- [ ] dependency policy checkが品質ゲートに含まれている
+- [ ] READMEから主要reportsへ辿れる
 
-## 14. Acceptance Decision
+### 開発環境
 
-上記の必須項目を満たした場合、`qa-sre-learning-mvp` は `v0.1.0` として受け入れ可能とする。
+- [ ] Dev Container内で `bun` が利用できる
+- [ ] Dev Container内で `bunx` が利用できる
+- [ ] Dev Container内で主要検証が成功する
 
-この時点で、本リポジトリは以下を示すMVPとして扱う。
+---
+
+## 受け入れ判断
+
+上記の必須項目を満たした場合、`qa-sre-learning-mvp` はポートフォリオMVPとして受け入れ可能とします。
+
+この時点で、本リポジトリは以下を示すMVPとして扱います。
 
 ```text
 structured learning data
   -> validation
   -> policy checks
   -> negative fixtures
-  -> quality report
-  -> report freshness
+  -> quality reports
+  -> public quiz data generation
+  -> React / Vite quiz UI
+  -> Playwright E2E
   -> dependency reproducibility
   -> public safety
+  -> security / performance baseline
   -> GitHub Actions quality gate
+  -> Cloudflare Pages deployment
 ```
+
+この受け入れ基準を満たすことで、本プロジェクトは「小さなクイズアプリ」ではなく、**品質ゲート付きのQA/SRE志向ポートフォリオMVP**として提示できる状態になります。
