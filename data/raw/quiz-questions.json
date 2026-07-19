@@ -1,112 +1,31 @@
 [
   {
-    "id": "dev_env_devops-quiz-001",
-    "track": "ap",
-    "category": "dev_env_devops",
-    "sub_category": "DockerとDevContainers",
-    "sub_sub_category": "再現可能開発コンテナ",
+    "id": "project_overview-001",
+    "track": "portfolio",
+    "category": "project_overview",
+    "sub_category": "MVPの目的",
+    "sub_sub_category": "QA/SRE志向ポートフォリオ",
     "difficulty": "basic",
-    "question": "次の設定方針に関する説明として最も適切なものを選べ。\n\n```json\n{\n  \"name\": \"qa-sre-learning-mvp\",\n  \"postCreateCommand\": \"bun install\"\n}\n```",
+    "question": "このプロジェクト `qa-sre-learning-mvp` の主な目的として最も適切なものはどれか。",
     "options": {
-      "1": "DevContainer起動後に依存関係の復元を自動化し、開発環境の再現性を高める。",
-      "2": "GitHub Actionsのbranch protectionを無効化する。",
-      "3": "Cloudflare Pagesの本番URLを自動的に削除する。",
-      "4": "TypeScriptの型検査を完全に無効化する。"
-    },
-    "answer": "1",
-    "explanation": "本問題は、DevContainerにおける開発環境再現性に関する知識を問うものです。postCreateCommandはコンテナ作成後に実行される初期化処理として利用でき、依存関係の復元などを自動化することで、開発者間の環境差分を小さくできます。",
-    "source": {
-      "title": "Dev Containers documentation",
-      "url": "https://containers.dev/",
-      "publisher": "Dev Containers",
-      "retrieved_at": "2026-07-16"
-    },
-    "tags": [
-      "dev_env_devops",
-      "docker",
-      "devcontainers"
-    ],
-    "legal": {
-      "is_official_question_reproduction": false,
-      "is_copied_verbatim": false,
-      "is_official_certification_claim": false,
-      "is_affiliation_or_endorsement_claim": false,
-      "is_modified_or_original": true,
-      "attribution": "Source: Dev Containers"
-    },
-    "review": {
-      "status": "reviewed",
-      "reviewed_at": "2026-07-16"
-    }
-  },
-  {
-    "id": "edge_infra_security-quiz-001",
-    "track": "cloudflare",
-    "category": "edge_infra_security",
-    "sub_category": "Cloudflare PagesとWorkers",
-    "sub_sub_category": "Pagesによる静的ホスティング",
-    "difficulty": "basic",
-    "question": "Cloudflare Pagesで静的サイトを公開する際、build後の公開対象として最も重要な設定はどれか。",
-    "options": {
-      "1": "Build output directory",
-      "2": "Git commit authorの年齢",
-      "3": "README内の絵文字数",
-      "4": "ローカル端末の壁紙"
-    },
-    "answer": "1",
-    "explanation": "本問題は、Cloudflare Pagesにおける静的サイト公開の基本設定に関する知識を問うものです。Build output directoryは、ビルド後に公開される静的ファイルの配置先を示すため、Pages運用において重要な設定です。",
-    "source": {
-      "title": "Cloudflare Pages documentation",
-      "url": "https://developers.cloudflare.com/pages/",
-      "publisher": "Cloudflare",
-      "retrieved_at": "2026-07-16"
-    },
-    "tags": [
-      "edge_infra_security",
-      "cloudflare",
-      "pages"
-    ],
-    "legal": {
-      "is_official_question_reproduction": false,
-      "is_copied_verbatim": false,
-      "is_official_certification_claim": false,
-      "is_affiliation_or_endorsement_claim": false,
-      "is_modified_or_original": true,
-      "attribution": "Source: Cloudflare"
-    },
-    "review": {
-      "status": "reviewed",
-      "reviewed_at": "2026-07-16"
-    }
-  },
-  {
-    "id": "frontend_languages-phase10-typescript-typecheck-001",
-    "track": "ap",
-    "category": "frontend_languages",
-    "sub_category": "TypeScript",
-    "sub_sub_category": "基本静的型付け",
-    "difficulty": "basic",
-    "question": "以下のTypeScriptコードを `bun run typecheck` で検査した場合の結果として、最も適切なものを選べ。\\n\\n```typescript\\nlet retryCount: number = 3;\\nretryCount = \\\"4\\\";\\n```",
-    "options": {
-      "1": "文字列は自動的に数値へ変換されるため、typecheckは成功する。",
-      "2": "number型の変数にstring型の値を代入しているため、静的型チェックでエラーとして検出される。",
-      "3": "TypeScriptの型注釈は実行時専用なので、typecheckでは検出されない。",
-      "4": "Vite buildを実行しない限り、TypeScriptの型エラーは検出できない。"
+      "1": "外部機関の試験問題を再現し、資格試験対策用の模擬問題集として公開すること。",
+      "2": "学習用クイズアプリ、データ検証、品質ゲート、E2E、デプロイを組み合わせ、QA/SRE志向の小型ポートフォリオMVPとして示すこと。",
+      "3": "Cloudflare Pagesの管理画面を自動操作し、すべての設定を外部から変更すること。",
+      "4": "READMEだけを作成し、実装コードや検証処理を持たない説明用リポジトリにすること。"
     },
     "answer": "2",
-    "explanation": "本問題は、TypeScriptの<b>基本静的型付け</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`retryCount` は `number` 型として宣言されているため、`string` 型の値である `\\\"4\\\"` を代入すると、静的型チェックで型不整合として検出されます。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】不適切です。TypeScriptの型チェックは、暗黙的な型変換を前提に型不整合を許容するものではありません。<br>【選択肢2】<b>適切な選択肢</b>です。number型にstring型を代入しているため、typecheckで検出されます。<br>【選択肢3】不適切です。TypeScriptの型注釈は主にコンパイル時・静的解析時に利用されます。<br>【選択肢4】不適切です。`tsc --noEmit` などのtypecheckにより、build出力を生成せずに型エラーを検出できます。<br><br><b>■ 本プロジェクトとの関係</b><br>本プロジェクトでは、`bun run check` にtypecheckを含めることで、型不整合をGitHub Actions上の<b>Quality Gate</b>で早期に検出する設計としています。",
+    "explanation": "このプロジェクトは、単なるクイズUIではなく、データ検証、品質ゲート、E2E、レポート生成、Cloudflare Pagesデプロイまでを含むQA/SRE志向のポートフォリオMVPとして構成されている。",
     "source": {
-      "title": "Project package scripts and TypeScript configuration",
-      "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/blob/main/package.json",
-      "publisher": "This project",
-      "retrieved_at": "2026-07-18"
+      "title": "README.md",
+      "url": "README.md",
+      "publisher": "qa-sre-learning-mvp",
+      "retrieved_at": "2026-07-19"
     },
     "tags": [
-      "frontend_languages",
-      "typescript",
-      "typecheck",
+      "project_overview",
+      "portfolio",
       "quality-gate",
-      "frontend"
+      "qa-sre"
     ],
     "legal": {
       "is_official_question_reproduction": false,
@@ -114,41 +33,41 @@
       "is_official_certification_claim": false,
       "is_affiliation_or_endorsement_claim": false,
       "is_modified_or_original": true,
-      "attribution": "Self-authored based on this project repository."
+      "attribution": "Original question based on this repository's README and project documentation."
     },
     "review": {
       "status": "reviewed",
-      "reviewed_at": "2026-07-18"
+      "reviewed_at": "2026-07-19"
     }
   },
   {
-    "id": "frontend_languages-phase10-typescript-typecheck-002",
-    "track": "ap",
-    "category": "frontend_languages",
-    "sub_category": "TypeScript",
-    "sub_sub_category": "基本静的型付け",
+    "id": "project_overview-002",
+    "track": "portfolio",
+    "category": "project_overview",
+    "sub_category": "成果物の構成",
+    "sub_sub_category": "アプリ・データ・レポートの関係",
     "difficulty": "basic",
-    "question": "以下の `package.json` のscript定義について、`typecheck` の役割として最も適切なものを選べ。\\n\\n```json\\n{\\n  \\\"scripts\\\": {\\n    \\\"typecheck\\\": \\\"tsc --noEmit\\\",\\n    \\\"client:build\\\": \\\"bun run prepare:public-quiz-data && bunx --bun vite build\\\"\\n  }\\n}\\n```",
+    "question": "本プロジェクトにおけるアプリ、データ、レポートの関係として最も適切なものはどれか。",
     "options": {
-      "1": "JavaScriptファイルを出力し、本番用bundleを生成する。",
-      "2": "型の静的解析を行い、build出力を生成せずに型不整合を検出する。",
-      "3": "PlaywrightのHTMLレポートを生成する。",
-      "4": "Cloudflare PagesのBuild output directoryを自動設定する。"
+      "1": "クイズUIだけが成果物であり、データ検証やレポートは品質保証の対象外である。",
+      "2": "raw dataを検証し、公開用JSONと品質レポートを生成し、そのデータをReact / Vite UIで利用する。",
+      "3": "レポートは手動で作成し、Git差分や鮮度確認とは切り離して管理する。",
+      "4": "public JSONにはreview metadataや内部検証用情報をすべて含める必要がある。"
     },
     "answer": "2",
-    "explanation": "本問題は、`tsc --noEmit` による<b>typecheckの目的</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`--noEmit` は、JavaScriptなどの出力を生成せず、TypeScriptの型チェックを行うための設定です。これにより、build処理とは別に型安全性を検証できます。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】不適切です。`--noEmit` は出力を生成しません。<br>【選択肢2】<b>適切な選択肢</b>です。型の静的解析により、型不整合を検出します。<br>【選択肢3】不適切です。PlaywrightのHTMLレポート生成とは別の責務です。<br>【選択肢4】不適切です。Cloudflare Pagesの設定を自動変更するものではありません。<br><br><b>■ 本プロジェクトとの関係</b><br>本プロジェクトでは、typecheckとclient buildを分離することで、CI上で型安全性を独立した品質ゲートとして確認できるようにしています。",
+    "explanation": "本プロジェクトでは、raw dataを正本として検証し、公開用JSONと品質レポートを生成する。React / Vite UIは公開用JSONを読み込み、ユーザーがクイズを操作できるようにする。",
     "source": {
-      "title": "Project package scripts",
-      "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/blob/main/package.json",
-      "publisher": "This project",
-      "retrieved_at": "2026-07-18"
+      "title": "docs/architecture.md",
+      "url": "docs/architecture.md",
+      "publisher": "qa-sre-learning-mvp",
+      "retrieved_at": "2026-07-19"
     },
     "tags": [
-      "frontend_languages",
-      "typescript",
-      "tsc",
-      "noemit",
-      "typecheck"
+      "project_overview",
+      "architecture",
+      "raw-data",
+      "public-data",
+      "reports"
     ],
     "legal": {
       "is_official_question_reproduction": false,
@@ -156,41 +75,40 @@
       "is_official_certification_claim": false,
       "is_affiliation_or_endorsement_claim": false,
       "is_modified_or_original": true,
-      "attribution": "Self-authored based on this project repository."
+      "attribution": "Original question based on this repository's architecture documentation."
     },
     "review": {
       "status": "reviewed",
-      "reviewed_at": "2026-07-18"
+      "reviewed_at": "2026-07-19"
     }
   },
   {
-    "id": "frontend_languages-phase10-typescript-typecheck-003",
-    "track": "ap",
-    "category": "frontend_languages",
-    "sub_category": "TypeScript",
-    "sub_sub_category": "基本静的型付け",
+    "id": "data_quality_pipeline-001",
+    "track": "quality",
+    "category": "data_quality_pipeline",
+    "sub_category": "正本データと公開用データ",
+    "sub_sub_category": "raw quiz data",
     "difficulty": "basic",
-    "question": "以下のTypeScriptコードでは、プロパティ名にタイポが含まれている。このコードをtypecheckした場合の説明として最も適切なものを選べ。\\n\\n```typescript\\nconst quizItem = {\\n  question: \\\"TypeScriptの目的は何か\\\",\\n  answer: \\\"1\\\"\\n};\\n\\nconsole.log(quizItem.answr);\\n```",
+    "question": "`data/raw/quiz-questions.json` の役割として最も適切なものはどれか。",
     "options": {
-      "1": "`answr` は `answer` と近いため、TypeScriptが自動的に補正して成功する。",
-      "2": "存在しないプロパティへのアクセスとして、静的型チェックでエラーとして検出される。",
-      "3": "実行時にのみReferenceErrorとなり、typecheckでは検出されない。",
-      "4": "JSON形式ではないため、TypeScriptはこのコードを検査できない。"
+      "1": "Webアプリが直接取得する最終的な配信用JSONである。",
+      "2": "クイズ問題の正本データであり、schema、taxonomy、policy、report生成の検証対象になる。",
+      "3": "Playwrightのブラウザ実行結果を保存する一時ファイルである。",
+      "4": "Cloudflare Pagesが生成するbuild output directoryである。"
     },
     "answer": "2",
-    "explanation": "本問題は、TypeScriptの<b>プロパティ存在確認</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`quizItem` には `question` と `answer` は存在しますが、`answr` は存在しません。TypeScriptはオブジェクトの型推論に基づき、存在しないプロパティへのアクセスを静的型チェックで検出できます。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】不適切です。TypeScriptは推測でソースコードを書き換えるものではありません。<br>【選択肢2】<b>適切な選択肢</b>です。存在しないプロパティへのアクセスはtypecheckで検出されます。<br>【選択肢3】不適切です。TypeScriptでは実行前の静的解析で検出可能です。<br>【選択肢4】不適切です。これはTypeScriptのオブジェクトリテラルであり、検査対象になります。<br><br><b>■ 本プロジェクトとの関係</b><br>クイズアプリでは、`question` や `answer` のようなデータfield名の取り違えがUI不具合につながるため、typecheckは実装ミスを早期に検出する品質ゲートとして機能します。",
+    "explanation": "`data/raw/quiz-questions.json` は、クイズ問題の正本データである。ここから検証、レポート生成、公開用JSON生成が行われるため、データ品質パイプラインの起点となる。",
     "source": {
-      "title": "Project TypeScript usage",
-      "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/tree/main/src",
-      "publisher": "This project",
-      "retrieved_at": "2026-07-18"
+      "title": "docs/quiz-schema-taxonomy-validation.md",
+      "url": "docs/quiz-schema-taxonomy-validation.md",
+      "publisher": "qa-sre-learning-mvp",
+      "retrieved_at": "2026-07-19"
     },
     "tags": [
-      "frontend_languages",
-      "typescript",
-      "property-access",
-      "typecheck",
-      "quiz-data"
+      "data_quality_pipeline",
+      "raw-quiz-data",
+      "validation",
+      "source-of-truth"
     ],
     "legal": {
       "is_official_question_reproduction": false,
@@ -198,124 +116,286 @@
       "is_official_certification_claim": false,
       "is_affiliation_or_endorsement_claim": false,
       "is_modified_or_original": true,
-      "attribution": "Self-authored based on this project repository."
+      "attribution": "Original question based on this repository's quiz validation documentation."
     },
     "review": {
       "status": "reviewed",
-      "reviewed_at": "2026-07-18"
+      "reviewed_at": "2026-07-19"
     }
   },
   {
-    "id": "frontend_languages-phase10-typescript-typecheck-004",
-    "track": "ap",
-    "category": "frontend_languages",
-    "sub_category": "TypeScript",
-    "sub_sub_category": "基本静的型付け",
+    "id": "data_quality_pipeline-002",
+    "track": "quality",
+    "category": "data_quality_pipeline",
+    "sub_category": "正本データと公開用データ",
+    "sub_sub_category": "public quiz data",
     "difficulty": "basic",
-    "question": "以下の関数呼び出しについて、TypeScriptのtypecheck結果として最も適切なものを選べ。\\n\\n```typescript\\nfunction buildScoreLabel(score: number): string {\\n  return `Score: ${score}`;\\n}\\n\\nconst label = buildScoreLabel(\\\"10\\\");\\n```",
+    "question": "`public/study-it/quiz_data.json` の役割として最も適切なものはどれか。",
     "options": {
-      "1": "引数の文字列は数値へ自動変換されるため、typecheckは成功する。",
-      "2": "関数の引数型がnumberであるため、stringを渡すと静的型チェックでエラーとして検出される。",
-      "3": "テンプレート文字列を使っているため、引数の型は常にstringとして扱われる。",
-      "4": "戻り値がstringなので、引数にもstringを渡す必要がある。"
-    },
-    "answer": "2",
-    "explanation": "本問題は、TypeScriptにおける<b>関数シグネチャの型チェック</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`buildScoreLabel` は `score: number` を受け取る関数として定義されています。そのため、`\\\"10\\\"` のようなstring型の値を渡すと、引数型の不一致としてtypecheckで検出されます。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】不適切です。TypeScriptの型チェックは自動変換を前提に型不一致を許容するものではありません。<br>【選択肢2】<b>適切な選択肢</b>です。関数の引数型と呼び出し側の値の型が一致していません。<br>【選択肢3】不適切です。テンプレート文字列の利用は、関数引数の型定義を変更しません。<br>【選択肢4】不適切です。戻り値の型と引数の型は別々に定義できます。<br><br><b>■ 本プロジェクトとの関係</b><br>UIやデータ変換処理では、関数の入力と出力を型で契約することで、クイズデータ生成や表示処理の不整合を早期に検出できます。",
-    "source": {
-      "title": "Project TypeScript usage",
-      "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/tree/main/src",
-      "publisher": "This project",
-      "retrieved_at": "2026-07-18"
-    },
-    "tags": [
-      "frontend_languages",
-      "typescript",
-      "function-signature",
-      "typecheck",
-      "frontend"
-    ],
-    "legal": {
-      "is_official_question_reproduction": false,
-      "is_copied_verbatim": false,
-      "is_official_certification_claim": false,
-      "is_affiliation_or_endorsement_claim": false,
-      "is_modified_or_original": true,
-      "attribution": "Self-authored based on this project repository."
-    },
-    "review": {
-      "status": "reviewed",
-      "reviewed_at": "2026-07-18"
-    }
-  },
-  {
-    "id": "frontend_languages-phase10-typescript-undefined-001",
-    "track": "ap",
-    "category": "frontend_languages",
-    "sub_category": "TypeScript",
-    "sub_sub_category": "高度な型システム",
-    "difficulty": "basic",
-    "question": "以下のTypeScriptコードでは、配列の先頭要素を取得している。`noUncheckedIndexedAccess` を有効にした場合の型安全性に関する説明として最も適切なものを選べ。\\n\\n```typescript\\nconst questions: string[] = [];\\nconst firstQuestion = questions[0];\\n```",
-    "options": {
-      "1": "`firstQuestion` は常にstring型であり、undefinedの可能性は考慮されない。",
-      "2": "配列要素が存在しない可能性を考慮し、`firstQuestion` は `string | undefined` として扱われる。",
-      "3": "空配列へのアクセスは必ずコンパイル時に例外として停止する。",
-      "4": "TypeScriptは配列アクセスをすべてany型に変換する。"
-    },
-    "answer": "2",
-    "explanation": "本問題は、TypeScriptの<b>optional / undefined対策</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`noUncheckedIndexedAccess` を有効にすると、配列やオブジェクトのインデックスアクセスに対して、値が存在しない可能性を型に反映します。そのため、`questions[0]` は `string | undefined` として扱われます。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】不適切です。設定が有効な場合、undefinedの可能性が考慮されます。<br>【選択肢2】<b>適切な選択肢</b>です。存在しない要素へのアクセス可能性を型として扱います。<br>【選択肢3】不適切です。TypeScriptは空配列アクセスを常にコンパイル時例外として停止するわけではありません。<br>【選択肢4】不適切です。any型へ変換する設定ではありません。<br><br><b>■ 本プロジェクトとの関係</b><br>クイズアプリでは、現在の問題や選択肢を配列から取り出す処理が発生します。undefinedの可能性を型で扱うことで、UI表示時の実行時エラーを減らせます。",
-    "source": {
-      "title": "Project TypeScript configuration",
-      "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/blob/main/tsconfig.json",
-      "publisher": "This project",
-      "retrieved_at": "2026-07-18"
-    },
-    "tags": [
-      "frontend_languages",
-      "typescript",
-      "undefined",
-      "noUncheckedIndexedAccess",
-      "type-safety"
-    ],
-    "legal": {
-      "is_official_question_reproduction": false,
-      "is_copied_verbatim": false,
-      "is_official_certification_claim": false,
-      "is_affiliation_or_endorsement_claim": false,
-      "is_modified_or_original": true,
-      "attribution": "Self-authored based on this project repository."
-    },
-    "review": {
-      "status": "reviewed",
-      "reviewed_at": "2026-07-18"
-    }
-  },
-  {
-    "id": "frontend_languages-phase10-typescript-undefined-002",
-    "track": "ap",
-    "category": "frontend_languages",
-    "sub_category": "TypeScript",
-    "sub_sub_category": "高度な型システム",
-    "difficulty": "basic",
-    "question": "以下のコードで、`currentQuestion` が `undefined` の可能性を持つ場合に、最も安全な修正方針はどれか。\\n\\n```typescript\\ntype Question = {\\n  id: string;\\n  question: string;\\n};\\n\\nconst currentQuestion: Question | undefined = undefined;\\nconsole.log(currentQuestion.question);\\n```",
-    "options": {
-      "1": "`currentQuestion` が存在するかを確認してから `question` にアクセスする。",
-      "2": "`currentQuestion` をany型に変換して型チェックを回避する。",
-      "3": "TypeScriptのstrict設定を無効化する。",
-      "4": "console.logを削除すれば、データの存在確認は不要になる。"
+      "1": "React / ViteクイズUIが実行時に取得する公開用クイズデータである。",
+      "2": "レビュー状態やlegal metadataだけを保存する内部管理用ファイルである。",
+      "3": "GitHub Actionsのworkflow定義ファイルである。",
+      "4": "E2Eテストのtrace viewerを保存するディレクトリである。"
     },
     "answer": "1",
-    "explanation": "本問題は、TypeScriptにおける<b>undefinedの可能性を持つ値への安全なアクセス</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`Question | undefined` の値に直接アクセスすると、値が存在しない場合に実行時エラーにつながります。アクセス前に存在確認を行うことで、型安全性と実行時安全性を両立できます。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】<b>適切な選択肢</b>です。undefinedの可能性を明示的に処理しています。<br>【選択肢2】不適切です。any型への変換は型チェックの利益を失わせます。<br>【選択肢3】不適切です。strict設定を無効化すると、品質ゲートとしてのtypecheckの価値が下がります。<br>【選択肢4】不適切です。出力処理を消しても、データ存在確認の設計問題は解決しません。<br><br><b>■ 本プロジェクトとの関係</b><br>クイズUIでは、現在表示する問題が存在するかを確認してから描画する必要があります。optional / undefined対策は、React / Vite UIの安定性を高めるための基本設計です。",
+    "explanation": "`public/study-it/quiz_data.json` は、検証済みのraw dataから生成される公開用JSONであり、クイズUIが実行時に読み込む。内部管理用のreview情報やlegal metadataは原則として公開用JSONから除外する。",
     "source": {
-      "title": "Project React quiz UI implementation",
-      "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/tree/main/src/client",
-      "publisher": "This project",
-      "retrieved_at": "2026-07-18"
+      "title": "src/cli/prepare-public-quiz-data.ts",
+      "url": "src/cli/prepare-public-quiz-data.ts",
+      "publisher": "qa-sre-learning-mvp",
+      "retrieved_at": "2026-07-19"
     },
     "tags": [
-      "frontend_languages",
-      "typescript",
-      "undefined",
+      "data_quality_pipeline",
+      "public-quiz-data",
       "react",
+      "vite"
+    ],
+    "legal": {
+      "is_official_question_reproduction": false,
+      "is_copied_verbatim": false,
+      "is_official_certification_claim": false,
+      "is_affiliation_or_endorsement_claim": false,
+      "is_modified_or_original": true,
+      "attribution": "Original question based on this repository's public quiz data generation workflow."
+    },
+    "review": {
+      "status": "reviewed",
+      "reviewed_at": "2026-07-19"
+    }
+  },
+  {
+    "id": "schema_taxonomy_validation-001",
+    "track": "quality",
+    "category": "schema_taxonomy_validation",
+    "sub_category": "Zod schema validation",
+    "sub_sub_category": "JSON構造の検証",
+    "difficulty": "basic",
+    "question": "Zod schema validationが本プロジェクトで担う役割として最も適切なものはどれか。",
+    "options": {
+      "1": "クイズデータの構造、必須項目、型、選択肢数などを検証する。",
+      "2": "Cloudflare Pagesの本番URLを自動的に変更する。",
+      "3": "GitHubのpull requestを自動でmergeする。",
+      "4": "ユーザーの学習履歴を外部データベースへ保存する。"
+    },
+    "answer": "1",
+    "explanation": "Zod schema validationは、JSONデータが期待する構造を満たしているかを検査する。クイズデータでは、問題文、選択肢、正答、解説、source、reviewなどの必須項目や型を確認する。",
+    "source": {
+      "title": "src/schemas/quiz-question.schema.ts",
+      "url": "src/schemas/quiz-question.schema.ts",
+      "publisher": "qa-sre-learning-mvp",
+      "retrieved_at": "2026-07-19"
+    },
+    "tags": [
+      "schema_taxonomy_validation",
+      "zod",
+      "schema-validation",
+      "json"
+    ],
+    "legal": {
+      "is_official_question_reproduction": false,
+      "is_copied_verbatim": false,
+      "is_official_certification_claim": false,
+      "is_affiliation_or_endorsement_claim": false,
+      "is_modified_or_original": true,
+      "attribution": "Original question based on this repository's schema validation implementation."
+    },
+    "review": {
+      "status": "reviewed",
+      "reviewed_at": "2026-07-19"
+    }
+  },
+  {
+    "id": "schema_taxonomy_validation-002",
+    "track": "quality",
+    "category": "schema_taxonomy_validation",
+    "sub_category": "Taxonomy validation",
+    "sub_sub_category": "分類体系の正本管理",
+    "difficulty": "basic",
+    "question": "taxonomy validationの目的として最も適切なものはどれか。",
+    "options": {
+      "1": "クイズ問題の `category`、`sub_category`、`sub_sub_category` が分類体系の正本と整合しているか確認する。",
+      "2": "Viteのproduction buildを高速化するためにCSSを圧縮する。",
+      "3": "PlaywrightのブラウザをCloudflare Pages上にインストールする。",
+      "4": "README内の見出し数を固定する。"
+    },
+    "answer": "1",
+    "explanation": "taxonomy validationは、クイズ問題に付与された分類が `data/raw/subject-taxonomy.json` に定義された分類体系と一致しているかを確認する。これにより、表記揺れや存在しないカテゴリの混入を検出できる。",
+    "source": {
+      "title": "data/raw/subject-taxonomy.json",
+      "url": "data/raw/subject-taxonomy.json",
+      "publisher": "qa-sre-learning-mvp",
+      "retrieved_at": "2026-07-19"
+    },
+    "tags": [
+      "schema_taxonomy_validation",
+      "taxonomy-validation",
+      "category",
+      "classification"
+    ],
+    "legal": {
+      "is_official_question_reproduction": false,
+      "is_copied_verbatim": false,
+      "is_official_certification_claim": false,
+      "is_affiliation_or_endorsement_claim": false,
+      "is_modified_or_original": true,
+      "attribution": "Original question based on this repository's taxonomy design."
+    },
+    "review": {
+      "status": "reviewed",
+      "reviewed_at": "2026-07-19"
+    }
+  },
+  {
+    "id": "policy_validation-001",
+    "track": "quality",
+    "category": "policy_validation",
+    "sub_category": "内製クイズ方針",
+    "sub_sub_category": "外部試験問題参照の排除",
+    "difficulty": "basic",
+    "question": "今回のクイズ問題コンセプト変更後に、policy validationで特に検出すべき内容として最も適切なものはどれか。",
+    "options": {
+      "1": "外部機関の試験問題、公式問題、過去問、実問再現を示唆する表現の混入。",
+      "2": "クイズUIで結果画面が表示されること。",
+      "3": "Cloudflare Pagesのbuild output directoryが存在すること。",
+      "4": "Markdownの表が左寄せで表示されること。"
+    },
+    "answer": "1",
+    "explanation": "新しいクイズは、本ポートフォリオ成果物の技術スタックや品質保証メカニズムを理解するための内製クイズである。そのため、外部試験問題や公式問題の再現と誤認される表現はpolicy validationで検出する必要がある。",
+    "source": {
+      "title": "src/application/validate-quiz-policy.ts",
+      "url": "src/application/validate-quiz-policy.ts",
+      "publisher": "qa-sre-learning-mvp",
+      "retrieved_at": "2026-07-19"
+    },
+    "tags": [
+      "policy_validation",
+      "internal-quiz",
+      "no-external-exam-reference",
+      "public-safety"
+    ],
+    "legal": {
+      "is_official_question_reproduction": false,
+      "is_copied_verbatim": false,
+      "is_official_certification_claim": false,
+      "is_affiliation_or_endorsement_claim": false,
+      "is_modified_or_original": true,
+      "attribution": "Original question based on this repository's quiz policy validation design."
+    },
+    "review": {
+      "status": "reviewed",
+      "reviewed_at": "2026-07-19"
+    }
+  },
+  {
+    "id": "policy_validation-002",
+    "track": "quality",
+    "category": "policy_validation",
+    "sub_category": "公開安全性",
+    "sub_sub_category": "review状態の確認",
+    "difficulty": "basic",
+    "question": "本プロジェクトで `review.status` を確認する理由として最も適切なものはどれか。",
+    "options": {
+      "1": "未確認または生成途中の問題がproduction用クイズデータへ混入することを防ぐため。",
+      "2": "Reactのstate更新を自動的に高速化するため。",
+      "3": "Gitのbranch名を自動的に短縮するため。",
+      "4": "Cloudflare Pagesの月間build数を増やすため。"
+    },
+    "answer": "1",
+    "explanation": "`review.status` は、クイズ問題が公開用データとして利用できる状態かを確認するための内部メタデータである。production用データにはreview済みの問題だけを含めることで、未確認データの混入を防ぐ。",
+    "source": {
+      "title": "src/application/validate-quiz-policy.ts",
+      "url": "src/application/validate-quiz-policy.ts",
+      "publisher": "qa-sre-learning-mvp",
+      "retrieved_at": "2026-07-19"
+    },
+    "tags": [
+      "policy_validation",
+      "review",
+      "quality-gate",
+      "public-safety"
+    ],
+    "legal": {
+      "is_official_question_reproduction": false,
+      "is_copied_verbatim": false,
+      "is_official_certification_claim": false,
+      "is_affiliation_or_endorsement_claim": false,
+      "is_modified_or_original": true,
+      "attribution": "Original question based on this repository's review policy."
+    },
+    "review": {
+      "status": "reviewed",
+      "reviewed_at": "2026-07-19"
+    }
+  },
+  {
+    "id": "quality_gate_ci-001",
+    "track": "quality",
+    "category": "quality_gate_ci",
+    "sub_category": "統合品質ゲート",
+    "sub_sub_category": "bun run check",
+    "difficulty": "basic",
+    "question": "`CI=1 bun run check` の役割として最も適切なものはどれか。",
+    "options": {
+      "1": "型検査、unit test、データ検証、生成物の鮮度確認、build、E2Eなどをまとめて実行する統合品質ゲートである。",
+      "2": "Cloudflare Pagesの管理画面で手動設定を行うためのコマンドである。",
+      "3": "READMEの本文を自動的に英語へ翻訳するためのコマンドである。",
+      "4": "GitHub上のすべてのissueを削除するためのコマンドである。"
+    },
+    "answer": "1",
+    "explanation": "`CI=1 bun run check` は、localとCIで同じ品質基準を確認するための統合品質ゲートである。複数の検査を連結することで、変更がMVPの受け入れ基準を満たすかを確認できる。",
+    "source": {
+      "title": "package.json",
+      "url": "package.json",
+      "publisher": "qa-sre-learning-mvp",
+      "retrieved_at": "2026-07-19"
+    },
+    "tags": [
+      "quality_gate_ci",
+      "bun",
+      "check",
+      "ci",
+      "quality-gate"
+    ],
+    "legal": {
+      "is_official_question_reproduction": false,
+      "is_copied_verbatim": false,
+      "is_official_certification_claim": false,
+      "is_affiliation_or_endorsement_claim": false,
+      "is_modified_or_original": true,
+      "attribution": "Original question based on this repository's package scripts."
+    },
+    "review": {
+      "status": "reviewed",
+      "reviewed_at": "2026-07-19"
+    }
+  },
+  {
+    "id": "quality_gate_ci-002",
+    "track": "quality",
+    "category": "quality_gate_ci",
+    "sub_category": "テスト責務",
+    "sub_sub_category": "Playwright E2E",
+    "difficulty": "basic",
+    "question": "本プロジェクトでPlaywright E2Eが確認する内容として最も適切なものはどれか。",
+    "options": {
+      "1": "ユーザー視点でクイズアプリを開き、回答、正誤フィードバック、結果画面、再実行の主要フローが動くこと。",
+      "2": "TypeScriptの型定義ファイルだけを生成すること。",
+      "3": "Cloudflare Pagesの請求設定を変更すること。",
+      "4": "GitHub Actionsのworkflow名を自動で変更すること。"
+    },
+    "answer": "1",
+    "explanation": "Playwright E2Eは、ブラウザ上で実際のユーザー操作に近い形で主要フローを確認する。単体テストやschema validationだけでは検出しにくいUI上の動作不具合を補完する役割を持つ。",
+    "source": {
+      "title": "e2e/quiz-smoke.e2e.ts",
+      "url": "e2e/quiz-smoke.e2e.ts",
+      "publisher": "qa-sre-learning-mvp",
+      "retrieved_at": "2026-07-19"
+    },
+    "tags": [
+      "quality_gate_ci",
+      "playwright",
+      "e2e",
       "quiz-ui"
     ],
     "legal": {
@@ -324,83 +404,41 @@
       "is_official_certification_claim": false,
       "is_affiliation_or_endorsement_claim": false,
       "is_modified_or_original": true,
-      "attribution": "Self-authored based on this project repository."
+      "attribution": "Original question based on this repository's Playwright E2E test."
     },
     "review": {
       "status": "reviewed",
-      "reviewed_at": "2026-07-18"
+      "reviewed_at": "2026-07-19"
     }
   },
   {
-    "id": "frontend_languages-phase10-typescript-undefined-003",
-    "track": "ap",
-    "category": "frontend_languages",
-    "sub_category": "TypeScript",
-    "sub_sub_category": "高度な型システム",
+    "id": "frontend_quiz_ui-001",
+    "track": "frontend",
+    "category": "frontend_quiz_ui",
+    "sub_category": "React / Vite UI",
+    "sub_sub_category": "公開用JSONの読み込み",
     "difficulty": "basic",
-    "question": "以下のTSXコンポーネントにおいて、`explanation` が存在しない可能性を考慮した実装として最も適切なものを選べ。\\n\\n```tsx\\ntype QuizCardProps = {\\n  explanation?: string;\\n};\\n\\nexport function QuizCard({ explanation }: QuizCardProps) {\\n  return <p>{explanation.toUpperCase()}</p>;\\n}\\n```",
+    "question": "React / ViteクイズUIが `public/study-it/quiz_data.json` を読み込む設計の利点として最も適切なものはどれか。",
     "options": {
-      "1": "`explanation` はoptionalなので、存在確認なしに常にstringとして扱える。",
-      "2": "`explanation` の存在確認を行い、存在する場合だけ文字列メソッドを呼び出す。",
-      "3": "`explanation` をnumber型へ変更すれば安全になる。",
-      "4": "JSX内ではTypeScriptの型チェックは行われないため、修正不要である。"
-    },
-    "answer": "2",
-    "explanation": "本問題は、TSXにおける<b>optional property</b>の扱いに関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`explanation?: string` は、`explanation` が `string` または `undefined` になり得ることを示します。そのため、`toUpperCase()` を呼ぶ前に存在確認が必要です。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】不適切です。optional propertyは存在しない可能性を持ちます。<br>【選択肢2】<b>適切な選択肢</b>です。存在確認により安全に文字列メソッドを呼び出せます。<br>【選択肢3】不適切です。number型へ変えても、文字列メソッドの問題は解決しません。<br>【選択肢4】不適切です。TSXもTypeScriptの型チェック対象です。<br><br><b>■ 本プロジェクトとの関係</b><br>Reactコンポーネントでは、クイズ解説やフィードバック表示のようなoptionalな値を扱う場面があります。optional / undefined対策は、UIの実行時エラーを防ぐために重要です。",
-    "source": {
-      "title": "Project React quiz UI implementation",
-      "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/tree/main/src/client",
-      "publisher": "This project",
-      "retrieved_at": "2026-07-18"
-    },
-    "tags": [
-      "frontend_languages",
-      "typescript",
-      "tsx",
-      "optional",
-      "react"
-    ],
-    "legal": {
-      "is_official_question_reproduction": false,
-      "is_copied_verbatim": false,
-      "is_official_certification_claim": false,
-      "is_affiliation_or_endorsement_claim": false,
-      "is_modified_or_original": true,
-      "attribution": "Self-authored based on this project repository."
-    },
-    "review": {
-      "status": "reviewed",
-      "reviewed_at": "2026-07-18"
-    }
-  },
-  {
-    "id": "frontend_languages-phase10-typescript-typecheck-005",
-    "track": "ap",
-    "category": "frontend_languages",
-    "sub_category": "TypeScript",
-    "sub_sub_category": "基本静的型付け",
-    "difficulty": "basic",
-    "question": "以下の `package.json` の `check` scriptについて、CI上でこのscriptを実行する目的として最も適切なものを選べ。\\n\\n```json\\n{\\n  \\\"scripts\\\": {\\n    \\\"check\\\": \\\"bun run typecheck && bun run test:unit && bun run client:build && bun run test:e2e\\\"\\n  }\\n}\\n```",
-    "options": {
-      "1": "型チェック、単体テスト、build、E2Eをまとめて実行し、変更が品質ゲートを通過できるか確認する。",
-      "2": "Cloudflare PagesのRoot directoryを自動的に空欄へ変更する。",
-      "3": "Gitのcommit messageを自動生成する。",
-      "4": "public JSONからreview metadataを意図的に公開する。"
+      "1": "UI実装とクイズデータを分離し、検証済みの公開用JSONを実行時データとして扱える。",
+      "2": "TypeScriptの型検査を完全に不要にできる。",
+      "3": "GitHub Actionsを使わずにpull requestを自動承認できる。",
+      "4": "すべての内部review metadataをユーザーへ表示できる。"
     },
     "answer": "1",
-    "explanation": "本問題は、TypeScriptを含む<b>品質ゲートとしてのcheck script</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`check` scriptは、typecheck、unit test、client build、E2Eなどをまとめて実行することで、変更がCI上の品質基準を満たすか確認する役割を持ちます。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】<b>適切な選択肢</b>です。複数の検証を連結し、品質ゲートとして機能します。<br>【選択肢2】不適切です。package scriptはCloudflare Pagesの画面設定を直接変更しません。<br>【選択肢3】不適切です。commit message生成のためのscriptではありません。<br>【選択肢4】不適切です。public JSONに内部metadataを出すことは避けるべきです。<br><br><b>■ 本プロジェクトとの関係</b><br>本プロジェクトでは、GitHub Actionsで `bun run check` を実行することで、typecheckを含む複数の検証をremote品質ゲートとして扱います。",
+    "explanation": "UIとデータを分離することで、raw dataの検証、public JSON生成、UI表示の責務を分けられる。クイズUIは、検証済みの公開用JSONを読み込むことで、実行時に必要なデータだけを扱える。",
     "source": {
-      "title": "Project package scripts",
-      "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/blob/main/package.json",
-      "publisher": "This project",
-      "retrieved_at": "2026-07-18"
+      "title": "src/client/",
+      "url": "src/client/",
+      "publisher": "qa-sre-learning-mvp",
+      "retrieved_at": "2026-07-19"
     },
     "tags": [
-      "frontend_languages",
-      "typescript",
-      "check",
-      "quality-gate",
-      "ci"
+      "frontend_quiz_ui",
+      "react",
+      "vite",
+      "public-json",
+      "runtime-data"
     ],
     "legal": {
       "is_official_question_reproduction": false,
@@ -408,41 +446,40 @@
       "is_official_certification_claim": false,
       "is_affiliation_or_endorsement_claim": false,
       "is_modified_or_original": true,
-      "attribution": "Self-authored based on this project repository."
+      "attribution": "Original question based on this repository's React / Vite quiz UI."
     },
     "review": {
       "status": "reviewed",
-      "reviewed_at": "2026-07-18"
+      "reviewed_at": "2026-07-19"
     }
   },
   {
-    "id": "frontend_languages-phase10-typescript-typecheck-006",
-    "track": "ap",
-    "category": "frontend_languages",
-    "sub_category": "TypeScript",
-    "sub_sub_category": "基本静的型付け",
+    "id": "frontend_quiz_ui-002",
+    "track": "frontend",
+    "category": "frontend_quiz_ui",
+    "sub_category": "フィードバックと結果画面",
+    "sub_sub_category": "カテゴリ別スコア",
     "difficulty": "basic",
-    "question": "以下のTypeScriptコードにおいて、`any` を使用した場合の問題点として最も適切なものを選べ。\\n\\n```typescript\\nfunction renderAnswer(answer: any) {\\n  return answer.toUpperCase();\\n}\\n\\nrenderAnswer(1);\\n```",
+    "question": "結果画面でカテゴリ別スコアを表示する意義として最も適切なものはどれか。",
     "options": {
-      "1": "`any` により型チェックが弱まり、不適切な値に対する操作がコンパイル時に検出されにくくなる。",
-      "2": "`any` を使うと、TypeScriptは必ず実行時に値をstringへ変換する。",
-      "3": "`any` はCloudflare Pages専用の型であり、frontendでは利用できない。",
-      "4": "`any` を使うと、PlaywrightのE2Eが自動的に失敗する。"
+      "1": "どの技術領域や設計領域の理解が不足しているかを利用者が確認しやすくするため。",
+      "2": "GitHub Actionsの実行時間を自動で短縮するため。",
+      "3": "Cloudflare Pagesのbuild output directoryを変更するため。",
+      "4": "Zod schema validationを完全に不要にするため。"
     },
     "answer": "1",
-    "explanation": "本問題は、TypeScriptにおける<b>any型と型安全性</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`any` はTypeScriptの型チェックを弱めるため、本来検出したい不適切な値の操作を見逃す可能性があります。例では数値に対して文字列メソッドを呼び出す危険があります。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】<b>適切な選択肢</b>です。any型は型安全性を損なう可能性があります。<br>【選択肢2】不適切です。anyは自動変換を保証するものではありません。<br>【選択肢3】不適切です。Cloudflare Pages専用の型ではありません。<br>【選択肢4】不適切です。anyの使用だけでPlaywrightが自動的に失敗するわけではありません。<br><br><b>■ 本プロジェクトとの関係</b><br>本プロジェクトでは、typecheckを品質ゲートとして機能させるため、型安全性を損なう実装を避けることが重要です。anyに依存すると、CI上のtypecheckで検出できるはずの問題を見逃す可能性があります。",
+    "explanation": "カテゴリ別スコアは、単なる合計点ではなく、データ品質、品質ゲート、UI、デプロイ、ドキュメントなどの理解状況を分野ごとに把握するために有効である。",
     "source": {
-      "title": "Project TypeScript usage",
-      "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/tree/main/src",
-      "publisher": "This project",
-      "retrieved_at": "2026-07-18"
+      "title": "src/client/components/",
+      "url": "src/client/components/",
+      "publisher": "qa-sre-learning-mvp",
+      "retrieved_at": "2026-07-19"
     },
     "tags": [
-      "frontend_languages",
-      "typescript",
-      "any",
-      "type-safety",
-      "typecheck"
+      "frontend_quiz_ui",
+      "result-screen",
+      "category-score",
+      "learning-feedback"
     ],
     "legal": {
       "is_official_question_reproduction": false,
@@ -450,41 +487,40 @@
       "is_official_certification_claim": false,
       "is_affiliation_or_endorsement_claim": false,
       "is_modified_or_original": true,
-      "attribution": "Self-authored based on this project repository."
+      "attribution": "Original question based on this repository's quiz result UI."
     },
     "review": {
       "status": "reviewed",
-      "reviewed_at": "2026-07-18"
+      "reviewed_at": "2026-07-19"
     }
   },
   {
-    "id": "frontend_languages-phase10-typescript-undefined-004",
-    "track": "ap",
-    "category": "frontend_languages",
-    "sub_category": "TypeScript",
-    "sub_sub_category": "高度な型システム",
+    "id": "deployment_cloudflare_pages-001",
+    "track": "deployment",
+    "category": "deployment_cloudflare_pages",
+    "sub_category": "デプロイ用ビルド",
+    "sub_sub_category": "dist/app",
     "difficulty": "basic",
-    "question": "以下の関数は、idに一致するクイズを検索する。戻り値の型として最も安全な考え方はどれか。\\n\\n```typescript\\ntype Quiz = { id: string; question: string };\\n\\nfunction findQuiz(quizzes: Quiz[], id: string) {\\n  return quizzes.find((quiz) => quiz.id === id);\\n}\\n```",
+    "question": "Cloudflare Pagesで本プロジェクトのクイズアプリを公開する際、公開対象として想定される出力先はどれか。",
     "options": {
-      "1": "一致する要素が必ず存在するため、戻り値は常にQuiz型である。",
-      "2": "一致する要素が存在しない可能性があるため、戻り値はQuizまたはundefinedとして扱う必要がある。",
-      "3": "findを使うと戻り値は常にstring型になる。",
-      "4": "配列検索はTypeScriptでは型チェックできないため、戻り値は必ずany型になる。"
+      "1": "dist/app",
+      "2": "reports/quiz-quality-report.md",
+      "3": "data/raw/quiz-questions.json",
+      "4": "tests/"
     },
-    "answer": "2",
-    "explanation": "本問題は、TypeScriptにおける<b>検索結果とundefinedの扱い</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`find` は条件に一致する要素が見つからない場合に `undefined` を返す可能性があります。そのため、呼び出し側では戻り値が存在するかを確認してから利用する設計が安全です。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】不適切です。一致する要素が常に存在するとは限りません。<br>【選択肢2】<b>適切な選択肢</b>です。undefinedの可能性を型として扱う必要があります。<br>【選択肢3】不適切です。findの戻り値は配列要素型またはundefinedです。<br>【選択肢4】不適切です。TypeScriptは配列検索結果の型も扱えます。<br><br><b>■ 本プロジェクトとの関係</b><br>クイズアプリでは、idや現在位置に基づいて対象データを取得する処理が発生します。検索結果が存在しない場合を型で扱うことで、UI表示時の実行時エラーを防ぎやすくなります。",
+    "answer": "1",
+    "explanation": "Cloudflare Pagesでは、デプロイ用ビルドで生成された静的成果物を公開する。本プロジェクトでは、React / Viteクイズアプリのbuild outputとして `dist/app` を想定している。",
     "source": {
-      "title": "Project quiz data handling",
-      "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/tree/main/src/client",
-      "publisher": "This project",
-      "retrieved_at": "2026-07-18"
+      "title": "README.md",
+      "url": "README.md",
+      "publisher": "qa-sre-learning-mvp",
+      "retrieved_at": "2026-07-19"
     },
     "tags": [
-      "frontend_languages",
-      "typescript",
-      "undefined",
-      "array-find",
-      "quiz-data"
+      "deployment_cloudflare_pages",
+      "cloudflare-pages",
+      "pages-build",
+      "dist-app"
     ],
     "legal": {
       "is_official_question_reproduction": false,
@@ -492,41 +528,40 @@
       "is_official_certification_claim": false,
       "is_affiliation_or_endorsement_claim": false,
       "is_modified_or_original": true,
-      "attribution": "Self-authored based on this project repository."
+      "attribution": "Original question based on this repository's deployment documentation."
     },
     "review": {
       "status": "reviewed",
-      "reviewed_at": "2026-07-18"
+      "reviewed_at": "2026-07-19"
     }
   },
   {
-    "id": "frontend_languages-phase10-typescript-typecheck-007",
-    "track": "ap",
-    "category": "frontend_languages",
-    "sub_category": "TypeScript",
-    "sub_sub_category": "基本静的型付け",
+    "id": "deployment_cloudflare_pages-002",
+    "track": "deployment",
+    "category": "deployment_cloudflare_pages",
+    "sub_category": "責務分離",
+    "sub_sub_category": "GitHub Actionsでの品質確認",
     "difficulty": "basic",
-    "question": "以下の `tsconfig.json` スニペットにおいて、型チェックを厳格にする中心的な設定として最も適切なものを選べ。\\n\\n```json\\n{\\n  \\\"compilerOptions\\\": {\\n    \\\"target\\\": \\\"ESNext\\\",\\n    \\\"strict\\\": true,\\n    \\\"noEmit\\\": true\\n  }\\n}\\n```",
+    "question": "GitHub ActionsとCloudflare Pagesの責務分離として最も適切なものはどれか。",
     "options": {
-      "1": "`target`: 出力するJavaScriptの構文水準に関する設定であり、厳格な型チェックの中心ではない。",
-      "2": "`strict`: 複数の厳格な型チェックを有効化する中心的な設定である。",
-      "3": "`noEmit`: Cloudflare Pagesへのdeployを自動実行する設定である。",
-      "4": "`compilerOptions`: Playwrightのbrowser installを実行する設定である。"
+      "1": "GitHub Actionsでは完全な品質ゲートを実行し、Cloudflare Pagesではデプロイ用buildと静的配信に責務を限定する。",
+      "2": "Cloudflare Pagesでunit test、E2E、型検査、Git操作をすべて実行し、GitHub Actionsは使わない。",
+      "3": "GitHub ActionsではREADMEだけを確認し、buildやtestは一切実行しない。",
+      "4": "Cloudflare Pagesではraw dataを直接編集し、public JSONを手動生成する。"
     },
-    "answer": "2",
-    "explanation": "本問題は、TypeScriptの<b>strict設定</b>に関する知識を問うものです。<br><br><b>■ 正答の理由</b><br>`strict` は、TypeScriptの厳格な型チェックを有効化する中心的な設定です。これにより、型安全性を高め、CI上のtypecheckを品質ゲートとして機能させやすくなります。<br><br><b>■ 各選択肢の正誤判定</b><br>【選択肢1】不適切です。`target` は出力されるJavaScriptの構文水準に関する設定です。<br>【選択肢2】<b>適切な選択肢</b>です。strict設定は型チェックを厳格化します。<br>【選択肢3】不適切です。`noEmit` は出力を生成しない設定であり、deploy自動実行ではありません。<br>【選択肢4】不適切です。Playwrightのbrowser installとは関係ありません。<br><br><b>■ 本プロジェクトとの関係</b><br>本プロジェクトでは、typecheckをCI品質ゲートとして扱うため、TypeScript設定で型安全性を維持することが重要です。",
+    "answer": "1",
+    "explanation": "本プロジェクトでは、GitHub Actionsが品質確認を担い、Cloudflare Pagesは静的アプリのbuildと配信に集中する。この責務分離により、CIとデプロイの役割が明確になる。",
     "source": {
-      "title": "Project TypeScript configuration",
-      "url": "https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/blob/main/tsconfig.json",
-      "publisher": "This project",
-      "retrieved_at": "2026-07-18"
+      "title": "docs/architecture.md",
+      "url": "docs/architecture.md",
+      "publisher": "qa-sre-learning-mvp",
+      "retrieved_at": "2026-07-19"
     },
     "tags": [
-      "frontend_languages",
-      "typescript",
-      "tsconfig",
-      "strict",
-      "typecheck"
+      "deployment_cloudflare_pages",
+      "github-actions",
+      "cloudflare-pages",
+      "responsibility-separation"
     ],
     "legal": {
       "is_official_question_reproduction": false,
@@ -534,11 +569,93 @@
       "is_official_certification_claim": false,
       "is_affiliation_or_endorsement_claim": false,
       "is_modified_or_original": true,
-      "attribution": "Self-authored based on this project repository."
+      "attribution": "Original question based on this repository's architecture documentation."
     },
     "review": {
       "status": "reviewed",
-      "reviewed_at": "2026-07-18"
+      "reviewed_at": "2026-07-19"
+    }
+  },
+  {
+    "id": "documentation_workflow-001",
+    "track": "documentation",
+    "category": "documentation_workflow",
+    "sub_category": "READMEとdocs",
+    "sub_sub_category": "設計意図の説明",
+    "difficulty": "basic",
+    "question": "本プロジェクトでREADMEとdocsを整備する主な目的として最も適切なものはどれか。",
+    "options": {
+      "1": "実装、品質ゲート、データ境界、デプロイ方針、受け入れ基準を第三者が追えるようにするため。",
+      "2": "TypeScriptの型エラーを自動的に修正するため。",
+      "3": "Cloudflare Pagesのジョブキューを強制的に再起動するため。",
+      "4": "public JSONに内部review metadataを含めるため。"
+    },
+    "answer": "1",
+    "explanation": "READMEとdocsは、実装内容だけでなく、なぜその設計にしたか、どの品質ゲートで何を保証するか、どの範囲がMVPの対象かを説明するために重要である。",
+    "source": {
+      "title": "docs/acceptance-criteria.md",
+      "url": "docs/acceptance-criteria.md",
+      "publisher": "qa-sre-learning-mvp",
+      "retrieved_at": "2026-07-19"
+    },
+    "tags": [
+      "documentation_workflow",
+      "README",
+      "docs",
+      "acceptance-criteria"
+    ],
+    "legal": {
+      "is_official_question_reproduction": false,
+      "is_copied_verbatim": false,
+      "is_official_certification_claim": false,
+      "is_affiliation_or_endorsement_claim": false,
+      "is_modified_or_original": true,
+      "attribution": "Original question based on this repository's documentation workflow."
+    },
+    "review": {
+      "status": "reviewed",
+      "reviewed_at": "2026-07-19"
+    }
+  },
+  {
+    "id": "git_workflow-001",
+    "track": "operations",
+    "category": "git_workflow",
+    "sub_category": "変更管理",
+    "sub_sub_category": "pull request統合",
+    "difficulty": "basic",
+    "question": "本プロジェクトでmain branchへの統合をpull request経由にする意義として最も適切なものはどれか。",
+    "options": {
+      "1": "変更内容をレビューし、GitHub Actionsの品質ゲートを通過したうえでmainへ統合できるようにするため。",
+      "2": "localの作業内容をすべて自動的に削除するため。",
+      "3": "Cloudflare Pagesのbuild output directoryを毎回変更するため。",
+      "4": "クイズデータのschema validationを無効化するため。"
+    },
+    "answer": "1",
+    "explanation": "pull request経由の統合により、変更差分を確認し、GitHub Actionsの品質ゲートを通過した状態でmainへ反映できる。これはポートフォリオを常に展示可能な状態に保つうえで重要である。",
+    "source": {
+      "title": "docs/acceptance-criteria.md",
+      "url": "docs/acceptance-criteria.md",
+      "publisher": "qa-sre-learning-mvp",
+      "retrieved_at": "2026-07-19"
+    },
+    "tags": [
+      "git_workflow",
+      "pull-request",
+      "main-branch",
+      "quality-gate"
+    ],
+    "legal": {
+      "is_official_question_reproduction": false,
+      "is_copied_verbatim": false,
+      "is_official_certification_claim": false,
+      "is_affiliation_or_endorsement_claim": false,
+      "is_modified_or_original": true,
+      "attribution": "Original question based on this repository's Git workflow documentation."
+    },
+    "review": {
+      "status": "reviewed",
+      "reviewed_at": "2026-07-19"
     }
   }
 ]
