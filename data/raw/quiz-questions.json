@@ -1,6 +1,6 @@
 [
   {
-    "id": "project-overview-001",
+    "id": "project_overview-001",
     "track": "portfolio",
     "category": "project_overview",
     "sub_category": "MVPの目的",
@@ -41,7 +41,7 @@
     }
   },
   {
-    "id": "project-overview-002",
+    "id": "project_overview-002",
     "track": "portfolio",
     "category": "project_overview",
     "sub_category": "成果物の構成",
@@ -83,7 +83,7 @@
     }
   },
   {
-    "id": "data-quality-pipeline-001",
+    "id": "data_quality_pipeline-001",
     "track": "quality",
     "category": "data_quality_pipeline",
     "sub_category": "正本データと公開用データ",
@@ -124,7 +124,7 @@
     }
   },
   {
-    "id": "data-quality-pipeline-002",
+    "id": "data_quality_pipeline-002",
     "track": "quality",
     "category": "data_quality_pipeline",
     "sub_category": "正本データと公開用データ",
@@ -165,7 +165,7 @@
     }
   },
   {
-    "id": "schema-taxonomy-validation-001",
+    "id": "schema_taxonomy_validation-001",
     "track": "quality",
     "category": "schema_taxonomy_validation",
     "sub_category": "Zod schema validation",
@@ -206,7 +206,7 @@
     }
   },
   {
-    "id": "schema-taxonomy-validation-002",
+    "id": "schema_taxonomy_validation-002",
     "track": "quality",
     "category": "schema_taxonomy_validation",
     "sub_category": "Taxonomy validation",
@@ -247,7 +247,7 @@
     }
   },
   {
-    "id": "policy-validation-001",
+    "id": "policy_validation-001",
     "track": "quality",
     "category": "policy_validation",
     "sub_category": "内製クイズ方針",
@@ -288,7 +288,7 @@
     }
   },
   {
-    "id": "policy-validation-002",
+    "id": "policy_validation-002",
     "track": "quality",
     "category": "policy_validation",
     "sub_category": "公開安全性",
@@ -329,7 +329,7 @@
     }
   },
   {
-    "id": "quality-gate-ci-001",
+    "id": "quality_gate_ci-001",
     "track": "quality",
     "category": "quality_gate_ci",
     "sub_category": "統合品質ゲート",
@@ -371,7 +371,7 @@
     }
   },
   {
-    "id": "quality-gate-ci-002",
+    "id": "quality_gate_ci-002",
     "track": "quality",
     "category": "quality_gate_ci",
     "sub_category": "テスト責務",
@@ -412,7 +412,7 @@
     }
   },
   {
-    "id": "frontend-quiz-ui-001",
+    "id": "frontend_quiz_ui-001",
     "track": "frontend",
     "category": "frontend_quiz_ui",
     "sub_category": "React / Vite UI",
@@ -454,7 +454,7 @@
     }
   },
   {
-    "id": "frontend-quiz-ui-002",
+    "id": "frontend_quiz_ui-002",
     "track": "frontend",
     "category": "frontend_quiz_ui",
     "sub_category": "フィードバックと結果画面",
@@ -495,7 +495,7 @@
     }
   },
   {
-    "id": "deployment-cloudflare-pages-001",
+    "id": "deployment_cloudflare_pages-001",
     "track": "deployment",
     "category": "deployment_cloudflare_pages",
     "sub_category": "デプロイ用ビルド",
@@ -536,7 +536,7 @@
     }
   },
   {
-    "id": "deployment-cloudflare-pages-002",
+    "id": "deployment_cloudflare_pages-002",
     "track": "deployment",
     "category": "deployment_cloudflare_pages",
     "sub_category": "責務分離",
@@ -577,7 +577,7 @@
     }
   },
   {
-    "id": "documentation-workflow-001",
+    "id": "documentation_workflow-001",
     "track": "documentation",
     "category": "documentation_workflow",
     "sub_category": "READMEとdocs",
@@ -618,7 +618,7 @@
     }
   },
   {
-    "id": "git-workflow-001",
+    "id": "git_workflow-001",
     "track": "operations",
     "category": "git_workflow",
     "sub_category": "変更管理",

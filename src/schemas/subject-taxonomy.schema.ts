@@ -1,10 +1,15 @@
 import * as z from "zod";
 
 export const CategoryKeySchema = z.enum([
-  "frontend_languages",
-  "edge_infra_security",
-  "qa_test_automation",
-  "dev_env_devops"
+  "project_overview",
+  "data_quality_pipeline",
+  "schema_taxonomy_validation",
+  "policy_validation",
+  "quality_gate_ci",
+  "frontend_quiz_ui",
+  "deployment_cloudflare_pages",
+  "documentation_workflow",
+  "git_workflow"
 ]);
 
 export const SubjectTaxonomySubCategorySchema = z.object({
@@ -23,5 +28,15 @@ export const SubjectTaxonomySchema = z.object({
   categories: z.array(SubjectTaxonomyCategorySchema).min(1)
 });
 
+export const SubjectTaxonomyCategoriesSchema = z.array(
+  SubjectTaxonomyCategorySchema
+);
+
 export type CategoryKey = z.infer<typeof CategoryKeySchema>;
+export type SubjectTaxonomySubCategory = z.infer<
+  typeof SubjectTaxonomySubCategorySchema
+>;
+export type SubjectTaxonomyCategory = z.infer<
+  typeof SubjectTaxonomyCategorySchema
+>;
 export type SubjectTaxonomy = z.infer<typeof SubjectTaxonomySchema>;

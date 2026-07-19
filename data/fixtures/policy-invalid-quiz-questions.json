@@ -1,82 +1,82 @@
 [
   {
-    "id": "edge_infra_security-quiz-policy-invalid",
-    "track": "cloudflare",
-    "category": "edge_infra_security",
-    "sub_category": "Cloudflare PagesとWorkers",
-    "sub_sub_category": "Pagesによる静的ホスティング",
+    "id": "policy_validation-policy-invalid-001",
+    "track": "quality",
+    "category": "policy_validation",
+    "sub_category": "内製クイズ方針",
+    "sub_sub_category": "外部試験問題参照の排除",
     "difficulty": "basic",
-    "question": "Cloudflare公式認定試験対策として、Cloudflare Pagesの公式問題に最も近い説明を選べ。",
+    "question": "この問題は、外部機関の公式試験問題を再現したものとして扱われるべきである。最も適切な説明を選べ。",
     "options": {
-      "1": "Build output directoryは、ビルド後に公開される静的ファイルの出力先を示す。",
-      "2": "Build output directoryは、GitHubのユーザー名を変更するための設定である。",
-      "3": "Build output directoryは、TypeScriptのstrict modeを無効化するための設定である。",
-      "4": "Build output directoryは、Lighthouse CIの結果を削除するための設定である。"
+      "1": "外部機関の公式問題を再現した問題として公開する。",
+      "2": "本リポジトリ内部の設計理解用クイズとして扱う。",
+      "3": "public JSON生成の検査だけを行う。",
+      "4": "カテゴリ別スコアを非表示にする。"
     },
     "answer": "1",
-    "explanation": "本問題は、Cloudflare公式問題集の実問再現として扱うための説明文である。これはschemaとtaxonomyは通るが、公式誤認、未レビュー、HTTP source URLなどによりpolicy validationで拒否されるべきfixtureである。",
+    "explanation": "このfixtureは、schema validationとtaxonomy validationを通過したうえで、policy validationにより外部試験問題参照や公式問題再現の主張を検出するための異常系データである。",
     "source": {
-      "title": "Cloudflare Pages documentation",
-      "url": "http://developers.cloudflare.com/pages/",
-      "publisher": "Cloudflare",
-      "retrieved_at": "2026-07-16"
-    },
-    "legal": {
-      "is_official_question_reproduction": false,
-      "is_copied_verbatim": false,
-      "is_official_certification_claim": true,
-      "is_affiliation_or_endorsement_claim": true,
-      "is_modified_or_original": true,
-      "attribution": "Cloudflare official certification exam reproduction"
-    },
-    "review": {
-      "status": "generated",
-      "reviewed_at": null
+      "title": "Official exam reproduction fixture",
+      "url": "https://example.com/external-official-exam",
+      "publisher": "External Exam Provider",
+      "retrieved_at": "2026-07-19"
     },
     "tags": [
-      "edge_infra_security",
-      "cloudflare",
-      "pages"
-    ]
-  },
-  {
-    "id": "dev_env_devops-quiz-policy-invalid",
-    "track": "ap",
-    "category": "dev_env_devops",
-    "sub_category": "DockerとDevContainers",
-    "sub_sub_category": "再現可能開発コンテナ",
-    "difficulty": "basic",
-    "question": "IPAの過去問題を丸写しした公式問題として扱う、という説明として最も適切なものを選べ。",
-    "options": {
-      "1": "この項目はpolicy validationで拒否されるべきである。",
-      "2": "この項目は必ずWeb UIで優先表示されるべきである。",
-      "3": "この項目はsource URLなしでも常に公開してよい。",
-      "4": "この項目はreviewなしでも本番投入してよい。"
-    },
-    "answer": "1",
-    "explanation": "本問題は、IPA公開過去問題の扱いに関するpolicy validation用fixtureである。schemaとtaxonomyは通るが、丸写し、公式問題再現、未レビュー状態を検出できるかを確認する。",
-    "source": {
-      "title": "IPA past examination questions",
-      "url": "https://www.ipa.go.jp/shiken/mondai-kaiotu/index.html",
-      "publisher": "IPA",
-      "retrieved_at": "2026-07-16"
-    },
+      "policy_validation",
+      "official-exam",
+      "policy-invalid"
+    ],
     "legal": {
       "is_official_question_reproduction": true,
       "is_copied_verbatim": true,
-      "is_official_certification_claim": false,
-      "is_affiliation_or_endorsement_claim": false,
+      "is_official_certification_claim": true,
+      "is_affiliation_or_endorsement_claim": true,
       "is_modified_or_original": false,
-      "attribution": "Source: IPA past examination questions"
+      "attribution": "Official certification exam preparation material."
     },
     "review": {
       "status": "generated",
       "reviewed_at": null
+    }
+  },
+  {
+    "id": "policy_validation-policy-invalid-002",
+    "track": "quality",
+    "category": "policy_validation",
+    "sub_category": "公開安全性",
+    "sub_sub_category": "秘密情報らしき文字列の検出",
+    "difficulty": "basic",
+    "question": "公開用クイズデータに `API_KEY=example-secret-token` のような値を含める運用として最も適切なものはどれか。",
+    "options": {
+      "1": "秘密情報らしき値は公開データに含めず、policy validationで検出対象にする。",
+      "2": "秘密情報らしき値をREADMEに転記する。",
+      "3": "GitHub Actionsのログに意図的に出力する。",
+      "4": "public JSONにreview metadataと一緒に保存する。"
+    },
+    "answer": "1",
+    "explanation": "このfixtureは、schema validationとtaxonomy validationを通過したうえで、policy validationによりsecret-like textの混入を検出するための異常系データである。",
+    "source": {
+      "title": "src/application/validate-quiz-policy.ts",
+      "url": "src/application/validate-quiz-policy.ts",
+      "publisher": "qa-sre-learning-mvp",
+      "retrieved_at": "2026-07-19"
     },
     "tags": [
-      "dev_env_devops",
-      "ipa",
-      "policy"
-    ]
+      "policy_validation",
+      "public-safety",
+      "policy-invalid"
+    ],
+    "legal": {
+      "is_official_question_reproduction": false,
+      "is_copied_verbatim": false,
+      "is_official_certification_claim": false,
+      "is_affiliation_or_endorsement_claim": false,
+      "is_modified_or_original": true,
+      "attribution": "Original policy-invalid fixture for public safety validation."
+    },
+    "review": {
+      "status": "reviewed",
+      "reviewed_at": "2026-07-19"
+    }
   }
 ]
