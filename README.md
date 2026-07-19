@@ -1,6 +1,7 @@
 # qa-sre-learning-mvp
+`README.md`
 
-[![quality-gate](https://github.com/<OWNER>/qa-sre-learning-mvp/actions/workflows/quality-gate.yml/badge.svg?branch=main)](https://github.com/<OWNER>/qa-sre-learning-mvp/actions/workflows/quality-gate.yml)
+[![quality-gate](https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/actions/workflows/quality-gate.yml/badge.svg?branch=main)](https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/actions/workflows/quality-gate.yml)
 [![TypeScript](https://img.shields.io/badge/TypeScript-7.x-blue.svg)](https://www.typescriptlang.org/)
 [![Bun](https://img.shields.io/badge/Bun-1.3.x-black.svg)](https://bun.sh/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -208,7 +209,7 @@ data/raw/learning-items.json
 ### セットアップ
 
 ```bash
-git clone https://github.com/<OWNER>/qa-sre-learning-mvp.git
+git clone https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp.git
 cd qa-sre-learning-mvp
 
 bun install --frozen-lockfile
