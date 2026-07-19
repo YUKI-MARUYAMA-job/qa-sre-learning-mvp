@@ -1,96 +1,197 @@
 {
-  "version": "2026-07-16",
+  "version": "2026-07-19",
   "categories": [
     {
-      "key": "frontend_languages",
-      "label": "言語とフロントエンド",
+      "key": "project_overview",
+      "label": "プロジェクト概要",
       "sub_categories": [
         {
-          "name": "TypeScript",
+          "name": "MVPの目的",
           "sub_sub_categories": [
-            "基本静的型付け",
-            "高度な型システム"
+            "QA/SRE志向ポートフォリオ",
+            "学習用クイズアプリの位置づけ"
           ]
         },
         {
-          "name": "React",
+          "name": "成果物の構成",
           "sub_sub_categories": [
-            "React Hooks",
-            "状態管理とカスタムフック"
-          ]
-        },
-        {
-          "name": "HonoとVite-SSG",
-          "sub_sub_categories": [
-            "Hono JSX表現",
-            "Vite SSGによる静的ビルド"
-          ]
-        },
-        {
-          "name": "Vanilla ExtractとCSS",
-          "sub_sub_categories": [
-            "型安全なCSS-in-JS",
-            "CSS変数と動的テーマ"
+            "READMEと主要ドキュメント",
+            "アプリ・データ・レポートの関係"
           ]
         }
       ]
     },
     {
-      "key": "edge_infra_security",
-      "label": "エッジインフラとセキュリティ",
+      "key": "data_quality_pipeline",
+      "label": "データ品質パイプライン",
       "sub_categories": [
         {
-          "name": "Cloudflare PagesとWorkers",
+          "name": "正本データと公開用データ",
           "sub_sub_categories": [
-            "Pagesによる静的ホスティング",
-            "Workersによるサーバーレス実行"
+            "raw quiz data",
+            "public quiz data"
           ]
         },
         {
-          "name": "Cloudflare AccessとZero Trust",
+          "name": "生成物の鮮度確認",
           "sub_sub_categories": [
-            "ID認識型プロキシ(IAP)",
-            "ワンタイムPIN認証ポリシー"
+            "quiz quality report",
+            "public data freshness check"
           ]
         }
       ]
     },
     {
-      "key": "qa_test_automation",
-      "label": "品質保証と自動テスト",
+      "key": "schema_taxonomy_validation",
+      "label": "スキーマ検証と分類検証",
       "sub_categories": [
         {
-          "name": "Webアクセシビリティ自動監査",
+          "name": "Zod schema validation",
           "sub_sub_categories": [
-            "WCAG AA基準コントラスト比",
-            "相対輝度の算出式"
+            "JSON構造の検証",
+            "必須項目と型の検証"
           ]
         },
         {
-          "name": "パフォーマンス測定",
+          "name": "Taxonomy validation",
           "sub_sub_categories": [
-            "PuppeteerとLighthouse",
-            "WebVitalsメトリクス"
+            "カテゴリ整合性",
+            "分類体系の正本管理"
           ]
         }
       ]
     },
     {
-      "key": "dev_env_devops",
-      "label": "開発環境とDevOps",
+      "key": "policy_validation",
+      "label": "ポリシー検証",
       "sub_categories": [
         {
-          "name": "DockerとDevContainers",
+          "name": "内製クイズ方針",
           "sub_sub_categories": [
-            "再現可能開発コンテナ",
-            "コンテナソケット共有"
+            "外部試験問題参照の排除",
+            "ポートフォリオ範囲内の出題"
           ]
         },
         {
-          "name": "GitOpsとインポート自動化",
+          "name": "公開安全性",
           "sub_sub_categories": [
-            "cim / qim トランザクション",
-            "Git自動コミットとロールバック"
+            "秘密情報らしき文字列の検出",
+            "review状態の確認"
+          ]
+        },
+        {
+          "name": "Fixture responsibility",
+          "sub_sub_categories": [
+            "schema違反fixture",
+            "taxonomy違反fixture",
+            "policy違反fixture"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "quality_gate_ci",
+      "label": "品質ゲートとCI",
+      "sub_categories": [
+        {
+          "name": "統合品質ゲート",
+          "sub_sub_categories": [
+            "bun run check",
+            "localとCIの再現性"
+          ]
+        },
+        {
+          "name": "GitHub Actions",
+          "sub_sub_categories": [
+            "pull request検査",
+            "main branch検査"
+          ]
+        },
+        {
+          "name": "テスト責務",
+          "sub_sub_categories": [
+            "unit test",
+            "Playwright E2E"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "frontend_quiz_ui",
+      "label": "クイズUI",
+      "sub_categories": [
+        {
+          "name": "React / Vite UI",
+          "sub_sub_categories": [
+            "公開用JSONの読み込み",
+            "クイズ表示と回答操作"
+          ]
+        },
+        {
+          "name": "フィードバックと結果画面",
+          "sub_sub_categories": [
+            "正誤フィードバック",
+            "カテゴリ別スコア"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "deployment_cloudflare_pages",
+      "label": "Cloudflare Pagesデプロイ",
+      "sub_categories": [
+        {
+          "name": "デプロイ用ビルド",
+          "sub_sub_categories": [
+            "pages:build",
+            "dist/app"
+          ]
+        },
+        {
+          "name": "責務分離",
+          "sub_sub_categories": [
+            "GitHub Actionsでの品質確認",
+            "Cloudflare Pagesでの静的配信"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "documentation_workflow",
+      "label": "ドキュメントと説明設計",
+      "sub_categories": [
+        {
+          "name": "READMEとdocs",
+          "sub_sub_categories": [
+            "設計意図の説明",
+            "受け入れ基準の明文化"
+          ]
+        },
+        {
+          "name": "reports",
+          "sub_sub_categories": [
+            "品質状態の可視化",
+            "提出準備状況の確認"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "git_workflow",
+      "label": "Git運用",
+      "sub_categories": [
+        {
+          "name": "変更管理",
+          "sub_sub_categories": [
+            "短命branch",
+            "pull request統合"
+          ]
+        },
+        {
+          "name": "同期状態の確認",
+          "sub_sub_categories": [
+            "git status",
+            "git sync diagnosis"
           ]
         }
       ]
