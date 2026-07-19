@@ -1,113 +1,155 @@
 # qa-sre-learning-mvp
 
-[![quality-gate](https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/actions/workflows/quality-gate.yml/badge.svg?branch=main)](https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/actions/workflows/quality-gate.yml)
+[![quality-gate](https://github.com/<OWNER>/qa-sre-learning-mvp/actions/workflows/quality-gate.yml/badge.svg?branch=main)](https://github.com/<OWNER>/qa-sre-learning-mvp/actions/workflows/quality-gate.yml)
 [![TypeScript](https://img.shields.io/badge/TypeScript-7.x-blue.svg)](https://www.typescriptlang.org/)
 [![Bun](https://img.shields.io/badge/Bun-1.3.x-black.svg)](https://bun.sh/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> **一言で説明**: `qa-sre-learning-mvp` は、QA/SRE志向の学習用クイズアプリと品質ゲートを組み合わせた小型ポートフォリオMVPです。
-> TypeScript、Bun、Vite、Playwright、Cloudflare Pagesを用いて、データ検証・E2E・品質レポート・本番デプロイまで再現できることを示します。
+> `qa-sre-learning-mvp` は、QA/SRE志向のポートフォリオ成果物として、クイズアプリ、データ検証、品質ゲート、E2E、レポート生成、Cloudflare Pagesデプロイを小さく統合したMVPです。
 
 ## 概要
 
-このリポジトリは、大規模なアプリケーションを作ることではなく、小さな学習アプリを題材に、品質保証・自動検証・デプロイ・ドキュメント化の一連の流れを実装することを目的としています。
+このリポジトリは、大規模なWebサービスを作ることではなく、小さなクイズアプリを題材に、品質保証・データ検証・自動テスト・デプロイ・ドキュメント化の一連の流れを実装することを目的としています。
 
-主な対象は、QA / SRE / フロントエンド基礎 / DevOps学習用の4択クイズです。
-クイズデータはpublic JSONとして生成され、アプリ側ではそれを読み込んで出題します。
+クイズの題材は、外部機関の試験問題や公式問題ではありません。
+本リポジトリ自体の構成、技術スタック、品質ゲート、データ検証、E2E、デプロイ、ドキュメント設計を理解するための内製クイズです。
 
-また、単にUIを作るだけではなく、以下を品質ゲートとして統合しています。
+現在のクイズは、以下を題材にした16問で構成されています。
 
-- TypeScript typecheck
-- unit test
-- schema validation
-- taxonomy validation
-- policy validation
-- negative fixture test
-- public quiz data freshness check
-- public safety check
-- static site build check
-- security baseline check
-- performance baseline check
-- Playwright E2E smoke test
+* プロジェクト概要
+* データ品質パイプライン
+* schema validation / taxonomy validation
+* policy validation
+* 品質ゲートとCI
+* React / ViteクイズUI
+* Cloudflare Pagesデプロイ
+* ドキュメントと説明設計
+* Git運用
 
-### なぜ作ったのか
+このプロジェクトでは、単にUIを作るだけでなく、以下を統合品質ゲートとして扱います。
 
-このプロジェクトは、未経験からQA / SRE / インフラ寄りのIT職を目指すためのポートフォリオとして作成しました。
+* TypeScript typecheck
+* client typecheck
+* unit test
+* learning data validation
+* source policy validation
+* quiz schema validation
+* quiz taxonomy validation
+* quiz policy validation
+* negative fixture validation
+* quiz quality report freshness check
+* public quiz data freshness check
+* dependency policy validation
+* public repository safety check
+* static site build check
+* client production build
+* security baseline check
+* performance baseline check
+* Playwright E2E smoke test
+
+## 作成目的
+
+このプロジェクトは、未経験からQA / SRE / インフラ寄りのIT職を目指すためのポートフォリオとして作成しています。
 
 特に、以下を示すことを目的としています。
 
-- 小さなMVPを要件に基づいて実装できること
-- データ品質をschema / taxonomy / policyで検証できること
-- 正常系だけでなく異常系fixtureも用意できること
-- localとCIで同じ品質ゲートを再現できること
-- Cloudflare Pagesへ公開デプロイできること
-- README、docs、reportsにより技術判断を説明できること
+* 小さなMVPを要件に基づいて実装できること
+* データ品質をschema / taxonomy / policyで検証できること
+* 正常系だけでなく異常系fixtureも用意できること
+* raw dataからpublic dataとreportを再生成できること
+* localとCIで同じ品質ゲートを再現できること
+* Playwright E2Eで主要なユーザー操作を検証できること
+* Cloudflare Pagesへ静的アプリをデプロイできること
+* README、docs、reportsにより技術判断を説明できること
 
----
+## 公開デモ
 
-## ライブデモ
-
-- **Quiz App**: https://qa-sre-learning-mvp.pages.dev
-- **Quality Gate**: `.github/workflows/quality-gate.yml`
+* **Quiz App**: https://qa-sre-learning-mvp.pages.dev
+* **Quality Gate**: `.github/workflows/quality-gate.yml`
 
 公開アプリでは、以下を確認できます。
 
-- 13問の4択クイズ
-- 正誤フィードバック
-- 結果画面
-- 正答率表示
-- カテゴリ別スコア集計
+* 16問の4択クイズ
+* 回答後の正誤フィードバック
+* 解説表示
+* 結果画面
+* スコア表示
+* 正答率表示
+* カテゴリ別スコア集計
+* 「もう一度解く」による再実行
 
----
+## クイズアプリの位置づけ
+
+このク 「もう一度解く」による再実行
+
+## クイズアプリの位置づけ
+
+このクイズアプリは、外部試験問題の模倣や再現を目的としたものではありません。
+
+本リポジトリのREADME、docs、reports、source code、CI/CD構成を題材として、ポートフォリオ成果物の設計意図と品質保証メカニズムを理解するための独自クイズです。
+
+そのため、クイズデータでは以下を方針としています。
+
+| 方針                   | 内容                                                                         |
+| -------------------- | -------------------------------------------------------------------------- |
+| 外部試験問題を扱わない          | 公式問題、過去問、実問再現、認定試験対策を題材にしない                                                |
+| 根拠をrepo内部に置く         | `README.md`、`docs/`、`reports/`、`src/`、`e2e/`、`package.json` などをsourceとして扱う |
+| raw dataを正本にする       | `data/raw/quiz-questions.json` を正本とし、検証と生成の起点にする                           |
+| public dataを生成する     | UI用の `public/study-it/quiz_data.json` を生成物として扱う                            |
+| review metadataを分離する | review / legal metadataは内部検証用として扱い、public JSONには原則として出さない                  |
+| 品質ゲートで検証する           | schema、taxonomy、policy、fixture、E2Eで変更を検証する                                 |
 
 ## 主な機能
 
-| 機能                    | 説明                                                           |
-| :---------------------- | :------------------------------------------------------------- |
-| 4択クイズ               | public JSONから読み込んだ13問のクイズを出題                    |
-| 正誤フィードバック      | 回答後に正解・不正解と解説を表示                               |
-| 結果画面                | スコア、正答率、カテゴリ別スコアを表示                         |
-| クイズデータ検証        | schema / taxonomy / policy validationを実行                    |
-| 異常系fixture           | schema違反・taxonomy違反・policy違反の責務を分離して検証       |
-| 品質レポート生成        | quiz quality report / portfolio readiness reportを生成         |
-| E2E smoke test          | Playwrightで主要なクイズ操作を検証                             |
-| Cloudflare Pages deploy | デプロイ用buildと完全品質ゲートを分離                          |
-| Dev Container           | Bun / TypeScript / Vite / Playwrightを再現可能な開発環境で実行 |
+| 機能                      | 説明                                                  |
+| ----------------------- | --------------------------------------------------- |
+| 4択クイズ                   | public JSONから読み込んだ16問のクイズを出題                        |
+| 正誤フィードバック               | 回答後に正解・不正解と解説を表示                                    |
+| 結果画面                    | スコア、正答率、カテゴリ別スコアを表示                                 |
+| クイズデータ検証                | schema / taxonomy / policy validationを実行            |
+| 異常系fixture              | schema違反・taxonomy違反・policy違反の責務を分離して検証              |
+| 品質レポート生成                | quiz quality report / portfolio readiness reportを生成 |
+| 生成物鮮度チェック               | reportとpublic quiz dataがraw dataと同期しているか確認          |
+| E2E smoke test          | Playwrightで主要なクイズ操作を検証                              |
+| Cloudflare Pages deploy | 静的アプリとしてCloudflare Pagesへデプロイ                       |
+| Public safety check     | 公開リポジトリに含めるべきでないファイルや文字列を検査                         |
 
----
+## 技術構成
 
-## 技術スタック
-
-| カテゴリ                  | 技術                                     |
-| :------------------------ | :--------------------------------------- |
-| Runtime / Package Manager | Bun                                      |
-| Language                  | TypeScript                               |
-| Frontend                  | React / Vite                             |
-| Validation                | Zod                                      |
-| Unit Test                 | Bun test                                 |
-| E2E                       | Playwright                               |
-| Static Hosting            | Cloudflare Pages                         |
-| CI                        | GitHub Actions                           |
-| Development Environment   | VS Code Dev Containers / Docker / Colima |
-| Documentation             | Markdown / generated reports             |
-
----
+| 分類                               | 技術                                       |
+| -------------------------------- | ---------------------------------------- |
+| Runtime / Package Manager        | Bun                                      |
+| Language                         | TypeScript                               |
+| Frontend                         | React / Vite                             |
+| Validation                       | Zod                                      |
+| Unit Test                        | Bun test                                 |
+| E2E                              | Playwright                               |
+| Static Hosting                   | Cloudflare Pages                         |
+| CI                               | GitHub Actions                           |
+| Documentation                    | Markdown / generated reports             |
+| Optional Development Environment | VS Code Dev Containers / Docker / Colima |
 
 ## アーキテクチャ
+
+クイズデータは、raw dataを正本として扱い、検証後にpublic JSONとレポートへ変換します。
 
 ```text
 data/raw/quiz-questions.json
   -> schema validation
   -> taxonomy validation
   -> policy validation
+  -> fixture validation
+  -> quiz quality report generation
   -> public quiz data generation
   -> public/study-it/quiz_data.json
   -> React / Vite quiz UI
+  -> client production build
   -> Playwright E2E smoke test
+  -> GitHub Actions quality gate
   -> Cloudflare Pages deployment
 ```
 
-品質レポート側は、以下の流れで生成します。
+学習データと静的レポート側は、以下の流れで検証・生成します。
 
 ```text
 data/raw/learning-items.json
@@ -123,36 +165,50 @@ data/raw/learning-items.json
 
 主要な構成は以下です。
 
-| Path                             | 役割                                              |
-| :------------------------------- | :------------------------------------------------ |
-| `src/client/`                    | React / ViteによるクイズUI                        |
-| `src/cli/`                       | validation / report / build / baseline check用CLI |
-| `src/schemas/`                   | Zod schema定義                                    |
-| `data/raw/`                      | 学習データ・クイズデータ                          |
-| `data/fixtures/`                 | 異常系検証用fixture                               |
-| `public/study-it/quiz_data.json` | 公開用に生成されたクイズJSON                      |
-| `reports/`                       | 品質レポート・提出準備レポート・release notes     |
-| `docs/`                          | 設計、要件、品質ゲート、面接説明用メモ            |
-| `e2e/`                           | Playwright E2E                                    |
-| `.devcontainer/`                 | Dev Container設定                                 |
-| `.github/workflows/`             | GitHub Actions品質ゲート                          |
+| Path                             | 役割                                                   |
+| -------------------------------- | ---------------------------------------------------- |
+| `src/client/`                    | React / ViteによるクイズUI                                 |
+| `src/cli/`                       | validation / report / build / baseline check用CLI     |
+| `src/schemas/`                   | Zod schema定義                                         |
+| `src/application/`               | taxonomy validation、policy validationなどのアプリケーションロジック |
+| `data/raw/`                      | 学習データ・クイズデータの正本                                      |
+| `data/fixtures/`                 | 異常系検証用fixture                                        |
+| `public/study-it/quiz_data.json` | UIが読み込む公開用クイズJSON                                    |
+| `reports/`                       | 品質レポート・提出準備レポート・release notes                        |
+| `docs/`                          | 設計、要件、品質ゲート、面接説明用メモ                                  |
+| `e2e/`                           | Playwright E2E                                       |
+| `.github/workflows/`             | GitHub Actions品質ゲート                                  |
+| `.devcontainer/`                 | 任意利用の開発コンテナ設定                                        |
 
----
+## データ境界
+
+このプロジェクトでは、raw dataとpublic dataを分けています。
+
+| データ                              | 役割             | commit対象 |
+| -------------------------------- | -------------- | -------- |
+| `data/raw/quiz-questions.json`   | クイズ問題の正本       | 対象       |
+| `data/raw/subject-taxonomy.json` | taxonomyの正本    | 対象       |
+| `reports/quiz-quality-report.md` | クイズ品質レポート      | 対象       |
+| `public/study-it/quiz_data.json` | UIが読み込む公開用JSON | 対象       |
+| `test-results/`                  | Playwright実行結果 | 原則対象外    |
+| `dist/`                          | build出力        | 原則対象外    |
+
+`reports/quiz-quality-report.md` と `public/study-it/quiz_data.json` は生成物ですが、品質ゲートで鮮度確認するためcommit対象にしています。
 
 ## はじめ方
 
 ### 前提条件
 
-- Bun 1.3.x
-- Node.js 22.x
-- Git
-- Dockerまたは互換コンテナ実行環境
-- VS Code Dev Containers拡張機能を使う場合は、Docker DesktopまたはColima等
+* Bun 1.3.x
+* Node.js 22.x
+* Git
+* Playwright E2Eを実行する場合はChromium実行環境
+* Dev Containerを利用する場合はDockerまたは互換コンテナ実行環境
 
 ### セットアップ
 
 ```bash
-git clone https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp.git
+git clone https://github.com/<OWNER>/qa-sre-learning-mvp.git
 cd qa-sre-learning-mvp
 
 bun install --frozen-lockfile
@@ -173,8 +229,6 @@ bun run client:preview -- --host 127.0.0.1 --port 4173 --strictPort
 http://127.0.0.1:4173/
 ```
 
----
-
 ## 品質ゲート
 
 完全な品質ゲートは以下で実行します。
@@ -185,18 +239,18 @@ CI=1 bun run check
 
 `bun run check` には、主に以下が含まれます。
 
-| 分類        | 内容                                                       |
-| :---------- | :--------------------------------------------------------- |
-| 型検査      | TypeScript typecheck / client typecheck                    |
-| Unit test   | Bun test                                                   |
-| データ検証  | data schema validation / source policy validation          |
-| クイズ検証  | quiz schema / taxonomy / policy validation                 |
-| fixture検証 | schema-invalid / taxonomy-invalid / policy-invalid fixture |
-| 生成物検証  | report freshness / public quiz data freshness              |
-| 安全性      | dependency policy / public repository safety               |
-| Build       | static site build / client production build                |
-| Baseline    | security baseline / performance baseline                   |
-| E2E         | Playwright smoke test                                      |
+| 分類        | 内容                                                                            |
+| --------- | ----------------------------------------------------------------------------- |
+| 型検査       | TypeScript typecheck / client typecheck                                       |
+| Unit test | Bun test                                                                      |
+| データ検証     | learning data schema validation / source policy validation                    |
+| クイズ検証     | quiz schema / taxonomy / policy validation                                    |
+| fixture検証 | schema-invalid / taxonomy-invalid / policy-invalid fixture                    |
+| 生成物検証     | quality report freshness / quiz report freshness / public quiz data freshness |
+| 安全性       | dependency policy / public repository safety                                  |
+| Build     | static site build / client production build                                   |
+| Baseline  | security baseline / performance baseline                                      |
+| E2E       | Playwright smoke test                                                         |
 
 個別に確認する場合は以下を使います。
 
@@ -209,11 +263,35 @@ bun run validate:policy
 bun run validate:quiz
 bun run validate:quiz-policy
 bun run validate:quiz-fixtures
+bun run quiz:report:check
+bun run prepare:public-quiz-data:check
 bun run client:build
 CI=1 bunx playwright test e2e/quiz-smoke.e2e.ts --trace on
 ```
 
----
+## クイズデータ更新ワークフロー
+
+クイズ問題やtaxonomyを変更した場合は、以下の順序で確認します。
+
+```bash
+bun run validate:quiz
+bun run validate:quiz-policy
+bun run validate:quiz-fixtures
+
+bun run quiz:report
+bun run prepare:public-quiz-data
+
+bun run quiz:report:check
+bun run prepare:public-quiz-data:check
+
+CI=1 bun run check
+```
+
+生成物をcommitする場合は、以下を含めます。
+
+```bash
+git add reports/quiz-quality-report.md public/study-it/quiz_data.json
+```
 
 ## デプロイ
 
@@ -221,7 +299,7 @@ CI=1 bunx playwright test e2e/quiz-smoke.e2e.ts --trace on
 
 ```text
 GitHub Actions:
-  bun run check
+  CI=1 bun run check
 
 Cloudflare Pages:
   bun run pages:build
@@ -243,19 +321,17 @@ Root directory:
   blank
 ```
 
----
-
-## レポート生成
+## レポート
 
 このプロジェクトでは、品質確認用のレポートを生成します。
 
-| Artifact                          | Purpose                                 |
-| :-------------------------------- | :-------------------------------------- |
+| Artifact                          | Purpose                    |
+| --------------------------------- | -------------------------- |
 | `reports/quality-report.md`       | 学習データの品質・source policy検証結果 |
-| `reports/quiz-quality-report.md`  | クイズデータの分布・検証結果            |
+| `reports/quiz-quality-report.md`  | クイズデータの分布・検証結果             |
 | `reports/portfolio-readiness.md`  | ポートフォリオ提出準備状況              |
-| `reports/release-notes-v0.1.0.md` | `v0.1.0` release notes                  |
-| `docs/interview-notes.md`         | 面接説明用の補助資料                    |
+| `reports/release-notes-v0.1.0.md` | `v0.1.0` release notes     |
+| `docs/interview-notes.md`         | 面接説明用の補助資料                 |
 
 レポートを再生成する場合は以下を実行します。
 
@@ -264,14 +340,19 @@ bun run report
 bun run quiz:report
 ```
 
----
+生成物が最新か確認する場合は以下を実行します。
+
+```bash
+bun run report:check
+bun run quiz:report:check
+```
 
 ## Dev Container
 
 このリポジトリには、VS Code Dev Containers向けの開発環境設定を含めています。
 
-Dev Containerを利用すると、Bun、TypeScript、Vite、Playwrightなどの開発環境をコンテナ内で再現できます。
-ローカル環境差による不具合を減らし、品質ゲートを安定して実行しやすくすることを目的としています。
+Dev Containerは、クイズ問題の分類項目ではなく、開発環境を再現するための補助機能です。
+Bun、TypeScript、Vite、Playwrightなどの実行環境をコンテナ内でそろえ、ローカル環境差による不具合を減らすことを目的としています。
 
 ### Dev Containerで開く手順
 
@@ -301,8 +382,6 @@ CI=1 bunx playwright test e2e/quiz-smoke.e2e.ts --trace on
 
 `Host system is missing dependencies to run browsers` が表示される場合は、`.devcontainer/Dockerfile` にPlaywright Chromium実行用のLinux共有ライブラリが含まれているか確認してください。
 
----
-
 ## デモ確認フロー
 
 このプロジェクトは、以下の順で確認できます。
@@ -317,80 +396,94 @@ CI=1 bunx playwright test e2e/quiz-smoke.e2e.ts --trace on
 7. GitHub ActionsのQuality Gateでremote CIの成功状態を確認する
 ```
 
----
-
 ## 今後の拡張候補
 
 今後は、以下の機能追加・品質向上を検討しています。
 
-- 出題範囲を絞り込む機能
-  - 分野、カテゴリ、学習テーマに応じて出題対象を選択できるようにする。
+* クイズ問題数の拡充
 
-- 問題順のシャッフル機能
-  - 固定順に加えて、任意で問題順を並べ替えられるようにする。
+  * 16問から20〜24問程度へ増やし、taxonomy coverageを高める。
 
-- 回答内容の振り返り画面
-  - 結果画面から、各問題の選択回答、正答、解説を確認できるようにする。
+* taxonomy coverageの改善
 
-- クイズデータの拡充
-  - QA、SRE、DevOps、TypeScript、Cloudflareなどの学習領域を中心に問題数を増やす。
+  * `documentation_workflow`、`git_workflow`、`policy_validation`、`quality_gate_ci` の未カバーsub categoryを補う。
 
-- アクセシビリティ確認の強化
-  - キーボード操作、見出し構造、色によらない情報提示などを追加で検証する。
+* 出題範囲の絞り込み
 
-- Lighthouse CIの運用強化
-  - 現在の補助的な確認から、将来的には継続的な品質指標として扱えるようにする。
+  * track、category、difficulty単位で出題対象を選択できるようにする。
 
-- 基本的な稼働確認の追加
-  - デプロイ後に主要ページへアクセスできることや、公開データが取得できることを確認する。
+* 回答内容の振り返り画面
 
----
+  * 結果画面から、各問題の選択回答、正答、解説を確認できるようにする。
+
+* E2Eの強化
+
+  * 問題数固定や曖昧なtext selectorに依存しない形で、主要操作の回帰検出力を高める。
+
+* レポートの拡張
+
+  * internal source path distribution、policy rule coverage、fixture responsibility summaryを追加する。
+
+* デプロイ後の稼働確認
+
+  * 公開URLへアクセスできること、public quiz dataを取得できることを確認する簡易smoke checkを追加する。
+
+* アクセシビリティ確認の強化
+
+  * キーボード操作、見出し構造、色によらない情報提示などを追加で検証する。
 
 ## 現時点での制限事項
 
 現時点では、本プロジェクトは本格運用サービスではなく、ポートフォリオ用の小型MVPとして範囲を限定しています。
 
-- 本格的な監視機能は未実装
-  - ログ収集、メトリクス監視、アラート通知などは今後の拡張対象です。
+* 本格的な監視機能は未実装
 
-- 本番運用を前提とした監視体制は未整備
-  - 障害検知、復旧手順、運用担当者向け通知などは含めていません。
+  * ログ収集、メトリクス監視、アラート通知などは今後の拡張対象です。
 
-- Lighthouse CIは補助的な確認として運用
-  - 現時点では、品質ゲートの必須条件ではなく、追加確認として扱っています。
+* 本番運用を前提とした監視体制は未整備
 
-- 外部参照元の鮮度確認は限定的
-  - 参照元資料が最新であるかを自動的に検証する仕組みは未実装です。
+  * 障害検知、復旧手順、運用担当者向け通知などは含めていません。
 
-- 参照内容の事実確認は限定的
-  - 参照元の内容そのものの正確性を自動的に検証する仕組みは含めていません。
+* 複数ユーザー利用は未対応
 
-- 複数ユーザー利用は未対応
-  - ログイン、ユーザー別履歴、権限管理などは実装していません。
+  * ログイン、ユーザー別履歴、権限管理などは実装していません。
 
-- 学習履歴の永続保存は未実装
-  - 回答履歴や成績推移をブラウザやデータベースに保存する機能は今後の拡張対象です。
+* 学習履歴の永続保存は未実装
 
----
+  * 回答履歴や成績推移をブラウザやデータベースに保存する機能は今後の拡張対象です。
+
+* 外部試験問題の再現は対象外
+
+  * このクイズは外部機関の公式問題、過去問、実問再現、認定試験対策を目的としていません。
+
+* 参照元の事実性を自動検証する仕組みは限定的
+
+  * 現在はrepo内部のsource pathとreview metadataを中心に検証しています。
+
+* Lighthouse CIは補助的な確認
+
+  * 現時点では、継続的な品質指標として拡張可能な余地を残しています。
 
 ## 主要ドキュメント
 
 主要ドキュメントは以下です。
 
 | Document                                  | Purpose                                        |
-| :---------------------------------------- | :--------------------------------------------- |
-| `docs/architecture/architechture.md`      | アーキテクチャと品質ゲートの説明               |
-| `docs/acceptance-criteria.md`             | MVP受け入れ基準                                |
-| `docs/interview-notes.md`                 | 面接説明用の補助資料                           |
-| `docs/quiz-schema-taxonomy-validation.md` | クイズデータのschema / taxonomy validation方針 |
-| `reports/portfolio-readiness.md`          | ポートフォリオ提出準備状況                     |
+| ----------------------------------------- | ---------------------------------------------- |
+| `docs/architecture.md`                    | アーキテクチャと品質ゲートの説明                               |
+| `docs/acceptance-criteria.md`             | MVP受け入れ基準                                      |
+| `docs/quiz-schema-taxonomy-validation.md` | クイズデータのschema / taxonomy / policy validation方針 |
+| `docs/interview-notes.md`                 | 面接説明用の補助資料                                     |
+| `reports/quality-report.md`               | 学習データの品質・source policy検証結果                     |
+| `reports/quiz-quality-report.md`          | クイズデータの分布・検証結果                                 |
+| `reports/portfolio-readiness.md`          | ポートフォリオ提出準備状況                                  |
 | `reports/release-notes-v0.1.0.md`         | release notes                                  |
-
----
 
 ## ライセンス
 
 このプロジェクトは [MIT License](LICENSE) の下で公開する想定です。
 
-ただし、外部サービス名、技術名、参照元情報、第三者が権利を持つコンテンツは、それぞれの権利者に帰属します。
-クイズデータ・学習データに外部資料を参照している場合でも、リポジトリ内には原則として独自作成した要約・メタデータ・検証用データのみを含め、第三者の本文・画像・教材を再配布しない方針です。
+本リポジトリ内のコードおよび独自作成したドキュメントはMIT Licenseの対象です。
+外部サービス名、技術名、商標、参照元情報、第三者が権利を持つコンテンツは、それぞれの権利者に帰属します。
+
+クイズデータは、本リポジトリのREADME、docs、reports、source code、CI/CD構成を題材として独自に作成したものです。外部機関の公式問題、過去問、実問、教材本文、画像等を再配布しない方針です。
