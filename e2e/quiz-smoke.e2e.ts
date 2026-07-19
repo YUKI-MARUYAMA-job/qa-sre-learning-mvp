@@ -73,7 +73,9 @@ test("quiz app loads and completes a minimal session", async ({ page }) => {
 
   await page.getByRole("button", { name: /もう一度解く/ }).click();
 
-  await expect(page.getByText(/Question/i)).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /^Question$/ })
+  ).toBeVisible();
 });
 
 test("quiz answer feedback is visually distinguishable", async ({ page }) => {
