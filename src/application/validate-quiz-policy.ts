@@ -7,7 +7,7 @@ export type QuizPolicyIssue = {
 };
 
 const officialMisrepresentationPattern =
-  /official\s+(certification|exam|training|course|question|problem|guide)|certification\s+exam|official\s+practice|認定試験対策|公式問題集|公式問題|公式教材|実問再現|本試験再現|公認|提携|認定講座/i;
+  /official\s+(certification|exam|training|course|question|problem|guide)q|certification\s+exam|official\s+practice|認定試験対策|公式問題集|公式問題|公式教材|実問再現|本試験再現|公認|提携|認定講座/i;
 
 const cloudflareOfficialClaimPattern =
   /Cloudflare\s+(official|certified|certification|exam|training|course|question|problem)|Cloudflare公式|Cloudflare認定|Cloudflare公認|Cloudflare提携|Cloudflare公式問題集|Cloudflare認定試験/i;

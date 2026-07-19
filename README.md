@@ -45,7 +45,7 @@
 
 ---
 
-## 🔗 ライブデモ
+## ライブデモ
 
 - **Quiz App**: https://qa-sre-learning-mvp.pages.dev
 - **Quality Gate**: `.github/workflows/quality-gate.yml`
@@ -373,7 +373,7 @@ CI=1 bunx playwright test e2e/quiz-smoke.e2e.ts --trace on
 
 ---
 
-## Documentation
+## 主要ドキュメント
 
 主要ドキュメントは以下です。
 
