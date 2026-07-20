@@ -396,6 +396,16 @@ CI=1 bunx playwright test e2e/quiz-smoke.e2e.ts --trace on
 6. reports/quiz-quality-report.md でクイズデータの分布と検証結果を確認する
 7. GitHub ActionsのQuality Gateでremote CIの成功状態を確認する
 ```
+## コンセプト転換の経緯
+(参考：`docs/adr/quiz-concept-pivot.md`)
+
+当初のクイズ問題は、外部技術学習や外部機関試験対策に寄った構成を含んでいました。
+
+その後、公開ポートフォリオとしての説明可能性、第三者教材への依存回避、公式問題再現リスクの低減を考慮し、クイズ問題のコンセプトを本リポジトリ自体の技術スタック・品質ゲート・デプロイ構成を理解するための内製クイズへ転換しました。
+
+commit履歴上は、`078da91` でtaxonomyをポートフォリオ理解用に再構成した段階から転換を開始し、`547b49b` で問題内容、`8a8fe94` でschema / policy validation、`1996995` でテスト・レポート・生成物を同期しました。
+
+その後、README、architecture、validation方針、技術説明メモを更新し、現在の16問・ポートフォリオ理解用クイズとして説明できる状態に整えました。
 
 ## 今後の拡張候補
 

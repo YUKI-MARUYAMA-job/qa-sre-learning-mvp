@@ -1,0 +1,27 @@
+name: lighthouse-app-warn
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  lighthouse-app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - run: bun install --frozen-lockfile
+
+      - run: bun run lighthouse:app:check
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-app-reports
+          path: .lighthouseci/app-reports
