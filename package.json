@@ -36,6 +36,7 @@
     "validate:performance-baseline": "bun run site:build && bun run src/cli/check-performance-baseline.ts",
     "lighthouse:site:check": "bun run site:build && lhci autorun --config=lighthouserc.json",
     "lighthouse:app:check": "bun run client:build && lhci autorun --config=lighthouserc.app.json",
+    "lighthouse:app:check:pw": "bun run client:build && bun run scripts/run-lhci-app-with-playwright-chromium.mjs",
     "lighthouse:check": "bun run lighthouse:site:check",
     "validate:deployment": "bun run src/cli/check-deployment-baseline.ts",
     "validate:readme-baseline": "bun run src/cli/check-readme-baseline.ts",

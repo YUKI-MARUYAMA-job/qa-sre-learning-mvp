@@ -7,15 +7,40 @@
       ],
       "numberOfRuns": 3,
       "settings": {
-        "preset": "desktop"
+        "preset": "desktop",
+        "chromeFlags": "--headless=new --no-sandbox --disable-dev-shm-usage"
       }
     },
     "assert": {
       "assertions": {
-        "categories:performance": ["warn", { "minScore": 0.8, "aggregationMethod": "median" }],
-        "categories:accessibility": ["warn", { "minScore": 0.9, "aggregationMethod": "median" }],
-        "categories:best-practices": ["warn", { "minScore": 0.9, "aggregationMethod": "median" }],
-        "categories:seo": ["warn", { "minScore": 0.8, "aggregationMethod": "median" }]
+        "categories:performance": [
+          "warn",
+          {
+            "minScore": 0.8,
+            "aggregationMethod": "median"
+          }
+        ],
+        "categories:accessibility": [
+          "warn",
+          {
+            "minScore": 0.9,
+            "aggregationMethod": "median"
+          }
+        ],
+        "categories:best-practices": [
+          "warn",
+          {
+            "minScore": 0.9,
+            "aggregationMethod": "median"
+          }
+        ],
+        "categories:seo": [
+          "warn",
+          {
+            "minScore": 0.8,
+            "aggregationMethod": "median"
+          }
+        ]
       }
     },
     "upload": {
