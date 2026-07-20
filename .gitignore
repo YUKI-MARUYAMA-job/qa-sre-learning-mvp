@@ -33,3 +33,8 @@ tmp/
 
 # Local backup files
 *.backup-*
+
+# Crash dumps
+core
+core.*
+*.core

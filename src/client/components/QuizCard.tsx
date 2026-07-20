@@ -64,19 +64,16 @@ export function QuizCard({
 
           return (
             <button
-              key={key}
-              type="button"
-              className={optionClassName}
-              onClick={() => onSelectAnswer(key)}
-              disabled={isAnswered}
-              aria-label={`${key}. ${question.options[key]}${statusLabel ? ` ${statusLabel}` : ""
-                }`}
+            key={key}
+            type="button"
+            className={optionClassName}
+            onClick={() => onSelectAnswer(key)}
+            disabled={isAnswered}
             >
               <strong>{key}.</strong>
               <span>{question.options[key]}</span>
-
               {statusLabel ? (
-                <span className="option-status" aria-hidden="true">
+                <span className="option-status">
                   {statusLabel}
                 </span>
               ) : null}
