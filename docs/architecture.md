@@ -2,11 +2,11 @@
 
 ## 目的
 
-`qa-sre-learning-mvp` は、QA/SRE志向の小型学習プロジェクトである。
+`qa-sre-learning-mvp` は、QA/SRE志向の小型学習プロジェクトです。
 
-このリポジトリの目的は、構造化された学習データを、再現可能な品質ゲートを通じて検証・検査・レポート化・CI上で確認する流れを示すことである。
+このリポジトリの目的は、構造化された学習データを、再現可能な品質ゲートを通じて検証・検査・レポート化・CI上で確認する流れを示すことです。
 
-このリポジトリでは、主に以下の観点を扱う。
+このリポジトリでは、主に以下の観点を扱います。
 
 - データスキーマ検証
 - ソースポリシー検証
@@ -19,7 +19,7 @@
 
 ## パイプライン
 
-主要なデータ処理パイプラインは以下である。
+主要なデータ処理パイプラインを以下に示します。
 
 ```text
 data/raw/learning-items.json
@@ -30,7 +30,7 @@ data/raw/learning-items.json
   -> GitHub Actions quality gate
 ```
 
-このパイプラインの目的は、learning itemデータが構文的に正しいだけでなく、プロジェクト固有の品質ルールにも従っていることを確認することである。
+このパイプラインの目的は、learning itemデータが構文的に正しいだけでなく、プロジェクト固有の品質ルールにも従っていることを確認することです。
 
 ## ディレクトリ構成
 
@@ -181,9 +181,8 @@ tests/invalid-fixture.test.ts
 
 ## データモデル
 
-中心となるデータ単位は learning item である。
-
-learning item は以下の項目を持つ。
+中心となるデータ単位は `learning item` です。
+`learning item` は以下の項目を持ちます。
 
 - `id`
 - `title`
@@ -194,11 +193,11 @@ learning item は以下の項目を持つ。
 - `summary`
 - `tags`
 
-スキーマはZodで実装している。
+スキーマはZodで実装しています。
 
 ## ソースポリシー
 
-ソースポリシーは、基本的なスキーマ検証を超えた、プロジェクト固有の品質ルールを検証する。
+ソースポリシーは、基本的なスキーマ検証を超えた、プロジェクト固有の品質ルールを検証します。
 
 例:
 
@@ -211,13 +210,13 @@ learning item は以下の項目を持つ。
 
 ## 品質レポート
 
-品質レポートは以下に生成される。
+品質レポートは以下に生成されます。
 
 ```text
 reports/quality-report.md
 ```
 
-レポートには以下を含める。
+レポートには以下を含めます。
 
 - summary counts
 - quality gate status
@@ -231,11 +230,11 @@ reports/quality-report.md
 - tag counts
 - source policy violations
 
-このレポートは決定的に生成される。不要なGit差分を発生させないため、timestampは含めない。
+このレポートは決定的に生成されます。不要なGit差分を発生させないため、timestampは含めません。
 
 ## レポート鮮度
 
-レポート鮮度検査では、commit済みのレポートが、現在のデータおよびレポート生成ロジックと一致していることを確認する。
+レポート鮮度検査では、commit済みのレポートが、現在のデータおよびレポート生成ロジックと一致していることを確認します。
 
 コマンド:
 
@@ -247,13 +246,13 @@ bun run report:check
 
 ## 品質ゲート
 
-統合されたlocal品質ゲートは以下である。
+統合されたlocal品質ゲートを以下に示します。
 
 ```bash
 bun run check
 ```
 
-このコマンドには以下が含まれる。
+このコマンドには以下が含まれます。
 
 - TypeScript typecheck
 - Bun unit tests
@@ -265,7 +264,7 @@ bun run check
 
 ## GitHub Actions
 
-GitHub Actionsでは、pushおよびpull request eventに対して同じ品質ゲートを実行する。
+GitHub Actionsでは、pushおよびpull request eventに対して同じ品質ゲートを実行します。
 
 Workflow file:
 
@@ -285,7 +284,7 @@ checkout repository
 
 ## 公開安全性チェック
 
-公開安全性チェックでは、公開リポジトリにcommitすべきでないファイルを検出する。
+公開安全性チェックでは、公開リポジトリにcommitすべきでないファイルを検出します。
 
 例:
 
@@ -322,11 +321,11 @@ CI artifact:
 quality-report
 ```
 
-このartifactは、各quality-gate実行後にGitHub Actionsから確認できるようuploadされる。
+このartifactは、各quality-gate実行後にGitHub Actionsから確認できるようuploadされます。
 
 ## 設計原則
 
-このプロジェクトでは、以下の設計原則に従う。
+このプロジェクトでは、以下の設計原則に従います。
 
 - MVPを小さく保つ
 - schema validation と policy validation を分離する
@@ -336,30 +335,9 @@ quality-report
 - 隠れた手作業検証を避ける
 - 暗黙的なworkflowよりも明示的なscriptを優先する
 
-## 制約
-
-現在の制約は以下である。
-
-- 外部URLの到達可能性は検査していない
-- sourceの鮮度は検査していない
-- 参照内容の事実正確性は検査していない
-- Web UIはまだ提供していない
-- performance baselineはまだ実装していない
-- deployment targetはまだ設定していない
-
-## 次のステップ
-
-今後の予定は以下である。
-
-- acceptance criteria documentを追加する
-- portfolio readiness reportを追加する
-- `v0.1.0` release tagを作成する
-- required quality-gate checkを伴うbranch protectionを検討する
-- 任意で、レポートをstatic siteとして公開する
-
 ## Cloudflare Pages Production Deployment
 
-Phase 12では、静的レポートサイトをCloudflare Pagesのproduction deploymentとして公開する。
+静的レポートサイトをCloudflare Pagesのproduction deploymentとして公開します。
 
 ```text
 reports/*.md
@@ -377,9 +355,24 @@ Build command: bun install --frozen-lockfile && bun run check
 Build output directory: dist/site
 ```
 
-deployment baselineでは、production URL上で以下を確認する。
+deployment baselineでは、production URL上で以下を確認します。
 
 - index page が取得できること
 - quality report page が取得できること
 - portfolio readiness page が取得できること
 - security headers がresponseに含まれること
+
+## 制約
+
+現在の制約事項について以下に示します。
+
+* learning data側の外部URLについて、到達可能性の自動検査はまだ実装していない。
+* learning data側の外部sourceについて、参照元の鮮度や更新状況の自動検査はまだ実装していない。
+* 参照内容そのものの事実正確性は、自動検証の対象にしていない。
+* quiz dataのsourceはrepo内部pathを前提としているが、repo内部pathの存在確認や参照先内容との意味的整合性までは完全には検査していない。
+* Web UIはReact / Viteで実装済みだが、複数ユーザー利用、ログイン、学習履歴の永続保存は実装していない。
+* Playwright E2Eは主要導線のsmoke testに限定しており、網羅的なブラウザ・端末・アクセシビリティ検証はまだ実装していない。
+* security / performance baselineは実装済みだが、本格的な継続監視、アラート通知、real user monitoring、production-grade observabilityはまだ実装していない。
+* Cloudflare Pagesをdeployment targetとして設定済みだが、デプロイ後の継続的なsynthetic monitoringや自動復旧運用はまだ実装していない。
+* public repository safety checkは導入済みだが、専用ツールによるfull secret scanning engineの代替にはならない。
+* 現在のクイズは16問構成であり、taxonomy coverageや出題粒度は今後拡充する余地がある。
