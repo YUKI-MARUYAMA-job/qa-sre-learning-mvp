@@ -114,14 +114,14 @@ container起動対策:
 
 ## 5. 関連ファイル
 
-| ファイル | 役割 |
-| --- | --- |
-| `lighthouserc.app.json` | `dist/app` 向けLighthouse CI設定 |
-| `scripts/run-lhci-app-with-playwright-chromium.mjs` | Playwright Chromiumの実行pathを取得し、Lighthouse CIへ渡す補助script |
-| `.devcontainer/devcontainer.json` | devcontainer作成後の依存関係installとPlaywright Chromium installを定義 |
-| `.gitignore` | `.lighthouseci/`、`dist/`、core dumpなどの生成物をGit管理対象外にする |
-| `docs/lighthouse-ci.md` | Lighthouse CI全体の運用方針 |
-| `docs/troubleshooting/devcontainer-lighthouse-chrome.md` | 本トラブルシューティング記録 |
+| ファイル                                                 | 役割                                                                   |
+| -------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `lighthouserc.app.json`                                  | `dist/app` 向けLighthouse CI設定                                       |
+| `scripts/run-lhci-app-with-playwright-chromium.mjs`      | Playwright Chromiumの実行pathを取得し、Lighthouse CIへ渡す補助script   |
+| `.devcontainer/devcontainer.json`                        | devcontainer作成後の依存関係installとPlaywright Chromium installを定義 |
+| `.gitignore`                                             | `.lighthouseci/`、`dist/`、core dumpなどの生成物をGit管理対象外にする  |
+| `docs/lighthouse-ci.md`                                  | Lighthouse CI全体の運用方針                                            |
+| `docs/troubleshooting/devcontainer-lighthouse-chrome.md` | 本トラブルシューティング記録                                           |
 
 ---
 
@@ -189,11 +189,11 @@ Playwright Chromium executable path
 
 各flagの意味は以下です。
 
-| flag | 目的 |
-| --- | --- |
-| `--headless=new` | GUIなしでChromiumを起動する |
-| `--no-sandbox` | container内でChromium sandboxが使えない場合の起動失敗を回避する |
-| `--disable-dev-shm-usage` | container内の小さい `/dev/shm` によるChromium不安定化を避ける |
+| flag                      | 目的                                                            |
+| ------------------------- | --------------------------------------------------------------- |
+| `--headless=new`          | GUIなしでChromiumを起動する                                     |
+| `--no-sandbox`            | container内でChromium sandboxが使えない場合の起動失敗を回避する |
+| `--disable-dev-shm-usage` | container内の小さい `/dev/shm` によるChromium不安定化を避ける   |
 
 ---
 
