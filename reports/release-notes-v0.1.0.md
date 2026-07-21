@@ -295,7 +295,7 @@ v0.1.0の主要成果物は以下です。
 | `reports/quality-report.md`                              | learning data品質レポート                                 |
 | `reports/portfolio-readiness.md`                         | ポートフォリオ提出準備レポート                            |
 | `reports/local-reproducibility-check-v0.1.0.md`          | local再現性確認レポート                                   |
-| `docs/architecture/architechture.md`                     | アーキテクチャ説明                                        |
+| `docs/architecture/architecture.md`                      | アーキテクチャ説明                                        |
 | `docs/acceptance-criteria.md`                            | 受け入れ基準                                              |
 | `docs/quiz-schema-taxonomy-validation.md`                | クイズデータ検証方針                                      |
 | `docs/dependency-and-tsconfig-policy.md`                 | 依存関係とTypeScript設定方針                              |

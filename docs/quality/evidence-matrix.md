@@ -77,7 +77,7 @@
 | Lighthouse site observation  | Static report site Lighthouse check                      | `bun run lighthouse:site:check`           | `dist/site` を対象にLighthouse warn-only補助観測を行います                             |
 | Lighthouse app observation   | Quiz app Lighthouse check                                | `bun run lighthouse:app:check`            | `dist/app` を対象にクイズアプリ本体のブラウザ品質を補助観測します                      |
 | Lighthouse policy            | Warn-only operation                                      | `docs/lighthouse-ci.md`                   | Lighthouseを必須品質ゲートではなく改善候補把握用として扱う理由を説明します             |
-| Architecture                 | Architecture documentation                               | `docs/architecture/architechture.md`      | クイズアプリ、データ境界、検証パイプライン、CI/CDの構成を説明します                    |
+| Architecture                 | Architecture documentation                               | `docs/architecture/architecture.md`       | クイズアプリ、データ境界、検証パイプライン、CI/CDの構成を説明します                    |
 | Acceptance criteria          | Acceptance criteria documentation                        | `docs/acceptance-criteria.md`             | v0.1.0の受け入れ条件と未対応範囲を説明します                                           |
 | Quiz validation policy       | Quiz schema / taxonomy / policy validation documentation | `docs/quiz-schema-taxonomy-validation.md` | クイズデータ検証方針を説明します                                                       |
 | Dependency / tsconfig policy | Dependency and TypeScript configuration policy           | `docs/dependency-and-tsconfig-policy.md`  | 依存関係、lockfile、TypeScript設定分離の方針を説明します                               |
