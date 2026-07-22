@@ -186,8 +186,8 @@ data/raw/learning-items.json
 | [data/raw/subject-taxonomy.json](data/raw/subject-taxonomy.json) | taxonomyの正本         | 対象       |
 | [reports/quiz-quality-report.md](reports/quiz-quality-report.md) | クイズ品質レポート     | 対象       |
 | [public/study-it/quiz_data.json](public/study-it/quiz_data.json) | UIが読み込む公開用JSON | 対象       |
-| [test-results/](test-results/)                                   | Playwright実行結果     | 原則対象外 |
-| [dist/](dist/)                                                   | build出力              | 原則対象外 |
+| `test-results/`                                                  | Playwright実行結果     | 原則対象外 |
+| `dist/`                                                          | build出力              | 原則対象外 |
 
 `reports/quiz-quality-report.md` と`public/study-it/quiz_data.json`は生成物ですが、品質ゲートで鮮度確認するためcommit対象にしています。
 
