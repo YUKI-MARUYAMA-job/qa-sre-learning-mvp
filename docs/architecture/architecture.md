@@ -1,4 +1,4 @@
-# クイズアプリのアーキテクチャ
+# アーキテクチャ
 
 [docs/architecture/architecture.md](/docs/architecture/architecture.md)
 
@@ -62,26 +62,13 @@ flowchart TD
 
 クイズデータは、内部用データと公開用データに分離します。
 
-[data/raw/quiz-questions.json](/data/raw/quiz-questions.json):
-クイズ問題の正本データ。
-question、options、answer、explanationに加え、
-source、legal、review、tagsなどの検証用メタデータを含める。
-
-[data/raw/subject-taxonomy.json](/data/raw/subject-taxonomy.json):
-クイズ分類体系の正本データ。
-category、sub_category、sub_sub_categoryの定義を保持する。
-
-[reports/quiz-quality-report.md](/reports/quiz-quality-report.md):
-raw quiz dataとtaxonomyから生成される品質レポート。
-問題数、track分布、category分布、publisher分布、coverageなどを可視化する。
-
-[public/study-it/quiz_data.json](/public/study-it/quiz_data.json):
-React / Viteクイズアプリが実行時に読み込む公開用JSON。
-UI表示とクイズ実行に必要な情報のみを含める。
-
-`legal / review metadata`:
-raw data側に保持する。
-public JSONには原則として含めない。
+| 対象                                                              | 役割・内容                                                                                                                                      |
+| ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| [data/raw/quiz-questions.json](/data/raw/quiz-questions.json)     | クイズ問題の正本データ。`question`、`options`、`answer`、`explanation`に加え、`source`、`legal`、`review`、`tags`などの検証用メタデータを含む。 |
+| [data/raw/subject-taxonomy.json](/data/raw/subject-taxonomy.json) | クイズ分類体系の正本データ。`category`、`sub_category`、`sub_sub_category`の定義を保持する。                                                    |
+| [reports/quiz-quality-report.md](/reports/quiz-quality-report.md) | raw quiz dataとtaxonomyから生成される品質レポート。問題数、track分布、category分布、publisher分布、coverageなどを可視化する。                   |
+| [public/study-it/quiz_data.json](/public/study-it/quiz_data.json) | React / Viteクイズアプリが実行時に読み込む公開用JSON。UI表示とクイズ実行に必要な情報のみを含む。                                                |
+| `legal / review metadata`                                         | raw data側に保持し、public JSONには原則として含めない。                                                                                         |
 
 この分離により、検証やレビューに必要な内部情報を保持しつつ、公開アプリ側では必要最小限のデータだけを扱います。
 
@@ -485,3 +472,4 @@ git add reports/quiz-quality-report.md public/study-it/quiz_data.json
 | [reports/quality-report.md](reports/quality-report.md)                              | 学習データの品質レポート   |
 | [reports/quiz-quality-report.md](/reports/quiz-quality-report.md)                   | クイズデータの品質レポート |
 | [reports/portfolio-readiness.md](/reports/portfolio-readiness.md)                   | ポートフォリオ提出準備状況 |
+|                                                                                     |                            |

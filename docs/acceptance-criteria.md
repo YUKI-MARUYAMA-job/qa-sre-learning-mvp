@@ -111,25 +111,25 @@ bun run pages:build
 | 確認項目             | 合格条件                                                                               | 確認方法                                                                                            |
 | -------------------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | アプリ実装           | [src/client/](/src/client/) にクイズUIが実装されている                                 | [src/client/App.tsx](/src/client/App.tsx)、[src/client/components/](/src/client/components/) を確認 |
-| 公開用データ読み込み | [public/study-it/quiz_data.json](/public/study-it/quiz_data.json) を読み込んで動作する | ブラウザまたはE2Eで確認                                                                             |
+| 公開用データ読み込み | [public/study-it/quiz_data.json](/public/study-it/quiz_data.json) を読み込んで動作する | ブラウザまたはE2E                                                                                   |
 | クイズ操作           | 問題表示、回答、正誤表示、次問題遷移、結果画面表示ができる                             | `CI=1 bunx playwright test e2e/quiz-smoke.e2e.ts --trace on`                                        |
-| 正誤フィードバック   | 正解・不正解、正答、解説が表示される                                                   | UIまたはE2Eで確認                                                                                   |
-| 結果画面             | 正答数、総問題数、正答率、カテゴリ別スコアが表示される                                 | UIまたはE2Eで確認                                                                                   |
-| 再実行               | 「もう一度解く」で初期状態へ戻れる                                                     | E2Eで確認                                                                                           |
+| 正誤フィードバック   | 正解・不正解、正答、解説が表示される                                                   | UIまたはE2E                                                                                         |
+| 結果画面             | 正答数、総問題数、正答率、カテゴリ別スコアが表示される                                 | UIまたはE2E                                                                                         |
+| 再実行               | 「もう一度解く」で初期状態へ戻れる                                                     | E2E                                                                                                 |
 | クライアントビルド   | production buildが成功する                                                             | `bun run client:build`                                                                              |
 
 ---
 
 ### 2. クイズコンセプト
 
-| 確認項目           | 合格条件                                                                             | 確認方法                                                      |
-| ------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
-| 位置づけ           | 外部試験対策ではなく、本ポートフォリオ理解用クイズとして説明されている               | README、docs、quiz dataを確認                                 |
-| 問題題材           | 本リポジトリの技術スタック、品質ゲート、検証、デプロイ、ドキュメントを題材にしている | [data/raw/quiz-questions.json](/data/raw/quiz-questions.json) |
-| 外部公式問題の排除 | 公式問題、過去問、実問再現、認定試験対策を目的としていない                           | `bun run validate:quiz-policy`                                |
-| source方針         | repo内部pathをsourceとして扱う                                                       | [data/raw/quiz-questions.json](/data/raw/quiz-questions.json) |
-| publisher方針      | `source.publisher` が `qa-sre-learning-mvp` で統一されている                         | `bun run validate:quiz-policy`                                |
-| review方針         | production用クイズデータがreview済みである                                           | `bun run validate:quiz-policy`                                |
+| 確認項目           | 合格条件                                                                             | 確認方法                                                                                                |
+| ------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| 位置づけ           | 外部試験対策ではなく、本ポートフォリオ理解用クイズとして説明されている               | [README.md](/README.md)、[docs/](/docs/)、[data/raw/quiz-questions.json](/data/raw/quiz-questions.json) |
+| 問題題材           | 本リポジトリの技術スタック、品質ゲート、検証、デプロイ、ドキュメントを題材にしている | [data/raw/quiz-questions.json](/data/raw/quiz-questions.json)                                           |
+| 外部公式問題の排除 | 公式問題、過去問、実問再現、認定試験対策を目的としていない                           | `bun run validate:quiz-policy`                                                                          |
+| source方針         | repo内部pathをsourceとして扱う                                                       | [data/raw/quiz-questions.json](/data/raw/quiz-questions.json)                                           |
+| publisher方針      | `source.publisher` が `qa-sre-learning-mvp` で統一されている                         | `bun run validate:quiz-policy`                                                                          |
+| review方針         | production用クイズデータがreview済みである                                           | `bun run validate:quiz-policy`                                                                          |
 
 ---
 
@@ -280,13 +280,13 @@ bun run pages:build
 
 ### 9. Cloudflare Pagesデプロイ
 
-| 確認項目        | 合格条件                                                                                          | 確認方法                                 |
-| --------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| 公開URL         | Cloudflare Pages上でクイズアプリを確認できる                                                      | ブラウザで確認                           |
-| デプロイ用build | `pages:build` が成功する                                                                          | `bun run pages:build`                    |
-| 出力先          | `dist/app` が生成される                                                                           | `test -d dist/app`                       |
-| 責務分離        | GitHub Actionsは完全品質ゲート、Cloudflare Pagesはデプロイ用buildに限定する                       | READMEまたはdocsで確認                   |
-| public data     | デプロイ対象に最新の [public/study-it/quiz_data.json](/public/study-it/quiz_data.json) が含まれる | `bun run prepare:public-quiz-data:check` |
+| 確認項目        | 合格条件                                                                                          | 確認方法                                     |
+| --------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| 公開URL         | Cloudflare Pages上でクイズアプリを確認できる                                                      | ブラウザ                                     |
+| デプロイ用build | `pages:build` が成功する                                                                          | `bun run pages:build`                        |
+| 出力先          | `dist/app` が生成される                                                                           | `test -d dist/app`                           |
+| 責務分離        | GitHub Actionsは完全品質ゲート、Cloudflare Pagesはデプロイ用buildに限定する                       | [README.md](/README.md)または[docs/](/docs/) |
+| public data     | デプロイ対象に最新の [public/study-it/quiz_data.json](/public/study-it/quiz_data.json) が含まれる | `bun run prepare:public-quiz-data:check`     |
 
 Cloudflare Pagesの想定設定:
 

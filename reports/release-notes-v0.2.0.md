@@ -1,6 +1,6 @@
 # v0.2.0: Browser Quality, Deployment, and Accessibility
 
-`reports/release-notes-v0.2.0.md`
+[reports/release-notes-v0.2.0.md](/reports/release-notes-v0.2.0.md)
 
 ## 概要
 
@@ -12,18 +12,18 @@
 
 ## v0.1.0からの主な変更
 
-| 領域               | v0.1.0                | v0.2.0                                          |
-| ------------------ | --------------------- | ----------------------------------------------- |
-| 主対象             | data quality pipeline | browser-facing portfolio MVP                    |
-| UI                 | 未実装                | React / ViteクイズUI                            |
-| Deployment         | 未整備                | Cloudflare Pages向けbuild                       |
-| E2E                | 限定的                | Playwright smoke testを品質ゲートへ統合         |
-| Lighthouse         | 未整備                | `dist/site` / `dist/app` のwarn-only補助観測    |
-| devcontainer再現性 | 基本開発環境          | Playwright Chromiumを使ったLighthouse実行を追加 |
-| 検索露出制御       | 未整備                | `robots.txt`、`meta noindex`、`X-Robots-Tag`    |
-| Security headers   | 未整備                | `_headers` にCSP / HSTS等を追加                 |
-| Accessibility      | 基本UI                | `.option-button` のaccessible nameを改善        |
-| 生成物管理         | 基本ignore            | `.lighthouseci/`、core dump除外を明確化         |
+| 領域               | v0.1.0                | v0.2.0                                                    |
+| ------------------ | --------------------- | --------------------------------------------------------- |
+| 主対象             | data quality pipeline | browser-facing portfolio MVP                              |
+| UI                 | 未実装                | React / ViteクイズUI                                      |
+| Deployment         | 未整備                | Cloudflare Pages向けbuild                                 |
+| E2E                | 限定的                | Playwright smoke testを品質ゲートへ統合                   |
+| Lighthouse         | 未整備                | `dist/site`/`dist/app` のwarn-only補助観測                |
+| devcontainer再現性 | 基本開発環境          | Playwright Chromiumを使ったLighthouse実行を追加           |
+| 検索露出制御       | 未整備                | [robots.txt](/robots.txt)、`meta noindex`、`X-Robots-Tag` |
+| Security headers   | 未整備                | `_headers` にCSP / HSTS等を追加                           |
+| Accessibility      | 基本UI                | `.option-button` のaccessible nameを改善                  |
+| 生成物管理         | 基本ignore            | `.lighthouseci/`、core dump除外を明確化                   |
 
 ---
 
@@ -54,21 +54,14 @@ v0.2.0では、主に以下を追加・改善しました。
 
 v0.2.0では、公開前の変更を責務単位で分離して実装しました。
 
-| 変更単位            | 主な内容                                     | 目的                                 |
-| ------------------- | -------------------------------------------- | ------------------------------------ |
-| 検索露出制御        | `robots.txt`、`meta noindex`、`X-Robots-Tag` | 公開demoの検索engine indexを抑制する |
-| Security header設定 | CSP、針                                      |
-
-v0.2.0では、公開前の変更を責務単位で分離して実装しました。
-
-| 変更単位               | 主な内容                                               | 目的                                                             |
-| ---------------------- | ------------------------------------------------------ | ---------------------------------------------------------------- |
-| 検索露出制御           | `robots.txt`、`meta noindex`、`X-Robots-Tag`           | 公開demoの検索engine indexを抑制する                             |
-| Security header設定    | CSP、HSTS、その他browser security header               | Cloudflare Pages配信時の基本的なbrowser security postureを整える |
-| GitHub Actions運用     | allowlistエラーのtroubleshooting docs                  | CI実行権限の設定不備を再現・説明できるようにする                 |
-| Lighthouse補助観測     | `lighthouserc.app.json`、Playwright Chromium補助script | devcontainer内でもブラウザ品質観測を再現可能にする               |
-| UI / accessibility改善 | favicon、icon link、`.option-button` semantics         | Lighthouse指摘に基づきUI品質とaccessibilityを改善する            |
-| 生成物管理             | `.lighthouseci/`、`dist/`、core dump除外               | 生成物やcrash dumpをPublic repoへ混入させない                    |
+| 変更単位               | 主な内容                                                                       | 目的                                                             |
+| ---------------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| 検索露出制御           | [robots.txt](/robots.txt)、`meta noindex`、`X-Robots-Tag`                      | 公開demoの検索engine indexを抑制する                             |
+| Security header設定    | CSP、HSTS、その他browser security header                                       | Cloudflare Pages配信時の基本的なbrowser security postureを整える |
+| GitHub Actions運用     | allowlistエラーのtroubleshooting docs                                          | CI実行権限の設定不備を再現・説明できるようにする                 |
+| Lighthouse補助観測     | [lighthouserc.app.json](/lighthouserc.app.json)、Playwright Chromium補助script | devcontainer内でもブラウザ品質観測を再現可能にする               |
+| UI / accessibility改善 | favicon、icon link、`.option-button` semantics                                 | Lighthouse指摘に基づきUI品質とaccessibilityを改善する            |
+| 生成物管理             | `.lighthouseci/`、`dist/`、core dump除外                                       | 生成物やcrash dumpをPublic repoへ混入させない                    |
 
 このように変更を分けることで、変更理由、影響範囲、検証方法を追跡しやすくしています。
 
@@ -118,9 +111,7 @@ Lighthouse app reportで、選択肢buttonに対する `label-content-name-misma
 
 対象は以下です。
 
-```text
-src/client/components/QuizCard.tsx
-```
+[src/client/components/QuizCard.tsx](/src/client/components/QuizCard.tsx)
 
 v0.2.0では、`.option-button` の `aria-label` によるaccessible nameの手動上書きを見直し、button内部の可視テキストからaccessible nameが自然に計算されるように整理しました。
 

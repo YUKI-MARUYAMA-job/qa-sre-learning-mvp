@@ -114,14 +114,14 @@ container起動対策:
 
 ## 5. 関連ファイル
 
-| ファイル                                                 | 役割                                                                   |
-| -------------------------------------------------------- | ---------------------------------------------------------------------- |
-| `lighthouserc.app.json`                                  | `dist/app` 向けLighthouse CI設定                                       |
-| `scripts/run-lhci-app-with-playwright-chromium.mjs`      | Playwright Chromiumの実行pathを取得し、Lighthouse CIへ渡す補助script   |
-| `.devcontainer/devcontainer.json`                        | devcontainer作成後の依存関係installとPlaywright Chromium installを定義 |
-| `.gitignore`                                             | `.lighthouseci/`、`dist/`、core dumpなどの生成物をGit管理対象外にする  |
-| `docs/lighthouse-ci.md`                                  | Lighthouse CI全体の運用方針                                            |
-| `docs/troubleshooting/devcontainer-lighthouse-chrome.md` | 本トラブルシューティング記録                                           |
+| ファイル                                                                                                          | 役割                                                                   |
+| ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| [lighthouserc.app.json](/lighthouserc.app.json)                                                                   | [dist/app](/dist/app) 向けLighthouse CI設定                            |
+| [scripts/run-lhci-app-with-playwright-chromium.mjs](/scripts/run-lhci-app-with-playwright-chromium.mjs)           | Playwright Chromiumの実行pathを取得し、Lighthouse CIへ渡す補助script   |
+| [.devcontainer/devcontainer.json](/.devcontainer/devcontainer.json)                                               | devcontainer作成後の依存関係installとPlaywright Chromium installを定義 |
+| [.gitignore](/.gitignore)                                                                                         | `.lighthouseci/`、`dist/`、core dumpなどの生成物をGit管理対象外にする  |
+| [docs/lighthouse-ci.md](/docs/lighthouse-ci.md)                                                                   | Lighthouse CI全体の運用方針                                            |
+| [docs/troubleshooting/devcontainer-lighthouse-chrome.md](/docs/troubleshooting/devcontainer-lighthouse-chrome.md) | 本トラブルシューティング記録                                           |
 
 ---
 
@@ -298,9 +298,7 @@ Lighthouse app reportでは、選択肢buttonに対して `label-content-name-mi
 
 対象は以下です。
 
-```text
-src/client/components/QuizCard.tsx
-```
+[src/client/components/QuizCard.tsx](/src/client/components/QuizCard.tsx)
 
 主な原因は、button内部に十分な可視テキストがあるにもかかわらず、`aria-label` でaccessible nameを手動上書きしていることです。
 
