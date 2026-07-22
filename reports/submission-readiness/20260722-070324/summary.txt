@@ -1,0 +1,47 @@
+Portfolio submission readiness
+Generated: 2026-07-22 07:03:37 +0000
+Repository: /workspaces/qa-sre-learning-mvp
+Expected quiz count: 16
+
+PASS=37 FAIL=1 WARN=0 SKIP=2 TOTAL=40
+
+[PASS] [実行環境] `bun` が利用できる — 1.3.14
+[PASS] [実行環境] `bunx` が利用できる
+[PASS] [実行環境] Dev Container内で実行されている
+[PASS] [データ・検証] `bun run validate:data` が成功する
+[PASS] [データ・検証] `bun run validate:policy` が成功する
+[PASS] [データ・検証] `bun run validate:quiz` が成功する
+[PASS] [データ・検証] `bun run validate:quiz-policy` が成功する
+[PASS] [データ・検証] `bun run validate:quiz-fixtures` が成功する
+[PASS] [型検査・テスト] `bun run typecheck` が成功する
+[PASS] [型検査・テスト] `bun run client:typecheck` が成功する
+[PASS] [型検査・テスト] `bun run test:unit` が成功する
+[PASS] [型検査・テスト] `CI=1 bunx playwright test e2e/quiz-smoke.e2e.ts --trace on` が成功する
+[PASS] [生成物] `bun run report` が成功する
+[PASS] [生成物] `bun run quiz:report` が成功する
+[PASS] [生成物] `bun run report:check` が成功する
+[PASS] [生成物] `bun run quiz:report:check` が成功する
+[PASS] [生成物] `bun run prepare:public-quiz-data:check` が成功する
+[PASS] [生成物] `reports/quiz-quality-report.md` が16問構成を反映している
+[PASS] [生成物] `public/study-it/quiz_data.json` が16問構成を反映している
+[PASS] [build・baseline] `bun run client:build` が成功する
+[PASS] [build・baseline] `bun run site:check` が成功する
+[PASS] [build・baseline] `bun run validate:security-baseline` が成功する
+[PASS] [build・baseline] `bun run validate:performance-baseline` が成功する
+[PASS] [統合品質ゲート] `CI=1 bun run check` が成功する
+[SKIP] [統合品質ゲート] GitHub Actions `quality-gate` がpull request上で成功する — GitHub CLI（gh）が利用できない
+[SKIP] [統合品質ゲート] GitHub Actions `quality-gate` がmain push後に成功する — GitHub CLI（gh）が利用できない
+[PASS] [デプロイ] Cloudflare Pagesでクイズアプリを確認できる — HTTP=200; https://qa-sre-learning-mvp.pages.dev/
+[PASS] [デプロイ] `bun run pages:build` が成功する
+[PASS] [デプロイ] `dist/app` が生成される
+[PASS] [ドキュメント] `README.md` が存在する
+[FAIL] [ドキュメント] `docs/architecture/architechture.md` が存在する — ファイルが見つからない
+[PASS] [ドキュメント] `docs/acceptance-criteria.md` が存在する
+[PASS] [ドキュメント] `docs/interview/quiz-app-explanation.md` が存在する
+[PASS] [ドキュメント] `docs/quiz-schema-taxonomy-validation.md` が存在する
+[PASS] [ドキュメント] READMEから主要docsへ辿れる — 検出: docs/acceptance-criteria.md
+[PASS] [ドキュメント] READMEから主要reportsへ辿れる — 検出: reports/quiz-quality-report.md
+[PASS] [ドキュメント] クイズが外部試験問題対策ではないことが明記されている
+[PASS] [開発環境] Dev Container内で `bun` が利用できる — 1.3.14
+[PASS] [開発環境] Dev Container内で `bunx` が利用できる
+[PASS] [開発環境] Dev Container内で主要検証が成功する — `CI=1 bun run check` の結果を再利用

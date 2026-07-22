@@ -1025,7 +1025,7 @@ main() {
   start_section "ドキュメント"
 
   check_file_exists "README.md"
-  check_file_exists "docs/architecture/architechture.md"
+  check_file_exists "docs/architecture/architecture.md"
   check_file_exists "docs/acceptance-criteria.md"
   check_file_exists "docs/interview/quiz-app-explanation.md"
   check_file_exists "docs/quiz-schema-taxonomy-validation.md"
