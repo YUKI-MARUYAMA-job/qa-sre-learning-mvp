@@ -1,6 +1,6 @@
 # クイズ問題コンセプトの転換
-`docs/adr/quiz-concept-pivot.md`
 
+[docs/adr/quiz-concept-pivot.md](/docs/adr/quiz-concept-pivot.md)
 
 ## コンセプト転換に至る経緯
 
@@ -21,16 +21,16 @@
 
 commit履歴上、この転換は以下の段階で進行した。
 
-| Commit | 位置づけ | 内容 |
-|---|---|---|
-| `078da91` | 転換開始点 | taxonomyをポートフォリオ理解用に再構成した |
-| `547b49b` | 問題内容の転換 | クイズ問題をポートフォリオ理解用に更新した |
-| `8a8fe94` | 検証方針の転換 | schemaとpolicy validationを新コンセプトに対応させた |
-| `1996995` | 整合性確保 | 新taxonomyに合わせてschema、テスト、レポートを同期した |
-| `e10bd51` | README整備 | READMEを16問・ポートフォリオ理解用クイズに合わせて改稿した |
-| `ee951be` | architecture整備 | architecture文書を新仕様へ合わせて改稿した |
-| `1e426e7` | validation docs整備 | quiz schema / taxonomy / policy validation方針を整理した |
-| `269d4f9` | 技術説明整備 | クイズアプリの技術説明メモを追加した |
+| Commit    | 位置づけ            | 内容                                                       |
+| --------- | ------------------- | ---------------------------------------------------------- |
+| `078da91` | 転換開始点          | taxonomyをポートフォリオ理解用に再構成した                 |
+| `547b49b` | 問題内容の転換      | クイズ問題をポートフォリオ理解用に更新した                 |
+| `8a8fe94` | 検証方針の転換      | schemaとpolicy validationを新コンセプトに対応させた        |
+| `1996995` | 整合性確保          | 新taxonomyに合わせてschema、テスト、レポートを同期した     |
+| `e10bd51` | README整備          | READMEを16問・ポートフォリオ理解用クイズに合わせて改稿した |
+| `ee951be` | architecture整備    | architecture文書を新仕様へ合わせて改稿した                 |
+| `1e426e7` | validation docs整備 | quiz schema / taxonomy / policy validation方針を整理した   |
+| `269d4f9` | 技術説明整備        | クイズアプリの技術説明メモを追加した                       |
 
 ## 結果
 

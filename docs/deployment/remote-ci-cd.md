@@ -1,6 +1,6 @@
 # Remote CI/CD Strategy
 
-`docs/deployment/remote-ci-cd.md`
+[docs/deployment/remote-ci-cd.md](/docs/deployment/remote-ci-cd.md)
 
 ## 1. 目的
 
@@ -86,8 +86,7 @@ bun run lighthouse:site:check
 bun run lighthouse:app:check
 ```
 
-Lighthouse CIはwarn-onlyの補助検査として扱います。
-そのため、`CI=1 bun run check` の代替にはしません。
+Lighthouse CIはwarn-onlyの補助検査とし、`CI=1 bun run check` の代替にはしません。
 
 ---
 
@@ -434,7 +433,7 @@ generated artifacts:
 
 GitHub Actionsは、`CI=1 bun run check` により、型検査、validation、生成物鮮度確認、public safety check、security / performance baseline、Playwright E2Eを含む完全な品質ゲートを実行します。
 
-Cloudflare Pagesは、`bun install --frozen-lockfile && bun run pages:build` により、公開用の `dist/app` を生成して静的配信します。
+Cloudflare Pagesは、`bun install --frozen-lockfile && bun run pages:build` により、公開用の [dist/app](/dist/app) を生成して静的配信します。
 
 Lighthouse CIは、必須品質ゲートではなく、warn-onlyの補助観測として扱います。
 この分離により、remote CI/CDを安定させながら、QA/SRE志向のポートフォリオとして説明可能な品質保証とデプロイ構成を維持します。
