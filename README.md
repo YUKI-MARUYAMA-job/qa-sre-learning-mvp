@@ -67,7 +67,7 @@
 ## 公開デモ
 
 - **Quiz App**: https://qa-sre-learning-mvp.pages.dev
-- **Quality Gate**: .github/workflows/quality-gate.yml
+- **Quality Gate**: [.github/workflows/quality-gate.yml](/.github/workflows/quality-gate.yml)
 
 公開アプリでは、以下を確認できます。
 
@@ -127,54 +127,77 @@
 
 ## アーキテクチャ
 
-クイズデータは、raw dataを正本として扱い、検証後にpublic JSONとレポートへ変換します。
+このプロジェクトでは、raw dataを正本として扱い、検証後に公開用データ、品質レポート、静的成果物を生成します。
 
-```
-data/raw/quiz-questions.json
-  -> schema validation
-  -> taxonomy validation
-  -> policy validation
-  -> fixture validation
-  -> quiz quality report generation
-  -> public quiz data generation
-  -> public/study-it/quiz_data.json
-  -> React / Vite quiz UI
-  -> client production build
-  -> Playwright E2E smoke test
-  -> GitHub Actions quality gate
-  -> Cloudflare Pages deployment
+クイズデータ系と学習データ・静的レポート系は、それぞれ異なる検証経路を持ちます。両者の結果は統合品質ゲートで確認します。一方、GitHub ActionsとCloudflare Pagesでは、品質確認とデプロイビルドの責務を分離しています。
+
+```mermaid
+flowchart TB
+    accTitle: データ検証、品質ゲート、デプロイのアーキテクチャ
+    accDescr: クイズデータ系と学習データ系を別々に検証し、GitHub Actionsの完全品質ゲートとCloudflare Pagesのデプロイビルドへ接続する構成です。
+
+    subgraph QUIZ["クイズデータ系"]
+        QRAW["quiz-questions.json"]
+        QVALIDATE["schema・taxonomy・policy検証"]
+        QFIXTURE["fixture責務検証"]
+        QREPORT["quiz quality report"]
+        QPUBLIC["public quiz data"]
+        QUIZUI["React / ViteクイズUI"]
+
+        QRAW --> QVALIDATE
+        QVALIDATE --> QFIXTURE
+        QFIXTURE --> QREPORT
+        QFIXTURE --> QPUBLIC
+        QPUBLIC --> QUIZUI
+    end
+
+    subgraph LEARNING["学習データ・静的レポート系"]
+        LRAW["learning-items.json"]
+        LVALIDATE["schema・source policy検証"]
+        LFIXTURE["negative fixture tests"]
+        LREPORT["quality report"]
+        STATIC["static site"]
+        BASELINE["security・performance baseline"]
+
+        LRAW --> LVALIDATE
+        LVALIDATE --> LFIXTURE
+        LFIXTURE --> LREPORT
+        LREPORT --> STATIC
+        STATIC --> BASELINE
+    end
+
+    QUIZUI --> BUILD["client production build"]
+    BUILD --> E2E["Playwright E2E"]
+    E2E --> CHECK["CI=1 bun run check"]
+    BASELINE --> CHECK
+    QREPORT --> CHECK
+    LREPORT --> CHECK
+
+    CHECK --> ACTIONS["GitHub Actions quality-gate"]
+
+    QUIZUI --> PAGESBUILD["bun run pages:build"]
+    STATIC --> PAGESBUILD
+    PAGESBUILD --> PAGES["Cloudflare Pages"]
 ```
 
-学習データと静的レポート側は、以下の流れで検証・生成します。
-
-```text
-data/raw/learning-items.json
-  -> Zod schema validation
-  -> source policy validation
-  -> negative fixture tests
-  -> quality report generation
-  -> report freshness check
-  -> static site generation
-  -> security / performance baseline
-  -> GitHub Actions quality gate
-```
+GitHub Actionsでは、完全品質ゲートとして`CI=1 bun run check`を実行します。Cloudflare Pagesでは、デプロイ用ビルドとして`bun run pages:build`を実行します。Playwright E2EはCloudflare Pagesのビルド処理には含めません。
 
 主要な構成は以下です。
 
-| Path                                                             | 役割                                                                 |
-| ---------------------------------------------------------------- | -------------------------------------------------------------------- |
-| [src/client/](src/client/)                                       | React / ViteによるクイズUI                                           |
-| [src/cli/](src/cli/)                                             | validation / report / build / baseline check用CLI                    |
-| [src/schemas/](src/schemas/)                                     | Zod schema定義                                                       |
-| [src/application/](src/application/)                             | taxonomy validation、policy validationなどのアプリケーションロジック |
-| [data/raw/](data/raw/)                                           | 学習データ・クイズデータの正本                                       |
-| [data/fixtures/](data/fixtures/)                                 | 異常系検証用fixture                                                  |
-| [public/study-it/quiz_data.json](public/study-it/quiz_data.json) | UIが読み込む公開用クイズJSON                                         |
-| [reports/](reports/)                                             | 品質レポート・提出準備レポート・release notes                        |
-| [docs/](docs/)                                                   | 設計、要件、品質ゲート、面接説明用メモ                               |
-| [e2e/](e2e/)                                                     | Playwright E2E                                                       |
-| [.github/workflows/](.github/workflows/)                         | GitHub Actions品質ゲート                                             |
-| [.devcontainer/](.devcontainer/)                                 | 任意利用の開発コンテナ設定                                           |
+| Path                                                             | 役割                                                      |
+| ---------------------------------------------------------------- | --------------------------------------------------------- |
+| [src/client/](src/client/)                                       | React / ViteによるクイズUI                                |
+| [src/cli/](src/cli/)                                             | validation、report、build、baseline check用CLI            |
+| [src/schemas/](src/schemas/)                                     | Zod schema定義                                            |
+| [src/application/](src/application/)                             | taxonomy・policy validationなどのアプリケーションロジック |
+| [data/raw/](data/raw/)                                           | 学習データ・クイズデータの正本                            |
+| [data/fixtures/](data/fixtures/)                                 | 異常系検証用fixture                                       |
+| [public/study-it/quiz_data.json](public/study-it/quiz_data.json) | UIが読み込む公開用クイズJSON                              |
+| [reports/](reports/)                                             | 品質レポート、提出準備レポート、release notes             |
+| [docs/](docs/)                                                   | 設計、要件、品質ゲート、面接説明用文書                    |
+| [e2e/](e2e/)                                                     | Playwright E2E                                            |
+| [.github/workflows/](.github/workflows/)                         | GitHub Actions品質ゲート                                  |
+| [.devcontainer/](.devcontainer/)                                 | 任意利用の開発コンテナ設定                                |
 
 ## データ境界
 
