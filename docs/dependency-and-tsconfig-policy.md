@@ -32,6 +32,7 @@
 | `bun.lock`             | 依存解決結果の正本                            | CIでの再現性確保                                       |
 | `package.json` scripts | 検証・build・生成処理の入口                   | `check`、`validate:*`、`client:build`                  |
 
+
 TypeScriptは、このリポジトリでは開発・型検査・buildのために利用するため、`peerDependencies` ではなく `devDependencies` に配置します。
 
 ---
@@ -89,6 +90,7 @@ TypeScript設定では、CLI、schema、test、clientの責務を分けて扱い
 | client       | [src/client/](/src/client/)                                          | React / ViteクイズUI                 |
 | E2E          | [e2e/](/e2e/)                                                        | Playwrightによるbrowser smoke test   |
 
+
 このように、TypeScriptはUIだけでなく、データ検証、生成処理、品質ゲートの基盤として利用しています。
 
 ---
@@ -136,6 +138,7 @@ client側では、以下の観点が重要です。
 | [tsconfig.json](/tsconfig.json)               | CLI、schema、application logic、unit testの共通型検査 |
 | [tsconfig.client.json](/tsconfig.client.json) | React / Vite clientの型検査                           |
 | [playwright.config.ts](/playwright.config.ts) | E2E testの実行設定                                    |
+
 
 site生成やドキュメントサイトの構成が拡大した場合は、必要に応じて `tsconfig.site.json` のように追加分離します。
 
@@ -205,7 +208,7 @@ CI=1 bun run check
 | Vite関連の変更                | `bun run client:build`、Cloudflare Pages build |
 | Bun関連の変更                 | CLI実行、unit test、CI install                 |
 
----
+
 
 ## 10. 現在の制約
 
@@ -236,7 +239,7 @@ CI=1 bun run check
 | [e2e/](/e2e/)                                                             | Playwright E2E tests                 |
 | [.github/workflows/quality-gate.yml](/.github/workflows/quality-gate.yml) | GitHub Actions品質ゲート             |
 
----
+
 
 ## 12. まとめ
 
