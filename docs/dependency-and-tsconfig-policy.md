@@ -1,7 +1,5 @@
 # 依存関係とTypeScript設定の運用方針
 
-`docs/dependency-and-tsconfig-policy.md`
-
 ## 1. 目的
 
 この文書は、`qa-sre-learning-mvp` における依存関係とTypeScript設定の運用方針を整理するものです。

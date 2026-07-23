@@ -1,7 +1,5 @@
 # ポートフォリオ提出準備レポート
 
-[reports/portfolio-readiness.md](/reports/portfolio-readiness.md)
-
 ## 1. 目的
 
 このレポートは、`qa-sre-learning-mvp` が QA/SRE 志向のポートフォリオMVPとして提示可能な状態にあるかを評価するものです。

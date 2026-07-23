@@ -1,7 +1,5 @@
 # v0.2.0: Browser Quality, Deployment, and Accessibility
 
-[reports/release-notes-v0.2.0.md](/reports/release-notes-v0.2.0.md)
-
 ## 概要
 
 `qa-sre-learning-mvp` v0.2.0 は、v0.1.0で整備したdata validation / report / CI quality gateを土台に、React / ViteクイズUI、Cloudflare Pages向けbuild、Lighthouse CIによるbrowser quality observation、devcontainer内Lighthouse再現性、検索露出制御、security header、accessibility改善を追加したreleaseです。
