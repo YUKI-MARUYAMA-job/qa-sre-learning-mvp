@@ -125,7 +125,7 @@ bun run pages:build
 | Workflow permissions | `GITHUB_TOKEN`の最小権限化 |
 | Public safety validation | 公開リポジトリへ含めてはならない情報・生成物の検査 |
 | Quality Gate | 型、データ、テスト、ビルド、E2Eを含む統合確認 |
-|||
+
 
 ## 運用方針
 
