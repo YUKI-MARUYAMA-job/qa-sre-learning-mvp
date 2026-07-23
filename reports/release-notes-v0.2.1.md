@@ -31,3 +31,7 @@ CI=1 bun run check
 ## 完全な変更履歴
 
 [v0.2.0...v0.2.1](https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/compare/v0.2.0...v0.2.1)
+
+## Previous release
+
+- [v0.2.0](https://github.com/YUKI-MARUYAMA-job/qa-sre-learning-mvp/blob/v0.3.0/reports/release-notes-v0.2.0.md)
