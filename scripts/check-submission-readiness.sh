@@ -1,1113 +1,640 @@
 #!/usr/bin/env bash
 
-# IT就活ポートフォリオ提出前の完了チェックを一括実行する。
-#
-# 実行例:
-#   bash scripts/check-submission-readiness.sh
-#
-# Cloudflare Pagesも確認:
-#   APP_URL="https://example.pages.dev" \
-#   bash scripts/check-submission-readiness.sh
-#
-# PR番号を明示:
-#   PR_NUMBER=123 \
-#   APP_URL="https://example.pages.dev" \
-#   bash scripts/check-submission-readiness.sh
-#
-# 環境変数:
-#   EXPECTED_QUIZ_COUNT       期待する問題数。既定値: 16
-#   APP_URL                  Cloudflare Pages本番URL
-#   APP_EXPECTED_TEXT        本番HTMLに含まれるべき文字列（任意）
-#   PR_NUMBER                確認対象PR番号（任意）
-#   MAIN_BRANCH              本番ブランチ。既定値: main
-#   QUALITY_WORKFLOW         GitHub Actions workflow名またはファイル名
-#                            既定値: quality-gate
-#   QUALITY_CHECK_NAME       PR上のcheck/job名。既定値: quality-gate
-#   RUN_REMOTE_CHECKS        0ならGitHub/Cloudflare確認を無効化。既定値: 1
-#   RUN_FULL_CHECK           0なら CI=1 bun run check を省略。既定値: 1
-#   KEEP_LOGS                1なら成功ログも保持。既定値: 0
-#
-# 終了コード:
-#   0: FAILなし（SKIPはあり得る）
-#   1: 1件以上FAIL
-#   2: 実行場所・必須ツールなどの前提エラー
-
-set -uo pipefail
-
-EXPECTED_QUIZ_COUNT="${EXPECTED_QUIZ_COUNT:-16}"
-APP_URL="${APP_URL:-}"
-APP_EXPECTED_TEXT="${APP_EXPECTED_TEXT:-}"
-PR_NUMBER="${PR_NUMBER:-}"
-MAIN_BRANCH="${MAIN_BRANCH:-main}"
-QUALITY_WORKFLOW="${QUALITY_WORKFLOW:-quality-gate}"
-QUALITY_CHECK_NAME="${QUALITY_CHECK_NAME:-quality-gate}"
-RUN_REMOTE_CHECKS="${RUN_REMOTE_CHECKS:-1}"
-RUN_FULL_CHECK="${RUN_FULL_CHECK:-1}"
-KEEP_LOGS="${KEEP_LOGS:-0}"
-
-TIMESTAMP="$(date '+%Y%m%d-%H%M%S')"
-LOG_DIR="${LOG_DIR:-reports/submission-readiness/${TIMESTAMP}}"
-SUMMARY_FILE="${LOG_DIR}/summary.txt"
-DETAIL_FILE="${LOG_DIR}/details.md"
-
-PASS_COUNT=0
-FAIL_COUNT=0
-SKIP_COUNT=0
-WARN_COUNT=0
-TOTAL_COUNT=0
-
-CURRENT_SECTION=""
-INSIDE_DEVCONTAINER=0
-QUALITY_GATE_LOCAL_RESULT="NOT_RUN"
-
-declare -a RESULT_STATUS=()
-declare -a RESULT_SECTION=()
-declare -a RESULT_NAME=()
-declare -a RESULT_DETAIL=()
-declare -a RESULT_LOG=()
-
-if [[ -t 1 && "${NO_COLOR:-0}" != "1" ]]; then
-  COLOR_RESET=$'\033[0m'
-  COLOR_BOLD=$'\033[1m'
-  COLOR_GREEN=$'\033[32m'
-  COLOR_RED=$'\033[31m'
-  COLOR_YELLOW=$'\033[33m'
-  COLOR_CYAN=$'\033[36m'
-  COLOR_GRAY=$'\033[90m'
-else
-  COLOR_RESET=""
-  COLOR_BOLD=""
-  COLOR_GREEN=""
-  COLOR_RED=""
-  COLOR_YELLOW=""
-  COLOR_CYAN=""
-  COLOR_GRAY=""
+# This script must be executed, not sourced, and must run under Bash.
+if [ -z "${BASH_VERSION:-}" ]; then
+  printf '%s\n' \
+    "[ERROR] This script requires Bash." \
+    "Run: ./scripts/check-submission-readiness.sh" >&2
+  return 2 2>/dev/null || exit 2
 fi
 
-print_header() {
-  printf '\n%s%s%s\n' "${COLOR_BOLD}${COLOR_CYAN}" "$1" "${COLOR_RESET}"
-  printf '%s\n' '────────────────────────────────────────────────────────────'
+if [[ "${BASH_SOURCE[0]:-}" != "$0" ]]; then
+  printf '%s\n' \
+    "[ERROR] Do not source this script." \
+    "Run: ./scripts/check-submission-readiness.sh" >&2
+  return 2
+fi
+
+# Deliberately omit `set -e`: this audit aggregates failures into one summary.
+set -uo pipefail
+
+TAG="${TAG:-v0.3.0}"
+DEFAULT_BRANCH="${DEFAULT_BRANCH:-main}"
+REMOTE_NAME="${REMOTE_NAME:-origin}"
+AUDIT_MODE="${AUDIT_MODE:-submission}"
+DEMO_URL="${DEMO_URL:-https://qa-sre-learning-mvp.pages.dev}"
+DEMO_URL="${DEMO_URL%/}"
+RELEASE_NOTES_FILE="${RELEASE_NOTES_FILE:-reports/release-notes-${TAG}.md}"
+REMOTE_REF="${REMOTE_NAME}/${DEFAULT_BRANCH}"
+
+case "${AUDIT_MODE}" in
+  submission | development)
+    ;;
+  *)
+    printf '[ERROR] Invalid AUDIT_MODE: %s\n' "${AUDIT_MODE}" >&2
+    printf '%s\n' 'Allowed values: submission, development' >&2
+    exit 2
+    ;;
+esac
+
+if [[ -z "${HOME:-}" ]]; then
+  printf '%s\n' '[ERROR] HOME is not set.' >&2
+  exit 2
+fi
+
+STAMP="$(date '+%Y%m%d-%H%M%S')-$$"
+OUT="${OUT:-${HOME}/portfolio-migration-backup/qa-sre-submission-check-${STAMP}}"
+mkdir -p "${OUT}"
+chmod 700 "${OUT}"
+OUT="$(cd "${OUT}" && pwd -P)"
+
+BOLD=""
+RESET=""
+GREEN=""
+YELLOW=""
+RED=""
+CYAN=""
+
+if [[ -t 1 && -n "${TERM:-}" && -z "${NO_COLOR:-}" ]] &&
+  command -v tput >/dev/null 2>&1
+then
+  BOLD="$(tput bold 2>/dev/null || true)"
+  RESET="$(tput sgr0 2>/dev/null || true)"
+  GREEN="$(tput setaf 2 2>/dev/null || true)"
+  YELLOW="$(tput setaf 3 2>/dev/null || true)"
+  RED="$(tput setaf 1 2>/dev/null || true)"
+  CYAN="$(tput setaf 6 2>/dev/null || true)"
+fi
+
+PASS_COUNT=0
+WARN_COUNT=0
+FAIL_COUNT=0
+REPO="unknown"
+CURRENT_BRANCH="unknown"
+ROOT=""
+TAG_SHA="unknown"
+
+section() {
+  local title="${1:?section title is required}"
+  printf '\n%s%s=== %s ===%s\n' "${BOLD}" "${CYAN}" "${title}" "${RESET}"
 }
 
-sanitize_filename() {
-  printf '%s' "$1" |
-    tr '[:upper:]' '[:lower:]' |
-    sed -E 's/[^a-z0-9._-]+/-/g; s/^-+//; s/-+$//'
+pass() {
+  local message="${1:?pass message is required}"
+  PASS_COUNT=$((PASS_COUNT + 1))
+  printf '%s[PASS]%s %s\n' "${GREEN}" "${RESET}" "${message}"
 }
 
-record_result() {
-  local status="$1"
-  local name="$2"
-  local detail="${3:-}"
-  local log_file="${4:-}"
+warn() {
+  local message="${1:?warning message is required}"
+  WARN_COUNT=$((WARN_COUNT + 1))
+  printf '%s[WARN]%s %s\n' "${YELLOW}" "${RESET}" "${message}"
+}
 
-  TOTAL_COUNT=$((TOTAL_COUNT + 1))
+fail() {
+  local message="${1:?failure message is required}"
+  FAIL_COUNT=$((FAIL_COUNT + 1))
+  printf '%s[FAIL]%s %s\n' "${RED}" "${RESET}" "${message}"
+}
 
-  case "$status" in
-    PASS) PASS_COUNT=$((PASS_COUNT + 1)) ;;
-    FAIL) FAIL_COUNT=$((FAIL_COUNT + 1)) ;;
-    SKIP) SKIP_COUNT=$((SKIP_COUNT + 1)) ;;
-    WARN) WARN_COUNT=$((WARN_COUNT + 1)) ;;
-    *)
-      printf 'Internal error: unknown status: %s\n' "$status" >&2
-      exit 2
-      ;;
-  esac
+info() {
+  local message="${1:?info message is required}"
+  printf '%s[INFO]%s %s\n' "${CYAN}" "${RESET}" "${message}"
+}
 
-  RESULT_STATUS+=("$status")
-  RESULT_SECTION+=("$CURRENT_SECTION")
-  RESULT_NAME+=("$name")
-  RESULT_DETAIL+=("$detail")
-  RESULT_LOG+=("$log_file")
+mode_sensitive_issue() {
+  local message="${1:?message is required}"
 
-  case "$status" in
-    PASS)
-      printf '  %s[PASS]%s %s' "$COLOR_GREEN" "$COLOR_RESET" "$name"
-      ;;
-    FAIL)
-      printf '  %s[FAIL]%s %s' "$COLOR_RED" "$COLOR_RESET" "$name"
-      ;;
-    SKIP)
-      printf '  %s[SKIP]%s %s' "$COLOR_YELLOW" "$COLOR_RESET" "$name"
-      ;;
-    WARN)
-      printf '  %s[WARN]%s %s' "$COLOR_YELLOW" "$COLOR_RESET" "$name"
-      ;;
-  esac
-
-  if [[ -n "$detail" ]]; then
-    printf ' — %s' "$detail"
+  if [[ "${AUDIT_MODE}" == "development" ]]; then
+    warn "${message}"
+  else
+    fail "${message}"
   fi
-
-  printf '\n'
 }
 
-start_section() {
-  CURRENT_SECTION="$1"
-  print_header "$CURRENT_SECTION"
-}
+run_logged() {
+  local label="${1:?label is required}"
+  local log_file="${2:?log file is required}"
+  shift 2
 
-run_command_check() {
-  local name="$1"
-  shift
-
-  local slug
-  local log_file
-  local rc
-
-  slug="$(sanitize_filename "$name")"
-  log_file="${LOG_DIR}/${slug}.log"
-
-  if "$@" >"$log_file" 2>&1; then
-    if [[ "$KEEP_LOGS" != "1" ]]; then
-      rm -f "$log_file"
-      log_file=""
-    fi
-    record_result "PASS" "$name" "" "$log_file"
+  if "$@" >"${log_file}" 2>&1; then
+    pass "${label}"
     return 0
-  else
-    rc=$?
-    record_result \
-      "FAIL" \
-      "$name" \
-      "終了コード=${rc}; log=${log_file}" \
-      "$log_file"
-    return "$rc"
-  fi
-}
-
-run_shell_check() {
-  local name="$1"
-  local command_text="$2"
-  local slug
-  local log_file
-  local rc
-
-  slug="$(sanitize_filename "$name")"
-  log_file="${LOG_DIR}/${slug}.log"
-
-  if bash -o pipefail -c "$command_text" >"$log_file" 2>&1; then
-    if [[ "$KEEP_LOGS" != "1" ]]; then
-      rm -f "$log_file"
-      log_file=""
-    fi
-    record_result "PASS" "$name" "" "$log_file"
-    return 0
-  else
-    rc=$?
-    record_result \
-      "FAIL" \
-      "$name" \
-      "終了コード=${rc}; log=${log_file}" \
-      "$log_file"
-    return "$rc"
-  fi
-}
-
-skip_check() {
-  local name="$1"
-  local reason="$2"
-  record_result "SKIP" "$name" "$reason"
-}
-
-warn_check() {
-  local name="$1"
-  local reason="$2"
-  record_result "WARN" "$name" "$reason"
-}
-
-check_file_exists() {
-  local path="$1"
-
-  if [[ -f "$path" ]]; then
-    record_result "PASS" "\`${path}\` が存在する"
-  else
-    record_result "FAIL" "\`${path}\` が存在する" "ファイルが見つからない"
-  fi
-}
-
-check_directory_exists() {
-  local path="$1"
-
-  if [[ -d "$path" ]]; then
-    record_result "PASS" "\`${path}\` が生成される"
-  else
-    record_result "FAIL" "\`${path}\` が生成される" "ディレクトリが見つからない"
-  fi
-}
-
-check_readme_link() {
-  local label="$1"
-  shift
-
-  if [[ ! -f README.md ]]; then
-    record_result "FAIL" "$label" "README.mdが存在しない"
-    return 1
   fi
 
-  local target
-  for target in "$@"; do
-    if grep -Fq "$target" README.md; then
-      record_result "PASS" "$label" "検出: ${target}"
-      return 0
-    fi
-  done
-
-  record_result \
-    "FAIL" \
-    "$label" \
-    "README.md内に対象パスへの参照が見つからない"
+  fail "${label}"
+  printf '  log: %s\n' "${log_file}"
+  tail -n 20 "${log_file}" | sed 's/^/  | /'
   return 1
 }
 
-package_script_exists() {
-  local script_name="$1"
+section "Runtime"
 
-  if [[ ! -f package.json ]]; then
-    return 1
-  fi
+pass "Running under Bash ${BASH_VERSION}"
+info "Audit mode: ${AUDIT_MODE}"
+info "Target tag: ${TAG}"
+info "Default branch: ${DEFAULT_BRANCH}"
+info "Remote reference: ${REMOTE_REF}"
+info "Evidence directory: ${OUT}"
 
-  bun -e '
-    const fs = require("node:fs");
-    const name = process.argv[1];
-    const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
-    process.exit(pkg.scripts && typeof pkg.scripts[name] === "string" ? 0 : 1);
-  ' "$script_name" >/dev/null 2>&1
-}
+section "Repository"
 
-run_bun_script() {
-  local script_name="$1"
-  local display_name="${2:-bun run ${script_name}}"
+if ! command -v git >/dev/null 2>&1; then
+  fail "Git is not available"
+  exit 1
+fi
 
-  if ! package_script_exists "$script_name"; then
-    record_result \
-      "FAIL" \
-      "\`${display_name}\` が成功する" \
-      "package.jsonにscripts.${script_name}が存在しない"
-    return 1
-  fi
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
 
-  run_command_check \
-    "\`${display_name}\` が成功する" \
-    bun run "$script_name"
-}
+if [[ -z "${ROOT}" ]]; then
+  fail "The script is not running inside a Git repository"
+  exit 1
+fi
 
-json_quiz_count() {
-  local json_path="$1"
+ROOT="$(cd "${ROOT}" && pwd -P)"
+cd "${ROOT}"
+pass "Git repository detected: ${ROOT}"
 
-  bun -e '
-    const fs = require("node:fs");
+case "${OUT}/" in
+  "${ROOT}/"*)
+    fail "Evidence directory must be outside the Git repository: ${OUT}"
+    ;;
+  *)
+    pass "Evidence directory is outside the Git repository"
+    ;;
+esac
 
-    const file = process.argv[1];
-    const expected = Number(process.argv[2]);
-    const data = JSON.parse(fs.readFileSync(file, "utf8"));
+INITIAL_STATUS_FILE="${OUT}/git-status-before.txt"
+FINAL_STATUS_FILE="${OUT}/git-status-after.txt"
+STATUS_CHANGE_FILE="${OUT}/git-status-change.diff"
 
-    function findQuestionArray(value, depth = 0) {
-      if (depth > 8 || value === null || value === undefined) {
-        return null;
-      }
+git status --porcelain=v1 --untracked-files=all >"${INITIAL_STATUS_FILE}"
 
-      if (Array.isArray(value)) {
-        const looksLikeQuestions =
-          value.length === 0 ||
-          value.every((item) =>
-            item &&
-            typeof item === "object" &&
-            (
-              "question" in item ||
-              "prompt" in item ||
-              "stem" in item ||
-              "choices" in item ||
-              "options" in item ||
-              "correctAnswer" in item ||
-              "answer" in item
-            )
-          );
+CURRENT_BRANCH="$(git branch --show-current)"
 
-        if (looksLikeQuestions) {
-          return value;
-        }
+if [[ "${CURRENT_BRANCH}" == "${DEFAULT_BRANCH}" ]]; then
+  pass "Current branch is ${DEFAULT_BRANCH}"
+elif [[ -z "${CURRENT_BRANCH}" ]]; then
+  mode_sensitive_issue "HEAD is detached; expected branch: ${DEFAULT_BRANCH}"
+else
+  mode_sensitive_issue "Current branch is ${CURRENT_BRANCH}; expected: ${DEFAULT_BRANCH}"
+fi
 
-        for (const item of value) {
-          const nested = findQuestionArray(item, depth + 1);
-          if (nested) return nested;
-        }
+if [[ ! -s "${INITIAL_STATUS_FILE}" ]]; then
+  pass "Working tree is clean"
+else
+  mode_sensitive_issue "Uncommitted changes exist"
+  sed 's/^/  | /' "${INITIAL_STATUS_FILE}"
+fi
 
-        return null;
-      }
+if git fetch "${REMOTE_NAME}" --prune --tags >"${OUT}/git-fetch.log" 2>&1; then
+  pass "Fetched branches and tags from ${REMOTE_NAME}"
+else
+  fail "Failed to fetch from ${REMOTE_NAME}"
+  tail -n 20 "${OUT}/git-fetch.log" | sed 's/^/  | /'
+fi
 
-      if (typeof value === "object") {
-        const preferredKeys = [
-          "questions",
-          "items",
-          "quiz",
-          "quizzes",
-          "data"
-        ];
+if git rev-parse --verify "${REMOTE_REF}^{commit}" >/dev/null 2>&1; then
+  LOCAL_SHA="$(git rev-parse HEAD)"
+  REMOTE_SHA="$(git rev-parse "${REMOTE_REF}^{commit}")"
 
-        for (const key of preferredKeys) {
-          if (key in value) {
-            const nested = findQuestionArray(value[key], depth + 1);
-            if (nested) return nested;
-          }
-        }
+  info "HEAD: ${LOCAL_SHA}"
+  info "${REMOTE_REF}: ${REMOTE_SHA}"
 
-        for (const nestedValue of Object.values(value)) {
-          const nested = findQuestionArray(nestedValue, depth + 1);
-          if (nested) return nested;
-        }
-      }
-
-      return null;
-    }
-
-    const questions = findQuestionArray(data);
-
-    if (!questions) {
-      console.error("問題配列を特定できませんでした。");
-      process.exit(2);
-    }
-
-    console.log(`detected=${questions.length}`);
-    console.log(`expected=${expected}`);
-
-    process.exit(questions.length === expected ? 0 : 1);
-  ' "$json_path" "$EXPECTED_QUIZ_COUNT"
-}
-
-check_json_quiz_count() {
-  local path="$1"
-  local name="\`${path}\` が${EXPECTED_QUIZ_COUNT}問構成を反映している"
-
-  if [[ ! -f "$path" ]]; then
-    record_result "FAIL" "$name" "ファイルが存在しない"
-    return 1
-  fi
-
-  run_command_check "$name" json_quiz_count "$path"
-}
-
-check_markdown_quiz_count() {
-  local path="$1"
-  local name="\`${path}\` が${EXPECTED_QUIZ_COUNT}問構成を反映している"
-  local slug
-  local log_file
-  local rc
-
-  if [[ ! -f "$path" ]]; then
-    record_result "FAIL" "$name" "ファイルが存在しない"
-    return 1
-  fi
-
-  slug="$(sanitize_filename "$name")"
-  log_file="${LOG_DIR}/${slug}.log"
-
-  EXPECTED="$EXPECTED_QUIZ_COUNT" REPORT_PATH="$path" bun <<'JS' >"$log_file" 2>&1
-const fs = require("node:fs");
-
-const path = process.env.REPORT_PATH;
-const expected = Number(process.env.EXPECTED);
-const text = fs.readFileSync(path, "utf8");
-
-const explicitPatterns = [
-  new RegExp(`(?:問題数|総問題数|設問数|questions?|total)[^\\n\\d]{0,30}${expected}(?:\\s*問)?`, "i"),
-  new RegExp(`${expected}\\s*問(?:構成|収録|掲載|実装|中)?`, "i"),
-  new RegExp(`(?:全|合計)\\s*${expected}\\s*問`, "i")
-];
-
-if (explicitPatterns.some((pattern) => pattern.test(text))) {
-  console.log(`explicit quiz count detected: ${expected}`);
-  process.exit(0);
-}
-
-const lines = text.split(/\r?\n/);
-
-const headingPatterns = [
-  /^\s{0,3}#{1,6}\s*(?:問題|問|question)\s*[0-9０-９]+(?:\b|[：:．.\s])/i,
-  /^\s*(?:[-*+]\s+)?(?:問題|問|question)\s*[0-9０-９]+(?:\b|[：:．.\s])/i
-];
-
-const matchedLines = lines.filter((line) =>
-  headingPatterns.some((pattern) => pattern.test(line))
-);
-
-console.log(`question-like headings=${matchedLines.length}`);
-console.log(`expected=${expected}`);
-
-if (matchedLines.length === expected) {
-  process.exit(0);
-}
-
-console.error(
-  "明示的な問題数または問題見出しを用いて期待数を確認できませんでした。"
-);
-process.exit(1);
-JS
-
-  rc=$?
-
-  if [[ "$rc" -eq 0 ]]; then
-    if [[ "$KEEP_LOGS" != "1" ]]; then
-      rm -f "$log_file"
-      log_file=""
-    fi
-    record_result "PASS" "$name" "" "$log_file"
-    return 0
-  fi
-
-  record_result \
-    "FAIL" \
-    "$name" \
-    "問題数の明記または問題見出しを確認できない; log=${log_file}" \
-    "$log_file"
-  return "$rc"
-}
-
-check_disclaimer() {
-  local name="クイズが外部試験問題対策ではないことが明記されている"
-  local files=(
-    "README.md"
-    "docs/acceptance-criteria.md"
-    "docs/quiz-schema-taxonomy-validation.md"
-  )
-
-  local existing_files=()
-  local file
-
-  for file in "${files[@]}"; do
-    if [[ -f "$file" ]]; then
-      existing_files+=("$file")
-    fi
-  done
-
-  if [[ "${#existing_files[@]}" -eq 0 ]]; then
-    record_result "FAIL" "$name" "検査対象文書が存在しない"
-    return 1
-  fi
-
-  local combined
-  combined="$(cat "${existing_files[@]}")"
-
-  if printf '%s' "$combined" |
-    grep -Eiq \
-      '(外部|公的|公式|実在).{0,30}(試験|資格).{0,40}(対策|再現|模倣|転載|目的では|対象では)|試験対策を目的としない|外部試験問題対策ではない|official exam.{0,30}(not|isn.t)|not.{0,30}exam preparation'; then
-    record_result "PASS" "$name"
+  if [[ "${LOCAL_SHA}" == "${REMOTE_SHA}" ]]; then
+    pass "HEAD matches ${REMOTE_REF}"
   else
-    record_result \
-      "FAIL" \
-      "$name" \
-      "READMEまたは主要docs内に明示的な免責・位置付けを検出できない"
-    return 1
+    mode_sensitive_issue "HEAD does not match ${REMOTE_REF}"
+  fi
+else
+  fail "Cannot resolve ${REMOTE_REF} to a commit"
+fi
+
+if git rev-parse --verify "${TAG}^{commit}" >/dev/null 2>&1; then
+  TAG_SHA="$(git rev-parse "${TAG}^{commit}")"
+  pass "Local tag ${TAG} resolves to a commit"
+  info "${TAG}: ${TAG_SHA}"
+
+  if git merge-base --is-ancestor "${TAG}^{commit}" HEAD >/dev/null 2>&1; then
+    pass "${TAG} is an ancestor of the current HEAD"
+  else
+    fail "${TAG} is not an ancestor of the current HEAD"
+  fi
+
+  if git cat-file -e "${TAG}:${RELEASE_NOTES_FILE}" 2>/dev/null; then
+    pass "${RELEASE_NOTES_FILE} is included in ${TAG}"
+  else
+    fail "${RELEASE_NOTES_FILE} is not included in ${TAG}"
+  fi
+else
+  fail "Local tag ${TAG} cannot be resolved"
+fi
+
+section "Required files"
+
+for path in \
+  README.md \
+  LICENSE \
+  .gitignore \
+  package.json \
+  bun.lock \
+  "${RELEASE_NOTES_FILE}" \
+  .github/workflows/quality-gate.yml
+do
+  if [[ -e "${path}" ]]; then
+    pass "${path} exists"
+  else
+    fail "${path} is missing"
+  fi
+done
+
+section "README navigation"
+
+check_readme_literal() {
+  local label="${1:?label is required}"
+  local literal="${2:?literal is required}"
+
+  if grep -Fq "${literal}" README.md; then
+    pass "${label}"
+  else
+    fail "${label}"
   fi
 }
 
-detect_devcontainer() {
-  if [[ -n "${REMOTE_CONTAINERS:-}" ]] ||
-     [[ -n "${DEVCONTAINER:-}" ]] ||
-     [[ -f "/.dockerenv" ]] ||
-     grep -qaE '(docker|containerd|kubepods)' /proc/1/cgroup 2>/dev/null; then
-    INSIDE_DEVCONTAINER=1
-  else
-    INSIDE_DEVCONTAINER=0
-  fi
-}
-
-check_pr_quality_gate() {
-  local name="GitHub Actions \`quality-gate\` がpull request上で成功する"
-
-  if [[ "$RUN_REMOTE_CHECKS" != "1" ]]; then
-    skip_check "$name" "RUN_REMOTE_CHECKS=0"
-    return
-  fi
-
-  if ! command -v gh >/dev/null 2>&1; then
-    skip_check "$name" "GitHub CLI（gh）が利用できない"
-    return
-  fi
-
-  if ! gh auth status >/dev/null 2>&1; then
-    skip_check "$name" "ghがGitHubへ認証されていない"
-    return
-  fi
-
-  local pr_ref="$PR_NUMBER"
-
-  if [[ -z "$pr_ref" ]]; then
-    pr_ref="$(gh pr view --json number --jq '.number' 2>/dev/null || true)"
-  fi
-
-  if [[ -z "$pr_ref" ]]; then
-    skip_check "$name" "現在のブランチに対応するPRを特定できない。PR_NUMBERを指定可能"
-    return
-  fi
-
-  local slug
-  local log_file
-  slug="$(sanitize_filename "$name")"
-  log_file="${LOG_DIR}/${slug}.log"
-
-  local result
-  result="$(
-    gh pr checks "$pr_ref" \
-      --json name,bucket,state,workflow \
-      --jq \
-      ".[] |
-       select(
-         ((.name // \"\") | ascii_downcase | contains(\"${QUALITY_CHECK_NAME,,}\")) or
-         ((.workflow // \"\") | ascii_downcase | contains(\"${QUALITY_WORKFLOW,,}\"))
-       ) |
-       [.name, .bucket, .state, .workflow] |
-       @tsv" \
-      2>"$log_file" || true
-  )"
-
-  if [[ -z "$result" ]]; then
-    record_result \
-      "FAIL" \
-      "$name" \
-      "PR #${pr_ref}に対象checkが見つからない; log=${log_file}" \
-      "$log_file"
-    return
-  fi
-
-  printf '%s\n' "$result" >>"$log_file"
-
-  if printf '%s\n' "$result" |
-    awk -F '\t' '
-      BEGIN { found=0; failed=0 }
-      {
-        found=1
-        bucket=tolower($2)
-        if (bucket != "pass") failed=1
-      }
-      END { exit !(found && !failed) }
-    '; then
-    if [[ "$KEEP_LOGS" != "1" ]]; then
-      rm -f "$log_file"
-      log_file=""
-    fi
-    record_result "PASS" "$name" "PR #${pr_ref}" "$log_file"
-  else
-    record_result \
-      "FAIL" \
-      "$name" \
-      "PR #${pr_ref}の対象checkが未成功; log=${log_file}" \
-      "$log_file"
-  fi
-}
-
-check_main_quality_gate() {
-  local name="GitHub Actions \`quality-gate\` がmain push後に成功する"
-
-  if [[ "$RUN_REMOTE_CHECKS" != "1" ]]; then
-    skip_check "$name" "RUN_REMOTE_CHECKS=0"
-    return
-  fi
-
-  if ! command -v gh >/dev/null 2>&1; then
-    skip_check "$name" "GitHub CLI（gh）が利用できない"
-    return
-  fi
-
-  if ! gh auth status >/dev/null 2>&1; then
-    skip_check "$name" "ghがGitHubへ認証されていない"
-    return
-  fi
-
-  local slug
-  local log_file
-  local run_json
-  local run_id
-  local conclusion
-  local url
-  local status
-
-  slug="$(sanitize_filename "$name")"
-  log_file="${LOG_DIR}/${slug}.log"
-
-  run_json="$(
-    gh run list \
-      --workflow "$QUALITY_WORKFLOW" \
-      --branch "$MAIN_BRANCH" \
-      --event push \
-      --limit 1 \
-      --json databaseId,conclusion,status,url,headSha,createdAt,workflowName \
-      2>"$log_file" || true
-  )"
-
-  if [[ -z "$run_json" || "$run_json" == "[]" ]]; then
-    record_result \
-      "FAIL" \
-      "$name" \
-      "workflow=${QUALITY_WORKFLOW}, branch=${MAIN_BRANCH} のpush runが見つからない; log=${log_file}" \
-      "$log_file"
-    return
-  fi
-
-  printf '%s\n' "$run_json" >>"$log_file"
-
-  run_id="$(
-    printf '%s' "$run_json" |
-      bun -e '
-        let input = "";
-        process.stdin.on("data", (chunk) => input += chunk);
-        process.stdin.on("end", () => {
-          const runs = JSON.parse(input);
-          process.stdout.write(String(runs[0]?.databaseId ?? ""));
-        });
-      '
-  )"
-
-  conclusion="$(
-    printf '%s' "$run_json" |
-      bun -e '
-        let input = "";
-        process.stdin.on("data", (chunk) => input += chunk);
-        process.stdin.on("end", () => {
-          const runs = JSON.parse(input);
-          process.stdout.write(String(runs[0]?.conclusion ?? ""));
-        });
-      '
-  )"
-
-  status="$(
-    printf '%s' "$run_json" |
-      bun -e '
-        let input = "";
-        process.stdin.on("data", (chunk) => input += chunk);
-        process.stdin.on("end", () => {
-          const runs = JSON.parse(input);
-          process.stdout.write(String(runs[0]?.status ?? ""));
-        });
-      '
-  )"
-
-  url="$(
-    printf '%s' "$run_json" |
-      bun -e '
-        let input = "";
-        process.stdin.on("data", (chunk) => input += chunk);
-        process.stdin.on("end", () => {
-          const runs = JSON.parse(input);
-          process.stdout.write(String(runs[0]?.url ?? ""));
-        });
-      '
-  )"
-
-  if [[ "$status" == "completed" && "$conclusion" == "success" ]]; then
-    if [[ "$KEEP_LOGS" != "1" ]]; then
-      rm -f "$log_file"
-      log_file=""
-    fi
-    record_result \
-      "PASS" \
-      "$name" \
-      "run=${run_id}${url:+; ${url}}" \
-      "$log_file"
-  else
-    record_result \
-      "FAIL" \
-      "$name" \
-      "run=${run_id}; status=${status}; conclusion=${conclusion}; ${url}; log=${log_file}" \
-      "$log_file"
-  fi
-}
-
-check_cloudflare_app() {
-  local name="Cloudflare Pagesでクイズアプリを確認できる"
-
-  if [[ "$RUN_REMOTE_CHECKS" != "1" ]]; then
-    skip_check "$name" "RUN_REMOTE_CHECKS=0"
-    return
-  fi
-
-  if [[ -z "$APP_URL" ]]; then
-    skip_check "$name" "APP_URLが未設定"
-    return
-  fi
-
-  if ! command -v curl >/dev/null 2>&1; then
-    skip_check "$name" "curlが利用できない"
-    return
-  fi
-
-  local slug
-  local log_file
-  local body_file
-  local http_code
-
-  slug="$(sanitize_filename "$name")"
-  log_file="${LOG_DIR}/${slug}.log"
-  body_file="${LOG_DIR}/${slug}.html"
-
-  http_code="$(
-    curl \
-      --location \
-      --silent \
-      --show-error \
-      --connect-timeout 10 \
-      --max-time 30 \
-      --output "$body_file" \
-      --write-out '%{http_code}' \
-      "$APP_URL" \
-      2>"$log_file" || true
-  )"
-
-  printf 'URL=%s\nHTTP=%s\n' "$APP_URL" "$http_code" >>"$log_file"
-
-  if [[ ! "$http_code" =~ ^2[0-9][0-9]$ ]]; then
-    record_result \
-      "FAIL" \
-      "$name" \
-      "HTTP=${http_code:-取得失敗}; log=${log_file}" \
-      "$log_file"
-    return
-  fi
-
-  if [[ ! -s "$body_file" ]]; then
-    record_result \
-      "FAIL" \
-      "$name" \
-      "レスポンス本文が空; log=${log_file}" \
-      "$log_file"
-    return
-  fi
-
-  if [[ -n "$APP_EXPECTED_TEXT" ]] &&
-     ! grep -Fqi "$APP_EXPECTED_TEXT" "$body_file"; then
-    record_result \
-      "FAIL" \
-      "$name" \
-      "HTTP=${http_code}だが期待文字列「${APP_EXPECTED_TEXT}」が見つからない; log=${log_file}" \
-      "$log_file"
-    return
-  fi
-
-  if ! grep -Eiq '<html|<div[^>]+id=["'"'"']root["'"'"']|<script[^>]+src=' "$body_file"; then
-    record_result \
-      "FAIL" \
-      "$name" \
-      "HTTP=${http_code}だがWebアプリHTMLを確認できない; log=${log_file}" \
-      "$log_file"
-    return
-  fi
-
-  if [[ "$KEEP_LOGS" != "1" ]]; then
-    rm -f "$log_file" "$body_file"
-    log_file=""
-  fi
-
-  record_result "PASS" "$name" "HTTP=${http_code}; ${APP_URL}" "$log_file"
-}
-
-generate_reports() {
-  mkdir -p "$LOG_DIR"
-
-  {
-    printf 'Portfolio submission readiness\n'
-    printf 'Generated: %s\n' "$(date '+%Y-%m-%d %H:%M:%S %z')"
-    printf 'Repository: %s\n' "$(pwd)"
-    printf 'Expected quiz count: %s\n' "$EXPECTED_QUIZ_COUNT"
-    printf '\n'
-    printf 'PASS=%d FAIL=%d WARN=%d SKIP=%d TOTAL=%d\n' \
-      "$PASS_COUNT" "$FAIL_COUNT" "$WARN_COUNT" "$SKIP_COUNT" "$TOTAL_COUNT"
-    printf '\n'
-
-    local i
-    for i in "${!RESULT_STATUS[@]}"; do
-      printf '[%s] [%s] %s' \
-        "${RESULT_STATUS[$i]}" \
-        "${RESULT_SECTION[$i]}" \
-        "${RESULT_NAME[$i]}"
-
-      if [[ -n "${RESULT_DETAIL[$i]}" ]]; then
-        printf ' — %s' "${RESULT_DETAIL[$i]}"
-      fi
-
-      printf '\n'
-    done
-  } >"$SUMMARY_FILE"
-
-  {
-    printf '# Submission Readiness Report\n\n'
-    printf -- '- Generated: `%s`\n' "$(date '+%Y-%m-%d %H:%M:%S %z')"
-    printf -- '- Repository: `%s`\n' "$(pwd)"
-    printf -- '- Expected quiz count: `%s`\n\n' "$EXPECTED_QUIZ_COUNT"
-
-    printf '## Summary\n\n'
-    printf '| Result | Count |\n'
-    printf '|---|---:|\n'
-    printf '| PASS | %d |\n' "$PASS_COUNT"
-    printf '| FAIL | %d |\n' "$FAIL_COUNT"
-    printf '| WARN | %d |\n' "$WARN_COUNT"
-    printf '| SKIP | %d |\n' "$SKIP_COUNT"
-    printf '| Total | %d |\n\n' "$TOTAL_COUNT"
-
-    printf '## Results\n\n'
-    printf '| Status | Section | Check | Detail |\n'
-    printf '|---|---|---|---|\n'
-
-    local i
-    local escaped_name
-    local escaped_detail
-
-    for i in "${!RESULT_STATUS[@]}"; do
-      escaped_name="$(
-        printf '%s' "${RESULT_NAME[$i]}" |
-          sed 's/|/\\|/g'
-      )"
-      escaped_detail="$(
-        printf '%s' "${RESULT_DETAIL[$i]}" |
-          sed 's/|/\\|/g'
-      )"
-
-      printf '| %s | %s | %s | %s |\n' \
-        "${RESULT_STATUS[$i]}" \
-        "${RESULT_SECTION[$i]}" \
-        "$escaped_name" \
-        "$escaped_detail"
-    done
-
-    printf '\n## Interpretation\n\n'
-
-    if [[ "$FAIL_COUNT" -gt 0 ]]; then
-      printf '**NOT READY:** FAILが%d件あります。\n' "$FAIL_COUNT"
-    elif [[ "$SKIP_COUNT" -gt 0 || "$WARN_COUNT" -gt 0 ]]; then
-      printf '**CONDITIONALLY READY:** FAILはありませんが、WARNまたはSKIPがあります。\n'
-    else
-      printf '**READY:** すべての検査がPASSしました。\n'
-    fi
-  } >"$DETAIL_FILE"
-}
-
-print_final_summary() {
-  print_header "総合判定"
-
-  printf '  PASS : %s%d%s\n' "$COLOR_GREEN" "$PASS_COUNT" "$COLOR_RESET"
-  printf '  FAIL : %s%d%s\n' "$COLOR_RED" "$FAIL_COUNT" "$COLOR_RESET"
-  printf '  WARN : %s%d%s\n' "$COLOR_YELLOW" "$WARN_COUNT" "$COLOR_RESET"
-  printf '  SKIP : %s%d%s\n' "$COLOR_YELLOW" "$SKIP_COUNT" "$COLOR_RESET"
-  printf '  TOTAL: %d\n\n' "$TOTAL_COUNT"
-
-  if [[ "$FAIL_COUNT" -gt 0 ]]; then
-    printf '%s%sNOT READY%s\n' \
-      "$COLOR_BOLD" "$COLOR_RED" "$COLOR_RESET"
-    printf 'FAIL項目を修正してから再実行してください。\n'
-  elif [[ "$SKIP_COUNT" -gt 0 || "$WARN_COUNT" -gt 0 ]]; then
-    printf '%s%sCONDITIONALLY READY%s\n' \
-      "$COLOR_BOLD" "$COLOR_YELLOW" "$COLOR_RESET"
-    printf 'ローカル検査上のFAILはありませんが、SKIP/WARN項目の手動確認が必要です。\n'
-  else
-    printf '%s%sREADY%s\n' \
-      "$COLOR_BOLD" "$COLOR_GREEN" "$COLOR_RESET"
-    printf 'スクリプトで定義したすべての項目が成功しました。\n'
-  fi
-
-  printf '\n結果:\n'
-  printf '  %s\n' "$SUMMARY_FILE"
-  printf '  %s\n' "$DETAIL_FILE"
-}
-
-main() {
-  if [[ ! -f package.json ]]; then
-    printf '%sERROR:%s package.jsonが見つかりません。\n' \
-      "$COLOR_RED" "$COLOR_RESET" >&2
-    printf 'リポジトリのルートディレクトリで実行してください。\n' >&2
-    exit 2
-  fi
-
-  mkdir -p "$LOG_DIR"
-
-  printf '%sPortfolio Submission Readiness Check%s\n' \
-    "${COLOR_BOLD}" "${COLOR_RESET}"
-  printf 'repository : %s\n' "$(pwd)"
-  printf 'timestamp  : %s\n' "$TIMESTAMP"
-  printf 'quiz count : %s\n' "$EXPECTED_QUIZ_COUNT"
-  printf 'logs       : %s\n' "$LOG_DIR"
-
-  start_section "実行環境"
-
-  if command -v bun >/dev/null 2>&1; then
-    record_result "PASS" "\`bun\` が利用できる" "$(bun --version 2>/dev/null || true)"
-  else
-    record_result "FAIL" "\`bun\` が利用できる" "PATH上にbunがない"
-    generate_reports
-    print_final_summary
-    exit 2
-  fi
-
-  if command -v bunx >/dev/null 2>&1; then
-    record_result "PASS" "\`bunx\` が利用できる"
-  else
-    record_result "FAIL" "\`bunx\` が利用できる" "PATH上にbunxがない"
-  fi
-
-  detect_devcontainer
-
-  if [[ "$INSIDE_DEVCONTAINER" -eq 1 ]]; then
-    record_result "PASS" "Dev Container内で実行されている"
-  else
-    skip_check \
-      "Dev Container内で実行されている" \
-      "ホスト環境と判定。Dev Container内でも同じスクリプトを実行すること"
-  fi
-
-  start_section "データ・検証"
-
-  run_bun_script "validate:data"
-  run_bun_script "validate:policy"
-  run_bun_script "validate:quiz"
-  run_bun_script "validate:quiz-policy"
-  run_bun_script "validate:quiz-fixtures"
-
-  start_section "型検査・テスト"
-
-  run_bun_script "typecheck"
-  run_bun_script "client:typecheck"
-  run_bun_script "test:unit"
-
-  run_command_check \
-    "\`CI=1 bunx playwright test e2e/quiz-smoke.e2e.ts --trace on\` が成功する" \
-    env CI=1 bunx playwright test e2e/quiz-smoke.e2e.ts --trace on
-
-  start_section "生成物"
-
-  run_bun_script "report"
-  run_bun_script "quiz:report"
-  run_bun_script "report:check"
-  run_bun_script "quiz:report:check"
-  run_bun_script "prepare:public-quiz-data:check"
-
-  check_markdown_quiz_count "reports/quiz-quality-report.md"
-  check_json_quiz_count "public/study-it/quiz_data.json"
-
-  start_section "build・baseline"
-
-  run_bun_script "client:build"
-  run_bun_script "site:check"
-  run_bun_script "validate:security-baseline"
-  run_bun_script "validate:performance-baseline"
-
-  start_section "統合品質ゲート"
-
-  if [[ "$RUN_FULL_CHECK" == "1" ]]; then
-    if package_script_exists "check"; then
-      if run_command_check \
-        "\`CI=1 bun run check\` が成功する" \
-        env CI=1 bun run check; then
-        QUALITY_GATE_LOCAL_RESULT="PASS"
+check_readme_literal \
+  "${TAG} release link exists" \
+  "releases/tag/${TAG}"
+
+check_readme_literal \
+  "Latest release link exists" \
+  "releases/latest"
+
+check_readme_literal \
+  "${TAG} detailed release notes link exists" \
+  "${RELEASE_NOTES_FILE}"
+
+if grep -Eq '\]\(/\.github/workflows/' README.md; then
+  fail "README still contains a site-root workflow link"
+else
+  pass "Workflow links use repository-relative paths"
+fi
+
+if grep -Eq '\[README\.md\]\(README\.md\)' README.md; then
+  warn "README contains a self-link"
+else
+  pass "README does not contain a self-link"
+fi
+
+if [[ -f "${RELEASE_NOTES_FILE}" ]] &&
+  grep -nEi '<OWNER>|<秘匿情報|YOUR_USERNAME|example-owner|REDACTED' \
+    README.md "${RELEASE_NOTES_FILE}" \
+    >"${OUT}/placeholders.log" 2>&1
+then
+  fail "Public documents contain a known placeholder"
+  sed 's/^/  | /' "${OUT}/placeholders.log"
+else
+  pass "No known placeholder was detected in public documents"
+fi
+
+{
+  git diff --check
+  git diff --cached --check
+} >"${OUT}/git-diff-check.log" 2>&1
+DIFF_CHECK_STATUS=$?
+
+if [[ "${DIFF_CHECK_STATUS}" -eq 0 ]]; then
+  pass "Working-tree and staged diffs pass whitespace checks"
+else
+  fail "Whitespace or patch formatting issue detected"
+  sed 's/^/  | /' "${OUT}/git-diff-check.log"
+fi
+
+section "Tracked artifacts"
+
+TRACKED_ARTIFACTS="$({
+  git ls-files |
+    grep -E '(^|/)(node_modules|dist|coverage|test-results|playwright-report|tmp)/' \
+    || true
+})"
+
+if [[ -z "${TRACKED_ARTIFACTS}" ]]; then
+  pass "No generated build, test, or temporary directories are tracked"
+else
+  fail "Potential generated or temporary artifacts are tracked"
+  printf '%s\n' "${TRACKED_ARTIFACTS}" | sed 's/^/  | /'
+fi
+
+TRACKED_ENV="$({
+  git ls-files |
+    grep -E '(^|/)\.env($|\.)' |
+    grep -vE '\.env\.(example|sample|template)$' \
+    || true
+})"
+
+if [[ -z "${TRACKED_ENV}" ]]; then
+  pass "No runtime .env file is tracked"
+else
+  fail "Potential runtime .env files are tracked"
+  printf '%s\n' "${TRACKED_ENV}" | sed 's/^/  | /'
+fi
+
+# Build sensitive signatures from fragments so this scanner does not match itself.
+SECRET_PATTERN='g''hp_[A-Za-z0-9]{30,}'\
+'|github_''pat_[A-Za-z0-9_]{20,}'\
+'|A''KIA[0-9A-Z]{16}'\
+'|-----BEGIN (RSA|OPENSSH|EC) PRIVATE K''EY-----'\
+'|CLOUDFLARE_API_''TOKEN'\
+'|CF_API_''TOKEN'
+
+if git grep -nEI \
+  "${SECRET_PATTERN}" \
+  -- . \
+  >"${OUT}/secret-patterns.log" 2>&1
+then
+  warn "Potential secret pattern detected; review for false positives"
+  sed 's/^/  | /' "${OUT}/secret-patterns.log"
+else
+  pass "No known secret pattern was detected"
+fi
+
+section "Local quality gates"
+
+if command -v bun >/dev/null 2>&1; then
+  pass "Bun is available: $(bun --version)"
+
+  run_logged \
+    "CI=1 bun run check" \
+    "${OUT}/bun-check.log" \
+    env CI=1 bun run check
+
+  run_logged \
+    "bun run pages:build" \
+    "${OUT}/pages-build.log" \
+    bun run pages:build
+else
+  fail "Bun is not available"
+fi
+
+git status --porcelain=v1 --untracked-files=all >"${FINAL_STATUS_FILE}"
+
+if cmp -s "${INITIAL_STATUS_FILE}" "${FINAL_STATUS_FILE}"; then
+  pass "Local validation did not change the working-tree state"
+else
+  fail "Local validation changed the working-tree state"
+  diff -u \
+    "${INITIAL_STATUS_FILE}" \
+    "${FINAL_STATUS_FILE}" \
+    >"${STATUS_CHANGE_FILE}" \
+    || true
+  sed 's/^/  | /' "${STATUS_CHANGE_FILE}"
+fi
+
+section "GitHub"
+
+if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
+  pass "GitHub CLI is authenticated"
+
+  REPO="$(gh repo view --json nameWithOwner --jq '.nameWithOwner' 2>/dev/null || true)"
+
+  if [[ -n "${REPO}" ]]; then
+    pass "GitHub repository: ${REPO}"
+
+    if gh release view "${TAG}" \
+      --json tagName,name,isDraft,isPrerelease,publishedAt,url \
+      >"${OUT}/release.json" 2>&1
+    then
+      IS_DRAFT="$(gh release view "${TAG}" --json isDraft --jq '.isDraft')"
+      IS_PRERELEASE="$(gh release view "${TAG}" --json isPrerelease --jq '.isPrerelease')"
+      PUBLISHED_AT="$(gh release view "${TAG}" --json publishedAt --jq '.publishedAt')"
+
+      if [[ "${IS_DRAFT}" == "false" &&
+            "${IS_PRERELEASE}" == "false" &&
+            "${PUBLISHED_AT}" != "null" ]]
+      then
+        pass "${TAG} is published as a standard release"
       else
-        QUALITY_GATE_LOCAL_RESULT="FAIL"
+        fail "${TAG} release attributes require review"
+        sed 's/^/  | /' "${OUT}/release.json"
       fi
     else
-      record_result \
-        "FAIL" \
-        "\`CI=1 bun run check\` が成功する" \
-        "package.jsonにscripts.checkが存在しない"
-      QUALITY_GATE_LOCAL_RESULT="FAIL"
+      fail "Cannot verify the ${TAG} release"
+    fi
+
+    LATEST_TAG="$({
+      gh api "/repos/${REPO}/releases/latest" \
+        --jq '.tag_name' \
+        2>/dev/null \
+        || true
+    })"
+
+    if [[ "${LATEST_TAG}" == "${TAG}" ]]; then
+      pass "${TAG} is the latest release"
+    elif [[ -n "${LATEST_TAG}" ]]; then
+      warn "Latest release is ${LATEST_TAG}; submission target is ${TAG}"
+    else
+      warn "Cannot determine the latest release"
+    fi
+
+    HEAD_SHA="$(git rev-parse HEAD)"
+
+    if gh run list \
+      --commit "${HEAD_SHA}" \
+      --limit 50 \
+      --json status,conclusion,name,url \
+      >"${OUT}/runs.json" 2>&1
+    then
+      RUN_COUNT="$({
+        gh run list \
+          --commit "${HEAD_SHA}" \
+          --limit 50 \
+          --json status \
+          --jq 'length' \
+          2>/dev/null \
+          || printf '0'
+      })"
+
+      BAD_RUNS="$({
+        gh run list \
+          --commit "${HEAD_SHA}" \
+          --limit 50 \
+          --json status,conclusion \
+          --jq '[
+            .[]
+            | select(
+                .status == "completed"
+                and .conclusion != "success"
+                and .conclusion != "neutral"
+                and .conclusion != "skipped"
+              )
+          ] | length' \
+          2>/dev/null \
+          || printf 'unknown'
+      })"
+
+      if [[ "${BAD_RUNS}" == "unknown" ]]; then
+        warn "Cannot evaluate GitHub Actions conclusions"
+      elif [[ "${RUN_COUNT}" == "0" ]]; then
+        warn "No GitHub Actions run was found for the current HEAD"
+      elif [[ "${BAD_RUNS}" == "0" ]]; then
+        pass "No failed completed workflow run exists for the current HEAD"
+      else
+        fail "A failed workflow run exists for the current HEAD"
+        gh run list \
+          --commit "${HEAD_SHA}" \
+          --limit 50 \
+          --json status,conclusion,name,url \
+          --jq '.[]' |
+          sed 's/^/  | /'
+      fi
+    else
+      warn "Cannot retrieve GitHub Actions runs"
+    fi
+
+    OPEN_PRS="$({
+      gh pr list \
+        --state open \
+        --limit 100 \
+        --json number \
+        --jq 'length' \
+        2>/dev/null \
+        || printf 'unknown'
+    })"
+
+    if [[ "${OPEN_PRS}" == "0" ]]; then
+      pass "No open pull request exists"
+    elif [[ "${OPEN_PRS}" == "unknown" ]]; then
+      warn "Cannot determine the number of open pull requests"
+    else
+      warn "${OPEN_PRS} open pull request(s) exist"
+      gh pr list --state open --limit 20 |
+        sed 's/^/  | /'
+    fi
+
+    OPEN_ALERTS="$({
+      gh api \
+        "/repos/${REPO}/code-scanning/alerts?state=open&per_page=100" \
+        --jq 'length' \
+        2>/dev/null \
+        || printf 'unknown'
+    })"
+
+    if [[ "${OPEN_ALERTS}" == "0" ]]; then
+      pass "No open code-scanning alert exists"
+    elif [[ "${OPEN_ALERTS}" == "unknown" ]]; then
+      warn "Cannot retrieve code-scanning alerts"
+    else
+      warn "${OPEN_ALERTS} open code-scanning alert(s) exist"
     fi
   else
-    skip_check \
-      "\`CI=1 bun run check\` が成功する" \
-      "RUN_FULL_CHECK=0"
-    QUALITY_GATE_LOCAL_RESULT="SKIP"
+    fail "Cannot determine the GitHub repository"
   fi
+else
+  warn "GitHub CLI is unavailable or unauthenticated; remote checks were skipped"
+fi
 
-  check_pr_quality_gate
-  check_main_quality_gate
+section "Published demo"
 
-  start_section "デプロイ"
+if command -v curl >/dev/null 2>&1; then
+  HTTP_CODE="$({
+    curl -fsSL \
+      --max-time 20 \
+      -o /dev/null \
+      -w '%{http_code}' \
+      "${DEMO_URL}/" \
+      2>"${OUT}/demo-curl.log" \
+      || true
+  })"
 
-  check_cloudflare_app
-  run_bun_script "pages:build"
-  check_directory_exists "dist/app"
-
-  start_section "ドキュメント"
-
-  check_file_exists "README.md"
-  check_file_exists "docs/architecture/architecture.md"
-  check_file_exists "docs/acceptance-criteria.md"
-  check_file_exists "docs/interview/quiz-app-explanation.md"
-  check_file_exists "docs/quiz-schema-taxonomy-validation.md"
-
-  check_readme_link \
-    "READMEから主要docsへ辿れる" \
-    "docs/architecture/architechture.md" \
-    "docs/acceptance-criteria.md" \
-    "docs/interview-notes.md" \
-    "docs/quiz-schema-taxonomy-validation.md"
-
-  check_readme_link \
-    "READMEから主要reportsへ辿れる" \
-    "reports/quiz-quality-report.md" \
-    "reports/" \
-    "./reports"
-
-  check_disclaimer
-
-  start_section "開発環境"
-
-  if [[ "$INSIDE_DEVCONTAINER" -eq 1 ]]; then
-    if command -v bun >/dev/null 2>&1; then
-      record_result \
-        "PASS" \
-        "Dev Container内で \`bun\` が利用できる" \
-        "$(bun --version 2>/dev/null || true)"
-    else
-      record_result \
-        "FAIL" \
-        "Dev Container内で \`bun\` が利用できる" \
-        "PATH上にbunがない"
-    fi
-
-    if command -v bunx >/dev/null 2>&1; then
-      record_result "PASS" "Dev Container内で \`bunx\` が利用できる"
-    else
-      record_result \
-        "FAIL" \
-        "Dev Container内で \`bunx\` が利用できる" \
-        "PATH上にbunxがない"
-    fi
-
-    case "$QUALITY_GATE_LOCAL_RESULT" in
-      PASS)
-        record_result \
-          "PASS" \
-          "Dev Container内で主要検証が成功する" \
-          "\`CI=1 bun run check\` の結果を再利用"
-        ;;
-      FAIL)
-        record_result \
-          "FAIL" \
-          "Dev Container内で主要検証が成功する" \
-          "\`CI=1 bun run check\` が失敗"
-        ;;
-      *)
-        skip_check \
-          "Dev Container内で主要検証が成功する" \
-          "統合品質ゲートが未実行"
-        ;;
-    esac
+  if [[ "${HTTP_CODE}" =~ ^2[0-9][0-9]$ ]]; then
+    pass "Published demo is reachable: HTTP ${HTTP_CODE}"
   else
-    skip_check \
-      "Dev Container内で \`bun\` が利用できる" \
-      "Dev Container外で実行中"
-    skip_check \
-      "Dev Container内で \`bunx\` が利用できる" \
-      "Dev Container外で実行中"
-    skip_check \
-      "Dev Container内で主要検証が成功する" \
-      "Dev Container内で同スクリプトを再実行する必要がある"
+    fail "Published demo is unreachable: HTTP ${HTTP_CODE:-unknown}"
   fi
 
-  generate_reports
-  print_final_summary
+  QUIZ_HTTP_CODE="$({
+    curl -fsSL \
+      --max-time 20 \
+      -o /dev/null \
+      -w '%{http_code}' \
+      "${DEMO_URL}/study-it/quiz_data.json" \
+      2>"${OUT}/quiz-data-curl.log" \
+      || true
+  })"
 
-  if [[ "$FAIL_COUNT" -gt 0 ]]; then
-    exit 1
+  if [[ "${QUIZ_HTTP_CODE}" =~ ^2[0-9][0-9]$ ]]; then
+    pass "Published quiz data is reachable: HTTP ${QUIZ_HTTP_CODE}"
+  else
+    fail "Published quiz data is unreachable: HTTP ${QUIZ_HTTP_CODE:-unknown}"
   fi
 
-  exit 0
-}
+  curl -sSIL \
+    --max-time 20 \
+    "${DEMO_URL}/" \
+    >"${OUT}/demo-headers.txt" \
+    2>/dev/null \
+    || true
 
-main "$@"
+  info "HTTP headers: ${OUT}/demo-headers.txt"
+else
+  warn "curl is unavailable; published demo checks were skipped"
+fi
+
+if [[ "${FAIL_COUNT}" -gt 0 ]]; then
+  DECISION="NOT_READY"
+  DECISION_LABEL="NOT READY"
+  EXIT_CODE=1
+elif [[ "${WARN_COUNT}" -gt 0 ]]; then
+  DECISION="READY_AFTER_MANUAL_REVIEW"
+  DECISION_LABEL="READY AFTER MANUAL REVIEW"
+  EXIT_CODE=0
+else
+  DECISION="READY"
+  DECISION_LABEL="READY"
+  EXIT_CODE=0
+fi
+
+section "Submission record"
+
+CHECKED_AT="$(date '+%Y-%m-%dT%H:%M:%S%z')"
+INITIAL_CHANGE_COUNT="$(wc -l <"${INITIAL_STATUS_FILE}" | tr -d '[:space:]')"
+FINAL_CHANGE_COUNT="$(wc -l <"${FINAL_STATUS_FILE}" | tr -d '[:space:]')"
+
+{
+  printf 'checked_at=%s\n' "${CHECKED_AT}"
+  printf 'audit_mode=%s\n' "${AUDIT_MODE}"
+  printf 'repository=%s\n' "${REPO}"
+  printf 'branch=%s\n' "${CURRENT_BRANCH}"
+  printf 'remote_ref=%s\n' "${REMOTE_REF}"
+  printf 'head_sha=%s\n' "$(git rev-parse HEAD)"
+  printf 'tag=%s\n' "${TAG}"
+  printf 'tag_sha=%s\n' "${TAG_SHA}"
+  printf 'demo_url=%s\n' "${DEMO_URL}"
+  printf 'initial_worktree_entries=%s\n' "${INITIAL_CHANGE_COUNT}"
+  printf 'final_worktree_entries=%s\n' "${FINAL_CHANGE_COUNT}"
+  printf 'pass=%s\n' "${PASS_COUNT}"
+  printf 'warn=%s\n' "${WARN_COUNT}"
+  printf 'fail=%s\n' "${FAIL_COUNT}"
+  printf 'decision=%s\n' "${DECISION}"
+} >"${OUT}/submission-record.txt"
+
+printf '\n%s%s+--------------------------------------+%s\n' "${BOLD}" "${CYAN}" "${RESET}"
+printf '%s%s|        SUBMISSION READINESS          |%s\n' "${BOLD}" "${CYAN}" "${RESET}"
+printf '%s%s+--------------------------------------+%s\n' "${BOLD}" "${CYAN}" "${RESET}"
+printf '| PASS: %-5s WARN: %-5s FAIL: %-5s |\n' \
+  "${PASS_COUNT}" "${WARN_COUNT}" "${FAIL_COUNT}"
+printf '%s%s+--------------------------------------+%s\n' "${BOLD}" "${CYAN}" "${RESET}"
+
+if [[ "${EXIT_CODE}" -eq 1 ]]; then
+  printf '%s%sDECISION: %s%s\n' "${BOLD}" "${RED}" "${DECISION_LABEL}" "${RESET}"
+  printf 'Resolve all FAIL results before submission.\n'
+elif [[ "${WARN_COUNT}" -gt 0 ]]; then
+  printf '%s%sDECISION: %s%s\n' "${BOLD}" "${YELLOW}" "${DECISION_LABEL}" "${RESET}"
+  printf 'Review each warning and confirm that it is explainable.\n'
+else
+  printf '%s%sDECISION: %s%s\n' "${BOLD}" "${GREEN}" "${DECISION_LABEL}" "${RESET}"
+fi
+
+printf 'Evidence directory: %s\n' "${OUT}"
+printf 'Submission record:  %s\n' "${OUT}/submission-record.txt"
+
+exit "${EXIT_CODE}"
