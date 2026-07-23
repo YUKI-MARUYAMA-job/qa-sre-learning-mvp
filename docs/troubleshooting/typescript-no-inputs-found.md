@@ -1,7 +1,5 @@
 # TypeScript no inputs found対応記録
 
-[docs/troubleshooting/typescript-no-inputs-found.md](/docs/troubleshooting/typescript-no-inputs-found.md)
-
 ## 概要
 
 `tsconfig.json` に `include` を設定した状態で `tsc --noEmit` を実行したところ、型検査対象の入力ファイルが見つからず停止しました。

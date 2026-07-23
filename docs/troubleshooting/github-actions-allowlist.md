@@ -1,7 +1,5 @@
 ## GitHub Actions allowlist エラー
 
-[docs/troubleshooting/github-actions-allowlist.md](/docs/troubleshooting/github-actions-allowlist.md)
-
 Advanced SecurityおよびActions permissionsを制限した後、`actions/checkout`、`actions/upload-artifact`、`oven-sh/setup-bun` がallowlistに一致せず、workflowが起動前に失敗しました。原因は、外部Actionの利用制限とworkflow内の `uses:` 指定の不整合でした。
 
 対応として、GitHub Actions settingsでGitHub公式Actionと `oven-sh/setup-bun` を明示的に許可しました。  

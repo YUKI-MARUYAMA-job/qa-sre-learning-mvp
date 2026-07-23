@@ -1,7 +1,5 @@
 # クイズデータ検証方針
 
-[docs/quiz-schema-taxonomy-validation.md](/docs/quiz-schema-taxonomy-validation.md)
-
 ## 概要
 
 このドキュメントは、`qa-sre-learning-mvp` におけるクイズデータの検証方針を整理するものです。

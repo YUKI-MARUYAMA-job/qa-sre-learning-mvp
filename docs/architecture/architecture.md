@@ -1,7 +1,5 @@
 # アーキテクチャ
 
-[docs/architecture/architecture.md](/docs/architecture/architecture.md)
-
 ## 概要
 
 このドキュメントは、`qa-sre-learning-mvp` におけるクイズアプリの設計、データ境界、検証層、品質ゲート、デプロイ責務を整理するものです。

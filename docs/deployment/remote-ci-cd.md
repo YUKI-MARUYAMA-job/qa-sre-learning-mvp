@@ -1,6 +1,5 @@
 # Remote CI/CD Strategy
 
-[docs/deployment/remote-ci-cd.md](/docs/deployment/remote-ci-cd.md)
 
 ## 1. 目的
 

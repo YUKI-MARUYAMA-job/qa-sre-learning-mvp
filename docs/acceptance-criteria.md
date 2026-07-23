@@ -1,7 +1,5 @@
 # 受け入れ基準
 
-[docs/acceptance-criteria.md](/docs/acceptance-criteria.md)
-
 ## 概要
 
 このドキュメントは、`qa-sre-learning-mvp` をポートフォリオMVPとして受け入れるための基準を定義するものです。

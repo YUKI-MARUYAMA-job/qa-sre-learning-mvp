@@ -1,7 +1,5 @@
 # v0.1.0: QA/SRE Learning MVP Quality Gate
 
-[reports/release-notes-v0.1.0.md](/reports/release-notes-v0.1.0.md)
-
 ## 概要
 
 `qa-sre-learning-mvp` v0.1.0 は、QA/SRE志向の小型ポートフォリオMVPとして、最初に固定するreleaseです。

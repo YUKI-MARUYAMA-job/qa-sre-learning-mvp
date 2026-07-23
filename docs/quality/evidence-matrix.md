@@ -1,6 +1,5 @@
 # Evidence Matrix
 
-[docs/quality/evidence-matrix.md](/docs/quality/evidence-matrix.md)
 
 ## 1. 目的
 

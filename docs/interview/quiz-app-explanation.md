@@ -1,7 +1,5 @@
 # クイズアプリ技術説明メモ
 
-[docs/interview/quiz-app-explanation.md](/docs/interview/quiz-app-explanation.md)
-
 ## 1. 位置づけ
 
 このドキュメントは、`qa-sre-learning-mvp` のクイズアプリ部分について、面接・コードレビュー・ポートフォリオ説明時に使う技術説明を整理するものです。

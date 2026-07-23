@@ -1,7 +1,5 @@
 # Local Reproducibility Check for v0.1.0
 
-[reports/local-reproducibility-check-v0.1.0.md](/reports/local-reproducibility-check-v0.1.0.md)
-
 ## 1. 目的
 
 このレポートは、`qa-sre-learning-mvp` をホストPC上の任意ディレクトリへ新規cloneし、依存関係のinstall、公開用クイズデータ生成、production build、品質ゲート、E2E、Lighthouse補助観測が再現できることを確認するものです。

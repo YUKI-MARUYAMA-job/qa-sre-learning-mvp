@@ -1,7 +1,5 @@
 # Lighthouse CI運用方針
 
-[docs/lighthouse-ci.md](/docs/lighthouse-ci.md)
-
 ## 1. 目的
 
 この文書は、`qa-sre-learning-mvp` におけるLighthouse CIの運用方針を整理するものです。
