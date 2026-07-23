@@ -202,3 +202,7 @@ v0.2.0固定後は、以下を検討します。
 - accessibility改善項目のissue化
 - synthetic monitoringの検討
 - releaseごとの品質指標比較
+
+## Previous release
+
+- [v0.1.0](/reports/release-notes-v0.1.0.md)
