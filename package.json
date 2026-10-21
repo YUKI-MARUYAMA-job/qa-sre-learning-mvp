@@ -3,6 +3,9 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "engines": {
+    "node": ">=24.22.1 <25"
+  },
   "devDependencies": {
     "@lhci/cli": "0.15.1",
     "@playwright/test": "^1.63.0",
