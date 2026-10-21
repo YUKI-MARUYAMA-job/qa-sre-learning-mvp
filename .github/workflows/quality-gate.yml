@@ -21,6 +21,21 @@ jobs:
         with:
           bun-version: latest
 
+      - name: Setup Node.js (security baseline)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.22.1
+
+      - name: Verify Node.js security baseline
+        run: |
+          ACTUAL_NODE="$(node -p 'process.versions.node')"
+          REQUIRED_NODE="24.22.1"
+          if [[ "${ACTUAL_NODE}" != "${REQUIRED_NODE}" ]]; then
+            echo "Expected Node.js ${REQUIRED_NODE}, got ${ACTUAL_NODE}"
+            exit 1
+          fi
+          node --version
+
       - name: Install dependencies
         run: bun install --frozen-lockfile
 

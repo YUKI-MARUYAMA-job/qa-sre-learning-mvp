@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm
+FROM mcr.microsoft.com/devcontainers/javascript-node:1-24-bookworm
 
 # このDockerfileは、QA / SRE Learning MVP用の再現可能な開発環境を定義する。
 # OSレベルのツール、Bun実行環境、Playwright Chromium実行に必要な依存関係を整備する。

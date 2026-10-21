@@ -146,7 +146,7 @@ Root directory:
   空欄
 
 NODE_VERSION:
-  22.16.0
+  24.22.1
 ```
 
 Cloudflare Pagesでは、Playwright E2Eを実行しません。

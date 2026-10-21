@@ -229,7 +229,7 @@ GitHub Actionsでは、完全品質ゲートとして`CI=1 bun run check`を実�
 ### 前提条件
 
 - Bun 1.3.x
-- Node.js 22.x
+- Node.js 24.22.1
 - Git
 - Playwright E2Eを実行する場合はChromium実行環境
 - Dev Containerを利用する場合はDockerまたは互換コンテナ実行環境
